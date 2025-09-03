@@ -7,8 +7,10 @@ Page({
   data: {
     currentRange :10,
     currentTotal :50,
-    currentProblem : "",
-    currentIndex:0,
+    currentProblem : "请选择难度开始练习",
+    correctAnswer: 0,
+    currentIndex: 0,
+    userAnswer : "",
   },
 
   /**
@@ -110,7 +112,17 @@ Page({
       correctAnswer: _correctAnswer
     })
   },
-
+  checkAnswer(e){
+    //记录两次输入时间，若大于1000毫秒，可认为是确认了答案，相当于点了提交，自动判定答案，若当前值与答案相同，这个时间可以缩小到400毫秒，直接显示正确，然后进入下一题。
+    const _userAnswer = parseInt(e.detail.value)
+    if (isNaN(_userAnswer)) {
+      this.setData({
+        userAnswer:""
+      })
+    }else if (_userAnswer === this.data.correctAnswer) {
+      
+    }
+  }
 //   // 检查答案
 //   checkAnswer() {
 //       const userAnswer = parseInt(userAnswerInput.value);

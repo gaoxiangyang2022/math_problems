@@ -1,7 +1,7 @@
 <!--pages/compute/simpleAddSub/index.wxml-->
 <view>
   <view class="container">
-    <h1>请选择出题范围</h1>
+    <h1>请选择出题范围？多少以内的加减法呢？</h1>
     <view class="selecter">
       <button type="{{currentRange==10?'primary':'default'}}" data-range="10" bindtap="changeRange">10</button>
       <button type="{{currentRange==20?'primary':'default'}}" data-range="20" bindtap="changeRange">20</button>
@@ -26,40 +26,18 @@
   </view>
   
   <view class="container">
-        <view class="header">
-            <h1>&#129518; 智能口算训练</h1>
-        </view>
-        
-        <view class="controls">
-            <select id="difficulty">
-                <option value="10">10以内</option>
-                <option value="20">20以内</option>
-                <option value="50">50以内</option>
-                <option value="100">100以内</option>
-            </select>
-            <button id="restart">重新开始</button>
-        </view>
-        
-        <view id="problem">请选择难度开始练习</view>
-        
-        <view class="input-group">
-            <input type="number" id="user-answer" placeholder="?" disabled />
-            <button id="submit" disabled>提交</button>
-        </view>
-        
+        <view id="problem">{{currentProblem}}</view>
+        <view><input type="number" bindinput="checkAnswer" value="{{userAnswer}}"/></view>
         <view id="feedback"></view>
-        
         <view class="progress-container">
             <view id="progress-bar">
                 <view id="progress"></view>
             </view>
         </view>
-        
         <view class="stats">
             <span>进度: <span id="current">0</span>/100</span>
             <span>错题: <span id="wrong-count">0</span></span>
         </view>
-        
         <h3 style="margin-top: 20px; color: #6c757d;">&#10060; 错题本</h3>
         <view id="wrong-list"></view>
     </view>

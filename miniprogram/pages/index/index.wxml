@@ -1,0 +1,61 @@
+<!--index.wxml-->
+<scroll-view class="scrollarea" scroll-y tyviewe="list">
+
+   <!-- 顶部标题 -->
+   <view class="header">
+        <view class="title">🐰 数学学习乐园 🐼</view>
+        <view class="subtitle">选择你想练习的数学内容吧！</view>
+    </view>
+    
+    <!-- 云朵装饰 -->
+    <view class="cloud cloud1"></view>
+    <view class="cloud cloud2"></view>
+    
+    <!-- 主要内容区域 -->
+    <view class="grid-container">
+        <view class="grid-item"  bind:tap="goToSimpleAddSub">
+            <view class="icon">➕➖</view>
+            <view>加减口算</view>
+            <view>简单的加减法练习</view>
+        </view>
+        
+        <view class="grid-item">
+            <view class="icon">🧮</view>
+            <view>加减复杂计算</view>
+            <view>多位数的加减法</view>
+        </view>
+        
+        <view class="grid-item">
+            <view class="icon">✖️</view>
+            <view>乘法口决</view>
+            <view>背诵乘法表</view>
+        </view>
+        
+        <view class="grid-item">
+            <view class="icon">➗</view>
+            <view>乘除口算</view>
+            <view>乘法和除法练习</view>
+        </view>
+        
+        <view class="grid-item">
+            <view class="icon">🔟</view>
+            <view>凑10法</view>
+            <view>学习如何凑成10</view>
+        </view>
+        
+        <view class="grid-item">
+            <view class="icon">💯</view>
+            <view>破10法</view>
+            <view>学习如何拆分数字</view>
+        </view>
+    </view>
+    
+    <!-- 卡通动物 -->
+    <view class="cartoon-animal bunny"></view>
+    <view class="cartoon-animal viewanda"></view>
+    
+    <!-- 底部 -->
+    <view class="footer">
+        快乐学习 · 天天进步
+    </view>
+</scroll-view>

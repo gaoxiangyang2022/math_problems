@@ -1,0 +1,223 @@
+/* pages/compute/simpleAddSub/index.wxss */
+
+page {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  line-height: 1.5;
+}
+
+.container {
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  width: 95%;
+  max-width: 500px;
+  position: relative;
+  overflow: hidden;
+}
+.selecter{
+  display: flex;
+  flex-direction: row; /* 明确指定横向排列 */
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 20rpx 0;
+  button {
+    flex: 1;
+    margin: 0 5rpx;
+
+    font-size: 28rpx;
+    color: #fff;
+    transition: all 0.3s;
+  }
+  button[type="default"] {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+  button[type="primary"] {
+    background-color: #07c160;
+  }
+} 
+
+
+.header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+h1 {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  position: relative;
+  display: inline-block;
+}
+
+h1::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #3498db, #9b59b6);
+  border-radius: 3px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+
+
+#problem {
+  font-size: 2.5rem;
+  text-align: center;
+  margin: 30px 0;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.input-group {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  gap: 10px;
+}
+
+input[type="number"] {
+  width: 120px;
+  height: 60px;
+  text-align: center;
+  font-size: 1.8rem;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s;
+}
+
+input[type="number"]:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+#submit {
+  height: 60px;
+  padding: 0 25px;
+  font-size: 1.2rem;
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+#feedback {
+  height: 30px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.correct { color: #27ae60; }
+.incorrect { color: #e74c3c; }
+
+.progress-container {
+  margin: 25px 0;
+}
+
+#progress-bar {
+  height: 10px;
+  background: #e9ecef;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+#progress {
+  height: 100%;
+  background: linear-gradient(90deg, #3498db, #9b59b6);
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.wrong-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 20px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+
+.wrong-item {
+  background: #fffbe6;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-left: 4px solid #ffb700;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+/* 移动端专属优化 */
+@media (max-width: 600px) {
+  .container {
+      padding: 20px 15px;
+  }
+  
+  h1 {
+      font-size: 1.5rem;
+  }
+  
+  #problem {
+      font-size: 2rem;
+      height: 70px;
+  }
+  
+  input[type="number"] {
+      width: 90px;
+      height: 50px;
+      font-size: 1.5rem;
+  }
+  
+  button {
+      padding: 10px;
+      font-size: 1rem;
+  }
+  
+  .controls {
+      flex-direction: column;
+      gap: 10px;
+  }
+  
+  select, button {
+      width: 100%;
+  }
+}
+
+/* 动画效果 */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.shake { animation: shake 0.5s; }

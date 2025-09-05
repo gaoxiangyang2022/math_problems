@@ -1,0 +1,74 @@
+h1 { color: #2c3e50; font-size: 2.5rem; margin-bottom: 0.5rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+.subtitle { color: #7f8c8d; font-size: 1.2rem; }
+
+
+.selecter {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 20rpx 0;
+  button {
+    flex: 1;
+    margin: 0 5rpx;
+    font-size: 28rpx;
+    color: #fff;
+    transition: all 0.3s;
+  }
+  button[type="default"] {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+  button[type="primary"] {
+    background-color: #07c160;
+  }
+}
+/* 竖式容器 */
+.vertical-equation {
+    display: flex; flex-direction: column; align-items: flex-end; margin-bottom: 2rem;
+    position: relative; min-height: 200px; /* 确保足够高度容纳所有元素 */
+}
+/* 数字行样式 */
+.number-row {
+    display: flex; justify-content: flex-end; margin-bottom: 0.5rem;
+    position: relative; /* 用于运算符定位 */
+}
+/* 单个数字单元格 */
+.digit-cell {
+    width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; font-weight: bold; font-family: 'Courier New', monospace;
+    background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px;
+    margin-left: 10px; /* 间隔 */
+}
+/* 运算符特殊样式 */
+.operator {
+    font-size: 3rem; color: #e74c3c; font-weight: bold;
+}
+/* 横线样式 */
+.line {
+    width: 100%; height: 2px; background: #3498db; margin: 1rem 0;
+    box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
+}
+/* 结果输入区域 */
+.result-inputs {
+    display: flex; justify-content: flex-end; margin-top: 1rem;
+}
+/* 输入框样式 */
+.result-input {
+    width: 50px; height: 50px; margin-left: 10px;
+    font-size: 2rem; text-align: center; border: 2px solid #3498db; border-radius: 8px;
+    outline: none; transition: all 0.3s ease;
+    font-family: 'Courier New', monospace; font-weight: bold;
+}
+.result-input:focus {
+    border-color: #e74c3c; box-shadow: 0 0 8px rgba(231, 76, 60, 0.3); transform: scale(1.05);
+}
+/* 反馈信息 */
+.feedback { text-align: center; margin-top: 1rem; min-height: 24px; font-size: 1.1rem; font-weight: bold; }
+.success { color: #2ecc71; }
+.error { color: #e74c3c; }
+@media (max-width: 600px) {
+    .digit-cell, .result-input { width: 40px; height: 40px; font-size: 1.8rem; }
+    .operator { font-size: 2.5rem; left: -35px; }
+}

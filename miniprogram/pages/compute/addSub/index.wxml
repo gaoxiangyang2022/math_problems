@@ -1,6 +1,6 @@
-<view style="width: 100%;">
-  <!-- 选择界面 -->
-  <view wx:if="{{showWherePage==0}}" class="container">
+<view>
+<!-- 选择界面 -->
+<view wx:if="{{showWherePage==0}}" class="container">
     <h1>请选择出题范围？多少以内的加减法呢？</h1>
     <view class="selecter">
       <button type="{{currentRange==10?'primary':'default'}}" data-range="10" bindtap="changeRange">10</button>
@@ -23,45 +23,33 @@
     <button id="startTest" type="primary" bindtap="startTest">我们开始吧</button>
   </view>
 
-  <!-- 做题界面 -->
   <view wx:if="{{showWherePage==1}}" class="container">
-    <view class="progress-container">
-      <view class="progress-info">
-        <span>进度: <span id="progressText">{{currentIndex}}/{{currentTotal}}</span></span>
-        <span>错误: <span id="wrongCount">{{wrongQuestions.length}}</span></span>
-      </view>
-      <view class="progress-bar">
-        <view class="progress" style="width: {{(currentIndex / currentTotal) * 100}}%;"></view>
-      </view>
-    </view>
-    <view class="selecter {{errorShake? ' shake' : ''}}">
-      <view id="problem">{{currentProblem}}</view>
-      <view><input type="number" bindinput="inputChange" value="{{userAnswer}}" focus="{{inputFocus}}" /></view>
-    </view>
+        <!-- 竖式计算区域 -->
+        <view class="vertical-equation">
+            <!--数字1 -->
+            <view class="number-row">
+                <view class="digit-cell"  wx:for="{{num1Array}}" wx:key="index">{{item}}</view>
+            </view>
+            
+            <!-- 数字2 -->
+            <view class="number-row">
+                <!-- 计算符号 -->
+                <view class="digit-cell operator">{{operator}}</view>
+                <view class="digit-cell"  wx:for="{{num2Array}}" wx:key="index">{{item}}</view>
+            </view>
+            
+            <!-- 横线 -->
+            <view class="line"></view>
+            
+            <!-- 结果输入区域（逆向排列） -->
+            <view class="result-inputs">
+                <input  wx:for="{{correctAnswerArray}}" wx:key="index" type="number" class="result-input" maxlength="1" data-val="{{item}}" data-index="{{index}}" placeholder="?" bindinput="inputChange" /> 
+            </view>
+        </view>
 
-    <button id="nextQuestion" type="primary" bindtap="nextProblem">下一题</button>
-    <view id="feedback">{{feedbackMessage}}</view>
-  </view>
 
-
-
-
-<!-- 错题展示界面 -->
-<view wx:if="{{showWherePage==2}}" class="container">
-  <h1 class="title">🐶错题小本本📙</h1>
-  
-  <!-- 自适应高度容器（替代scroll-view） -->
-  <view class="questions-wrapper">
-    <block wx:for="{{wrongQuestions}}" wx:key="index">
-      <view class="question-card ">
-        <view class="question-text">{{item.question}} {{item.correctAnswer}} 你的答案： {{item.yourAnswer}}</view>
-
-      </view>
-    </block>
-  </view>
-  
-  <button class="restart-btn" open-type="getUserInfo" bindtap="restartQuiz">再来一次😠</button>
-</view>
-
+      <button id="nextQuestion" type="primary" bindtap="nextProblem">下一题</button>
+      <view id="feedback">{{feedbackMessage}}</view>
+	</view>
 
 </view>

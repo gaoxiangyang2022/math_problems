@@ -36,15 +36,25 @@ h1 { color: #2c3e50; font-size: 2.5rem; margin-bottom: 0.5rem; text-shadow: 1px 
 }
 /* 单个数字单元格 */
 .digit-cell {
-    width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
-    font-size: 2rem; font-weight: bold; font-family: 'Courier New', monospace;
-    background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px;
-    margin-left: 10px; /* 间隔 */
+  width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; font-weight: bold; font-family: 'Courier New', monospace;
+  background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px;
+  margin-left: 10px; /* 间隔 */
 }
 /* 运算符特殊样式 */
 .operator {
     font-size: 3rem; color: #e74c3c; font-weight: bold;
 }
+
+.selected {
+  animation: shake 0.7s;
+  background-color:#07c160;
+}
+@keyframes shake {
+  0% { background-color:#fff; }
+  100% { background-color:#07c160; }
+}
+
 /* 横线样式 */
 .line {
     width: 100%; height: 2px; background: #3498db; margin: 1rem 0;
@@ -52,7 +62,7 @@ h1 { color: #2c3e50; font-size: 2.5rem; margin-bottom: 0.5rem; text-shadow: 1px 
 }
 /* 结果输入区域 */
 .result-inputs {
-    display: flex; justify-content: flex-end; margin-top: 1rem;
+    display: flex; justify-content: flex-end; margin-top: 1rem;justify-content: flex-end;  flex-direction: row-reverse;
 }
 /* 输入框样式 */
 .result-input {
@@ -68,7 +78,41 @@ h1 { color: #2c3e50; font-size: 2.5rem; margin-bottom: 0.5rem; text-shadow: 1px 
 .feedback { text-align: center; margin-top: 1rem; min-height: 24px; font-size: 1.1rem; font-weight: bold; }
 .success { color: #2ecc71; }
 .error { color: #e74c3c; }
-@media (max-width: 600px) {
-    .digit-cell, .result-input { width: 40px; height: 40px; font-size: 1.8rem; }
-    .operator { font-size: 2.5rem; left: -35px; }
+
+
+
+#feedback {
+  height: 30px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.progress-container {
+  margin-bottom: 25px;
+  width: 100%;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #555;
+  font-size: 1rem;
+}
+
+.progress-bar {
+  height: 10px;
+  background: #f0f4ff;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: linear-gradient(to right, #6e8efb, #a777e3);
+  border-radius: 5px;
+  width: 0%;
+  transition: width 0.5s ease;
 }

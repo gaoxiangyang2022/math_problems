@@ -3,13 +3,13 @@
 
    <!-- 顶部标题 -->
    <view class="header">
-        <view class="title">🐰 数学学习乐园 🐼</view>
+        <view class="title">{{emo1}} 数学学习乐园 {{emo2}}</view>
         <view class="subtitle">选择你想练习的数学内容吧！</view>
     </view>
     
     <!-- 云朵装饰 -->
-    <view class="cloud cloud1"></view>
-    <view class="cloud cloud2"></view>
+    <view class="cloud cloud1">{{emo3}}</view>
+    <view class="cloud cloud2">{{emo4}}</view>
     
     <!-- 主要内容区域 -->
     <view class="grid-container">
@@ -25,13 +25,13 @@
             <view>多位数的加减法</view>
         </view>
         
-        <view class="grid-item" bind:tap="goToPage">
+        <view class="grid-item" bind:tap="goToMultip">
             <view class="icon">✖️</view>
             <view>乘法口决</view>
             <view>背诵乘法表</view>
         </view>
         
-        <view class="grid-item" bind:tap="goToPage">
+        <view class="grid-item" bind:tap="goToMult">
             <view class="icon">➗</view>
             <view>乘除口算</view>
             <view>乘法和除法练习</view>
@@ -51,8 +51,8 @@
     </view>
     
     <!-- 卡通动物 -->
-    <view class="cartoon-animal bunny"></view>
-    <view class="cartoon-animal viewanda"></view>
+    <view class="cartoon-animal bunny">{{emo1}}</view>
+    <view class="cartoon-animal panda">{{emo2}}</view>
     
     <!-- 底部 -->
     <view class="footer">

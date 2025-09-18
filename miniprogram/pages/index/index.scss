@@ -90,61 +90,14 @@ page {
 .bunny {
   top: 70px;
   right: 10px;
-  width: 60px;
-  height: 80px;
-  background-color: #fff;
-  border-radius: 50% 50% 45% 45%;
   position: absolute;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  font-size: 106rpx;
 }
-
-.bunny:before, .bunny:after {
-  content: '';
-  position: absolute;
-  background-color: #fff;
-  border-radius: 50%;
-  top: -15px;
-  width: 25px;
-  height: 30px;
-}
-
-.bunny:before {
-  left: 10px;
-  transform: rotate(-20deg);
-}
-
-.bunny:after {
-  right: 10px;
-  transform: rotate(20deg);
-}
-
 .panda {
+  font-size: 106rpx;
   bottom: 20px;
   left: 10px;
-  width: 70px;
-  height: 70px;
-  background-color: #fff;
-  border-radius: 50%;
   position: absolute;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-}
-
-.panda:before, .panda:after {
-  content: '';
-  position: absolute;
-  background-color: #2c2c54;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  top: 25px;
-}
-
-.panda:before {
-  left: 10px;
-}
-
-.panda:after {
-  right: 10px;
 }
 
 .cloud {
@@ -152,6 +105,7 @@ page {
   background-image: "../../static/img/cloud.png";
   opacity: 0.9;
   z-index: -1;
+  font-size: 96rpx;
 }
 
 .cloud1 {

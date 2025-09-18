@@ -1,4 +1,5 @@
 // pages/compute/addSub/index.ts
+import { MathOperationAnalyzer, AdditionStep, SubtractionStep } from '../../../utils/MathOperationAnalyzer';
 Page({
 
   /**
@@ -7,14 +8,23 @@ Page({
   data: {
     num1Array:[4,2,5],
     num2Array:[6,1,2],
+    num1Selected :10000,
+    num2Selected :10000,
     correctAnswerArray:[1,0,3,7],
-    userAnswerArray:[],
+    correctAnimationArray:[],
+    userAnswerArray:[0],
     showWherePage:0,
     currentRange: 10,
     currentTotal: 50,
     currentIndex: 1,
     wrongQuestions:[],
-    operator:'+'
+    inputFocus:0,
+    operator:'+',
+    isWrong: false,
+    userAnswer : "",
+    processOfProblemIndex : 0,
+    processSteps:[],
+    currentStep:{}
   },
 
   changeRange(e) {
@@ -42,7 +52,8 @@ Page({
 
   nextProblem() {
     this.setData({
-      userAnswer: ""
+      userAnswer: "",
+      inputFocus: 0
     });
 
     if (this.data.currentIndex > this.data.currentTotal) {
@@ -78,11 +89,13 @@ Page({
       }
       _currentProblem = `${num1} - ${num2} = `;
       _correctAnswer = num1 - num2;
+
+      console.log(_currentProblem,_correctAnswer)
     }
 
     const _num1Array = String(num1).split('').map(Number);
     const _num2Array = String(num2).split('').map(Number);
-    const _correctAnswerArray = String(_correctAnswer).split('').map(Number);
+    const _correctAnswerArray = String(_correctAnswer).split('').map(Number).reverse();
     
     this.setData({
       currentProblem: _currentProblem,
@@ -90,25 +103,121 @@ Page({
       num1Array: _num1Array,
       num2Array: _num2Array,
       correctAnswerArray: _correctAnswerArray,
+      userAnswerArray: _correctAnswerArray.map(() => null),
       operator: _operator
     });
   },
 
   
   inputChange(e) {
+
+    console.log(e.target.dataset)
     const _userAnswer = parseInt(e.detail.value);
-
-    if (this.data.timer) {
-      clearTimeout(this.data.timer);
+    const _dataSet = e.target.dataset
+    //如果用户当前输入的答案有误，设置答案错误
+    console.log("===",_dataSet.val,_userAnswer)
+    if(!this.data.isWrong && _dataSet.val != _userAnswer){
+      this.setData({
+        isWrong : true,
+      })
     }
+    var _userAnswerArray = this.data.userAnswerArray
+    _userAnswerArray[_dataSet.index] = _userAnswer
+    //保存用户答案
+    this.setData({
+      userAnswerArray : _userAnswerArray,
+      inputFocus : _dataSet.index+1,
+    })
 
-    const debounceTimer = setTimeout(() => {
-      this.checkAnswer();
-    }, this.data.debounce_time);
+    if(this.data.userAnswerArray.length-1 == _dataSet.index){
+      this.checkAnswer()
+    }
+  },
+
+  
+  checkAnswer() {
+
+  if (this.data.userAnswerArray.reverse().join('') != this.data.correctAnswerArray.reverse().join('')) {
+    var wqTmp = this.data.wrongQuestions
+    wqTmp.push({"question": this.data.currentProblem,"yourAnswer": this.data.userAnswerArray.reverse().join(''),"correctAnswer": this.data.correctAnswerArray.reverse().join('')})
+    this.setData({
+      feedbackMessage: `😢答错了！正确答案是 ${this.data.correctAnswerArray.reverse().join('')}`,
+      currentIndex: this.data.currentIndex + 1,
+      wrongQuestions: wqTmp
+    });
+    setTimeout(() => {
+      this.nextProblem();
+    }, 800);
+    } else {
+      this.setData({
+        feedbackMessage: "😏答对了！",
+        currentIndex: this.data.currentIndex + 1
+      });
+      this.nextProblem();
+    }
+  },
+
+  nextClick(){
+    if(this.data.correctAnswerArray.join("")==this.data.userAnswerArray.join("")){
+      this.setData({
+        isWrong : true,
+      })
+    }
+  },
+  beginProcess(){
+
+    //计算动画所需要的值，然后依次播放
+    if(this.data.operator=="+"){
+      // 加法计算
+      const addSteps = MathOperationAnalyzer.analyzeAddition(Number(this.data.num1Array.join("")), Number(this.data.num2Array.join("")));
+      this.setData({
+        processSteps:addSteps
+      })
+    }else{
+      // 减法计算
+      const subSteps = MathOperationAnalyzer.analyzeSubtraction(Number(this.data.num1Array.join("")), Number(this.data.num2Array.join("")));
+      this.setData({
+        processSteps:subSteps
+      })
+    }
+    this.setData({
+      processOfProblemIndex:0
+    })
+    this.processOfProblem()
+  },
+  processOfProblem(){
+    var index = this.data.processOfProblemIndex
+    var maxProcess = this.data.processSteps.length
+    if(index> maxProcess) return;
+    var step = this.data.processSteps[this.data.processSteps.length - 1 - index]
 
     this.setData({
-      userAnswer: _userAnswer,
-      timer: debounceTimer
-    });
+      currentStep:step
+    })
+    console.log(step)
+      var a = this.data.correctAnswerArray[index]
+      //选择第一个数的计算位
+      setTimeout(() => {this.setData({num1Selected: this.data.num1Array.length-1-index})}, 100);
+
+      //选择第二个数的计算位
+      setTimeout(() => {this.setData({num2Selected: this.data.num2Array.length-1-index})}, 800);
+
+      // if(step.operation == "subtraction"){
+      //   //是否需要借位？
+      //   if(step.borrowIn != 0){
+      //     var b_step = this.data.processSteps[this.data.processSteps.length - 2 - index]
+      //     console.log(b_step)
+      //   }
+      //   //是否有借位？
+      // }else{
+
+      // }
+
+
+      //清空选择位
+      setTimeout(() => {this.setData({num2Selected: 10000,num1Selected: 10000,})}, 1600);
+      this.setData({
+        processOfProblemIndex:this.data.processOfProblemIndex+1
+      })
   },
 })

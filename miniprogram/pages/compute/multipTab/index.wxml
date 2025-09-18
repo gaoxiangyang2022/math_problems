@@ -1,0 +1,31 @@
+<view class="header">
+  <h1>趣味乘法口诀学习</h1>
+  <view>点击乘法表中的单元格，查看图形化解释</view>
+</view>
+
+<view class="multiplication-container">
+  <scroll-view type="list" scroll-x enable-flex show-scrollbar="{{false}}" style="width: 100vw;">
+    <view class="multiplication-flex">
+      <view class="column" wx:for="{{multipData}}" wx:key="index">
+        <view class="cell" wx:for="{{item}}" wx:key="index" data-i="{{item.i}}" data-j="{{item.j}}" bind:tap="showExplanation">{{item.t}}</view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <view class="explanation-panel">
+    <h2 class="explanation-header">{{explanationHeader}}</h2>
+    <scroll-view type="list" scroll-x enable-flex show-scrollbar="{{false}}" style="width: 100vw;">
+    <view class="bunnies-container">
+      <!-- 小兔子图形生成 -->
+          <view class="bunny-group" wx:for="{{groupData}}" wx:key="index">
+            <view wx:for="{{item}}" wx:key="index" class="{{item.label?'group-label':'bunny'}}">{{item.t}}</view>
+          </view>
+      
+    </view>
+  </scroll-view>
+  </view>
+</view>
+
+<view class="footer">
+  <view>设计用于儿童乘法学习 | 趣味数学教育工具</view>
+</view>

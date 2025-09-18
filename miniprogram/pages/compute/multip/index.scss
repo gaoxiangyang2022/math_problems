@@ -1,0 +1,200 @@
+page{
+  justify-content: center;
+}
+.selecter {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 20rpx 0;
+  button {
+    flex: 1;
+    margin: 0 5rpx;
+    font-size: 28rpx;
+    color: #fff;
+    transition: all 0.3s;
+  }
+  button[type="default"] {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+  button[type="primary"] {
+    background-color: #07c160;
+  }
+}
+
+h1 {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  position: relative;
+  display: inline-block;
+}
+
+#problem {
+  font-size: 2.5rem;
+  text-align: center;
+  margin: 30px 0;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+input[type="number"] {
+  width: 120px;
+  height: 60px;
+  text-align: center;
+  font-size: 1.8rem;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s;
+}
+
+input[type="number"]:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+#feedback {
+  height: 30px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.progress-container {
+  margin-bottom: 25px;
+  width: 100%;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #555;
+  font-size: 1rem;
+}
+
+.progress-bar {
+  height: 10px;
+  background: #f0f4ff;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: linear-gradient(to right, #6e8efb, #a777e3);
+  border-radius: 5px;
+  width: 0%;
+  transition: width 0.5s ease;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 20px 15px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  #problem {
+    font-size: 2rem;
+    height: 70px;
+  }
+
+  input[type="number"] {
+    width: 90px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+
+  button {
+    padding: 10px;
+    font-size: 1rem;
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+.shake { animation: shake 0.7s; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 标题样式 */
+.title {
+  text-align: center;
+  color: #ff7b9c; /* 珊瑚粉 */
+  font-size: 32px;
+  margin: 20px 0 30px;
+  position: relative;
+}
+/* 题目容器（关键改进点） */
+.questions-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* 卡片间距 */
+  max-width: 90vh;
+  margin: 0 auto;
+}
+
+/* 题目卡片 */
+.question-card {
+  background: linear-gradient(to right, #ff9a9e, #fad0c4); /* 粉橙渐变 */
+  border-radius: 20px;
+  padding: 10px;
+  width: 100%;
+  box-shadow: 0 8px 25px rgba(255, 182, 193, 0.2); /* 柔和阴影 */
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+
+
+/* 题目文字 */
+.question-text {
+  font-size: 18px;
+  line-height: 1.6;
+  color: rgb(113, 113, 116);
+  margin-bottom: 10px;
+  padding-left: 10px;
+}
+
+/* 重新开始按钮 */
+.restart-btn {
+  display: block;
+  width: 80%;
+  margin: 30px auto;
+  background: linear-gradient(to right, #ff9a9e, #fad0c4); /* 粉橙渐变 */
+  border-radius: 50px;
+  color: rgb(112, 44, 44);
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 5px 15px rgba(255, 154, 158, 0.4);
+  border: none !important;
+  padding: 15px 0;
+}

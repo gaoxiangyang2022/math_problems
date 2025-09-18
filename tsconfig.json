@@ -23,7 +23,7 @@
   },
   "include": [
     "./**/*.ts"
-  ],
+, "miniprogram/utils/MathOperationAnalyzer.js"  ],
   "exclude": [
     "node_modules"
   ]

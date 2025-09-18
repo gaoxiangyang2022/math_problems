@@ -26,44 +26,13 @@
       </view>
     </view>
        
-        <!-- 竖式计算区域 -->
-        <view class="vertical-equation">
-            <!--计算动画演示 -->
-            <!-- <view class="number-row">
-                <view class="digit-cell" style="border-color: #f8f9fa; font-size: 1rem;"  wx:for="{{processSteps}}" wx:key="index">
-                  <text wx:if="item.carryOut">{{item.carryOut}}</text>
-                  <text wx:if="item.borrowOut">{{item.borrowOut}}</text>
-                  <text wx:if="item.value">{{item.value}}</text>
-                </view>
-            </view> -->
-
-            <!--数字1 -->
-            <view class="number-row">
-                <view wx:for="{{num1Array}}" wx:key="index" class="digit-cell {{index==num1Selected?'selected':''}}"  >{{item}}</view>
-            </view>
-            
-            <!-- 数字2 -->
-            <view class="number-row">
-                <!-- 计算符号 -->
-                <view class="digit-cell operator">{{operator}}</view>
-                <view wx:for="{{num2Array}}" wx:key="index" class="digit-cell {{index==num2Selected ? 'selected' : '' }}"  >{{item}}</view>
-            </view>
-            
-            <!-- 横线 -->
-            <view class="line"></view>
-            
-            <!-- 结果输入区域（逆向排列） -->
-            <view class="result-inputs">
-                <input  wx:for="{{correctAnswerArray}}" wx:key="index" type="number" class="result-input" maxlength="1" data-val="{{item}}" data-index="{{index}}" placeholder="{{['个','十','百','千','万'][index]}}" bindinput="inputChange" focus="{{inputFocus==index}}"  value="{{userAnswer}}" /> 
-            </view>
-        </view>
+    <view class="selecter {{errorShake? ' shake' : ''}}">
+      <view id="problem">{{currentProblem}}</view>
+      <view style="display: flex;line-height: 80rpx; font-size: 32px;font-weight: 800;"> ? = <input type="number" bindinput="inputChange" value="{{userAnswer}}" focus="{{inputFocus}}" /></view>
+    </view>
 
 
       <button id="nextQuestion" type="primary" bindtap="nextProblem">下一题</button>
-      <button bindtap="beginProcess" type="default" size="mini">解题过程</button>
-             <!--计算演示 -->
-        <view bind:tap="processOfProblem" wx:if="currentStep.description">{{currentStep.description}}  <text>点击看一步--></text></view>
-
       <view id="feedback">{{feedbackMessage}}</view>
 	</view>
 

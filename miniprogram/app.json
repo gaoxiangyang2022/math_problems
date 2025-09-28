@@ -1,7 +1,6 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs",
     "pages/compute/simpleAddSub/index",
     "pages/compute/addSub/index",
     "pages/compute/multipTab/index",

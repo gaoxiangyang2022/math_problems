@@ -53,6 +53,11 @@ Component({
         url: '/pages/compute/mixAddSub/index'
       })
     },
+    goToMixMultip(){
+      wx.navigateTo({
+        url: '/pages/compute/mixMultip/index'
+      })
+    },
     goAboutFun(){
       wx.navigateTo({
         url: '/pages/about/index'

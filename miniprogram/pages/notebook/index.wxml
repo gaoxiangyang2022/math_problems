@@ -2,6 +2,7 @@
  <!-- 竖式计算区域 -->
 <view class="vertical-equation">
     <!--计算动画演示 -->
+    <h1>解题过程演示--正在开发...</h1>
     <view class="number-row">
         <view wx:for="{{addSteps}}" wx:key="index" class="digit-cell"  >{{item.carryOut}}</view>
     </view>

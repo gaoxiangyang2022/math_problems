@@ -9,7 +9,8 @@
     "pages/compute/tenFun/index",
     "pages/about/index",
     "pages/compute/mixAddSub/index",
-    "pages/notebook/index"
+    "pages/notebook/index",
+    "pages/compute/mixMultip/index"
   ],
   "window": {
     "navigationBarTextStyle": "black",

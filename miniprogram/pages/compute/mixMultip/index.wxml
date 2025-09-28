@@ -1,0 +1,23 @@
+<!-- 选择界面 -->
+<view wx:if="{{showWherePage==0}}" class="container">
+  <range-total bind:beginTest="startTest" range="{{false}}"></range-total>
+</view>
+
+  <view wx:if="{{showWherePage==1}}" class="container">
+    
+    <progress-bar index="{{currentIndex}}" total="{{currentTotal}}" wrongNum="{{wrongQuestions.length}}"></progress-bar>
+
+    <view id="feedback">{{feedbackMessage}}</view>
+    <view class="problem {{errorShake? ' shake' : ''}}">
+      <view id="problem">{{currentProblem}}</view>
+      <view class="question-ans"> ? = <input type="number" bindinput="inputChange" value="{{userAnswer}}" focus="{{inputFocus}}" /></view>
+    </view>
+
+
+      <button id="nextQuestion" type="primary" bindtap="nextProblem">下一题</button>
+     
+	</view>
+ <!-- 错题本区域 -->
+ <view wx:if="{{showWherePage==2}}" class="container">
+    <wrong-list wrongList="{{wrongQuestions}}"></wrong-list>
+ </view>

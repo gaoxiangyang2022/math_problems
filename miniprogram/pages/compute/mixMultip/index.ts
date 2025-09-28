@@ -1,24 +1,36 @@
-import { getAddSubProblem } from '../../../utils/util';
+import { getComplexMultipProblem } from '../../../utils/util';
 Page({
+
+  /**
+   * 页面的初始数据
+   */
   data: {
-    currentRange: 10,
+    isWrong: false,
+    processOfProblemIndex : 0,
+
     currentTotal: 50,
-    currentProblem: "请选择难度开始练习",
-    correctAnswer: 0,
     currentIndex: 1,
-    userAnswer: "",
-    inputFocus: false,
-    lastInputTime: 0,
+    wrongQuestions:[],
+    showWherePage:0,
+
+    userAnswer : "",
     timer: 0,
-    debounce_time: 900,
+    debounce_time:700,
+    inputFocus:false,
     errorShake: false,
-    wrongQuestions: [],
-    feedbackMessage: "",
-    showWherePage: 0
+    nums: [2,3,4,5,6,7,8,9]
   },
-  startTest(e) {
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad() {
+
+  },
+
+
+  startTest(e) {    
     this.setData({
-      currentRange:e.detail.range,
       currentTotal:e.detail.total,
       currentIndex: 1,
       wrongQuestions: [],
@@ -28,28 +40,31 @@ Page({
   },
 
   generateNewProblem() {
-    let _p = getAddSubProblem(this.data.currentRange)
+    let p_obj = getComplexMultipProblem()
     this.setData({
-      currentProblem: _p.problem,
-      correctAnswer: _p.answer,
+      currentProblem: p_obj.problem,
+      correctAnswer: p_obj.answer,
       inputFocus: true
     });
   },
-
+ 
   inputChange(e) {
     const _userAnswer = parseInt(e.detail.value);
     if (this.data.timer) {
       clearTimeout(this.data.timer);
     }
+
     const debounceTimer = setTimeout(() => {
       this.checkAnswer();
     }, this.data.debounce_time);
+
     this.setData({
       userAnswer: _userAnswer,
       timer: debounceTimer
     });
   },
 
+  
   checkAnswer() {
     if (isNaN(this.data.userAnswer)) {
       this.setData({
@@ -95,10 +110,4 @@ Page({
     });
   },
 
-  restartQuiz() {
-    this.setData({
-      showWherePage: 0,
-      currentProblem: "请选择难度开始练习"
-    });
-  }
-});
+})

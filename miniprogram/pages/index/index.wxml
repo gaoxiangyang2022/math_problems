@@ -45,7 +45,7 @@
             <view>加减混合计算的练习</view>
         </view>
 
-        <view class="grid-item" bind:tap="goToPage">
+        <view class="grid-item" bind:tap="goToMixMultip">
             <view class="icon">🔡</view>
             <view>乘与加减混合</view>
             <view>乘法与加减混合计算的练习</view>

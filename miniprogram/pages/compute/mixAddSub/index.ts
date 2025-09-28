@@ -1,4 +1,4 @@
-import { getComplexAddSubNums } from '../../../utils/util';
+import { getComplexAddSubProblem } from '../../../utils/util';
 Page({
   data: {
     currentRange: 10,
@@ -29,7 +29,7 @@ Page({
   },
 
   generateNewProblem() {
-    let p_obj = getComplexAddSubNums(this.data.currentRange)
+    let p_obj = getComplexAddSubProblem(this.data.currentRange)
     this.setData({
       currentProblem: p_obj.problem,
       correctAnswer: p_obj.answer,

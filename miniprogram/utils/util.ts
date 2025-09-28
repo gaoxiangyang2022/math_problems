@@ -27,13 +27,23 @@ const getNumsByRange = (range: number) => {
   
   return arr;
 }
+const getNumsByMultip = () => {
+  const arr = [2,3,4,5,6,7,8,9];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  
+  return arr;
+}
 
 /**
- * 生成 num1 = num2 + num3
+ * 生成算式
+ * 生成加or减的算式
  * 用于加法与减法的口算计算
  * @param range 生成值的范围
  */
-export const getAddSubNums = (range: number) => {
+export const getAddSubProblem = (range: number) => {
   const isAddition = Math.random() > 0.5;
   var nums = getNumsByRange(range);
   var num1 = Math.max(nums[0],nums[1],nums[2])
@@ -46,10 +56,11 @@ export const getAddSubNums = (range: number) => {
 }
 
 /**
+ * 生成算式
  * 生成连加连减的算式
  * @param range 生成数字的范围
  */
-export const getComplexAddSubNums = (range: number) => {
+export const getComplexAddSubProblem = (range: number) => {
   var nums = getNumsByRange(range);
   var num1 = Math.max(nums[0],nums[1])
   var num2 = Math.min(nums[0],nums[1])
@@ -64,22 +75,94 @@ export const getComplexAddSubNums = (range: number) => {
 }
 
 const getProblem = (num1: number,num2: number,num3: number,isAddFirst: boolean) => {
-  const indexArray = [0,1,2,3].sort(()=>Math.random()-0.5)
+  const _index = getNumsByRange(4)[0]-1
   var answer = 0
   if(isAddFirst){
-    var num4 = num1+num2-num3
-    const nums = [num1,num2,num3,num4]
-    answer = nums[indexArray[0]]
-    nums[indexArray[0]] = "?"
+    const nums = [num1,num2,num3,num1+num2-num3]
+    answer = nums[_index]
+    nums[_index] = "?"
     return {problem : `${nums[0]} + ${nums[1]} - ${nums[2]} = ${nums[3]}`,
     answer:answer}
   }else{
-    var num4 = num1-num2+num3
-    const nums = [num1,num2,num3,num4]
-    answer = nums[indexArray[0]]
-    nums[indexArray[0]] = "?"
+    const nums = [num1,num2,num3,num1-num2+num3]
+    answer = nums[_index]
+    nums[_index] = "?"
     return {problem : `${nums[0]} - ${nums[1]} + ${nums[2]} = ${nums[3]}`,
     answer:answer}
+  }
+}
+
+
+/**
+ * 生成算式
+ * 生成乘法或除法算式
+ * @param
+ */
+export const getMultipProblem = () => {
+  var multN1 = getNumsByMultip();
+  var multN2 = getNumsByMultip();
+  const rnums = [multN1[1],multN2[2],multN1[1]*multN2[2]]
+  const _index = getNumsByRange(3)[0]-1;
+  var _answer = rnums[_index]
+  rnums[_index] = "?"
+  return {
+    problem: `${rnums[0]} * ${rnums[1]} = ${rnums[2]}`,
+    answer: _answer
+  }
+  
+}
+
+/**
+ * 生成算式
+ * 生成乘法与加减混合算式
+ * @param
+ */
+export const getComplexMultipProblem = () => {
+  var multN1 = getNumsByMultip();
+  var multN2 = getNumsByMultip();
+  var addN = getNumsByRange(100);
+  const isMultFirst = addN[9]%2==0;
+  const isAdd = addN[5]%2==0;
+  const _index = getNumsByRange(4)[0]-1;
+
+  if(isMultFirst){
+    if(isAdd){//a*b+c
+      const rnums = [multN1[1],multN2[2],addN[0],multN1[1]*multN2[2]+addN[0]]
+      var _answer = rnums[_index]
+      rnums[_index] = "?"
+      return {
+        problem: `${rnums[0]} * ${rnums[1]} + ${rnums[2]} = ${rnums[3]}`,
+        answer: _answer
+      }
+    }else{    //a*b-c  
+      const _r =addN.filter(n => n < multN1[1]*multN2[2])[0]
+      const rnums = [multN1[1] , multN2[2] , _r , (multN1[1]*multN2[2]-_r)]
+      var _answer = rnums[_index]
+      rnums[_index] = "?"
+      return {
+        problem: `${rnums[0]} * ${rnums[1]} - ${rnums[2]} = ${rnums[3]}`,
+        answer: _answer
+      }
+    }
+  }else{
+    if(isAdd){//a+b*c
+      const rnums = [addN[0],multN1[1],multN2[2],addN[0]+multN1[1]*multN2[2]]
+      var _answer = rnums[_index]
+      rnums[_index] = "?"
+      return {
+        problem: `${rnums[0]} + ${rnums[1]} * ${rnums[2]} = ${rnums[3]}`,
+        answer: _answer
+      }
+    }else{//a-b*c
+      const _r =addN.filter(n => n > multN1[1]*multN2[2])[0]
+      const rnums = [ _r , multN1[1] , multN2[2] , (_r - multN1[1]*multN2[2])]
+      var _answer = rnums[_index]
+      rnums[_index] = "?"
+      return {
+        problem: `${rnums[0]} - ${rnums[1]} * ${rnums[2]} = ${rnums[3]}`,
+        answer: _answer
+      }
+    }
   }
 }
 

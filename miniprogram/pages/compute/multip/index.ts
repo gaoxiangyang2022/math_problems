@@ -1,11 +1,10 @@
-// pages/compute/multip/index.ts
+import { getMultipProblem } from '../../../utils/util';
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    operator:'x',
     isWrong: false,
     processOfProblemIndex : 0,
 
@@ -19,7 +18,6 @@ Page({
     debounce_time:700,
     inputFocus:false,
     errorShake: false,
-    nums: [2,3,4,5,6,7,8,9]
   },
 
   /**
@@ -41,25 +39,13 @@ Page({
   },
 
   generateNewProblem() {
-    const isMul = Math.random() > 0.5;
-    let num1 = this.getRandomNum();
-    let num2 = this.getRandomNum();
+    let p_obj = getMultipProblem()
     this.setData({
-      currentProblem: isMul ? `${num1} x ${num2} = ?` : `${num1} x ? = ${num1 * num2}`,
-      correctAnswer: isMul ? num1 * num2 : num2,
-      operator: isMul?"x":'/',
+      currentProblem: p_obj.problem,
+      correctAnswer: p_obj.answer,
       inputFocus: true
     });
-  },
-  getRandomNum() {
-    const _nums = [...this.data.nums].sort(()=>Math.random()-0.5)
-    var index = Math.floor(Math.random() * 8);
-    if(index>7){ index = index -7}
-    return _nums[index]
-  },
-
-
-  
+  },  
   inputChange(e) {
     const _userAnswer = parseInt(e.detail.value);
     if (this.data.timer) {

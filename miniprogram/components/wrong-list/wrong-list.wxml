@@ -1,5 +1,5 @@
 <view wx:if="{{wrongList.length>0}}">
-  <h1 class="title">🐶错题小本本📙</h1>
+  <h1 class="title">{{emojiStr[0]}}错题小本本📙</h1>
   <view class="questions-wrapper">
     <block wx:for="{{wrongList}}" wx:key="index">
       <view class="question-card ">
@@ -15,20 +15,20 @@
   </view>
         
   <view style="text-align: center;">
-    <h1 class="animate-bounce">太棒了！</h1>
-    <view >你答对了所有题目！<span >🎉</span></view>
+    <h1 class="animate-bounce" bind:tap="changeEmlji">太棒了！</h1>
+    <view >{{guli[0]}}</view>
     
     <view class="good-job">
         <view class="good-job-item">
-            <view class="item-icon item-c1">🎊</view>
+            <view class="item-icon item-c1">{{emojiStr[2]}}</view>
             <p >完美表现</p>
         </view>
         <view class="good-job-item">
-            <view class="item-icon item-c2">⭐</view>
+            <view class="item-icon item-c2">{{emojiStr[3]}}</view>
             <p >满分成就</p>
         </view>
         <view class="good-job-item">
-            <view class="item-icon item-c3">✨</view>
+            <view class="item-icon item-c3">{{emojiStr[4]}}</view>
             <p>庆祝时刻</p>
         </view>
       </view>

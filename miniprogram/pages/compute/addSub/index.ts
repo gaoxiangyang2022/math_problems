@@ -20,11 +20,11 @@ Page({
     wrongQuestions:[],
     inputFocus:0,
     operator:'+',
-    isWrong: false,
     userAnswer : "",
     processOfProblemIndex : 0,
     processSteps:[],
-    currentStep:{}
+    currentStep:{},
+    errorShake:false
   },
 
   changeRange(e) {
@@ -52,8 +52,10 @@ Page({
 
   nextProblem() {
     this.setData({
+      feedbackMessage: "",
       userAnswer: "",
-      inputFocus: 0
+      inputFocus: 0,
+      errorShake:false
     });
 
     if (this.data.currentIndex > this.data.currentTotal) {
@@ -113,27 +115,21 @@ Page({
 
   
   inputChange(e) {
-
     console.log(e.target.dataset)
-    const _userAnswer = parseInt(e.detail.value);
-    const _dataSet = e.target.dataset
-    //如果用户当前输入的答案有误，设置答案错误
-    console.log("===",_dataSet.val,_userAnswer)
-    if(!this.data.isWrong && _dataSet.val != _userAnswer){
+    if(this.isValidNumber(e.detail.value)){
+      const _userAnswer = parseInt(e.detail.value);
+      const _dataSet = e.target.dataset
+      var _userAnswerArray = this.data.userAnswerArray
+      _userAnswerArray[_dataSet.index] = _userAnswer
+      //保存用户答案
       this.setData({
-        isWrong : true,
+        userAnswerArray : _userAnswerArray,
+        inputFocus : _dataSet.index+1,
       })
-    }
-    var _userAnswerArray = this.data.userAnswerArray
-    _userAnswerArray[_dataSet.index] = _userAnswer
-    //保存用户答案
-    this.setData({
-      userAnswerArray : _userAnswerArray,
-      inputFocus : _dataSet.index+1,
-    })
 
-    if(this.data.userAnswerArray.length-1 == _dataSet.index){
-      this.checkAnswer()
+      if(this.data.userAnswerArray.length-1 == _dataSet.index){
+        this.checkAnswer()
+      }
     }
   },
 
@@ -146,29 +142,17 @@ Page({
     this.setData({
       feedbackMessage: `😢答错了！正确答案是 ${this.data.correctAnswerArray.reverse().join('')}`,
       currentIndex: this.data.currentIndex + 1,
-      wrongQuestions: wqTmp
+      wrongQuestions: wqTmp,
+      errorShake:true
     });
-    setTimeout(() => {
-      this.nextProblem();
-    }, 800);
     } else {
       this.setData({
-        feedbackMessage: "😏答对了！",
         currentIndex: this.data.currentIndex + 1
       });
       this.nextProblem();
     }
   },
-
-  nextClick(){
-    if(this.data.correctAnswerArray.join("")==this.data.userAnswerArray.join("")){
-      this.setData({
-        isWrong : true,
-      })
-    }
-  },
   beginProcess(){
-
     //计算动画所需要的值，然后依次播放
     if(this.data.operator=="+"){
       // 加法计算
@@ -223,4 +207,15 @@ Page({
         processOfProblemIndex:this.data.processOfProblemIndex+1
       })
   },
+  
+isValidNumber(value) {
+  if(value.length>0){
+    const num = Number(value);
+    console.log(num,value)
+    return !isNaN(num);
+  }else{
+    return false
+  }
+
+},
 })

@@ -49,13 +49,18 @@ export const getComplexAddSubNums = (range: number) => {
   var nums = getNumsByRange(range);
   var num1 = Math.max(nums[0],nums[1])
   var num2 = Math.min(nums[0],nums[1])
+  const isAddFirst = Math.random() > 0.5;
   var num3 = nums[2]
-  return getProblem(num1,num2,num3)
+  if(isAddFirst&&num1+num2<num3){
+    var na = nums.filter(n=>(num1+num2)>n)
+    num3 = na[0]
+  }
+  
+  return getProblem(num1,num2,num3,isAddFirst)
 }
 
-const getProblem = (num1: number,num2: number,num3: number) => {
+const getProblem = (num1: number,num2: number,num3: number,isAddFirst: boolean) => {
   const indexArray = [0,1,2,3].sort(()=>Math.random()-0.5)
-  const isAddFirst = Math.random() > 0.5;
   var answer = 0
   if(isAddFirst){
     var num4 = num1+num2-num3

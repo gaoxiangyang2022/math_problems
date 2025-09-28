@@ -20,15 +20,11 @@ width: 50px; height: 50px; display: flex; align-items: center; justify-content: 
 font-size: 2rem; font-weight: bold; font-family: 'Courier New', monospace;
 background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 8px;
 margin-left: 10px; /* 间隔 */
+transition: all 0.4s ease-in-out;
 }
 /* 运算符特殊样式 */
 .operator {
   font-size: 3rem; color: #e74c3c; font-weight: bold;
-}
-
-.selected {
-animation: shake 0.7s;
-background-color:#07c160;
 }
 
 /* 横线样式 */
@@ -39,4 +35,7 @@ background-color:#07c160;
 /* 结果输入区域 */
 .result-inputs {
   display: flex; justify-content: flex-end; margin-top: 1rem;justify-content: flex-end;  flex-direction: row-reverse;
+}
+.hide{
+  display: none;
 }

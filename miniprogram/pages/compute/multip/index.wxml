@@ -1,4 +1,3 @@
-<view>
 <!-- 选择界面 -->
 <view wx:if="{{showWherePage==0}}" class="container">
     <h1>请选择出多少道题目呢？</h1>
@@ -15,25 +14,26 @@
   </view>
 
   <view wx:if="{{showWherePage==1}}" class="container">
-
     <view class="progress-container">
       <view class="progress-info">
         <span>进度: <span id="progressText">{{currentIndex}}/{{currentTotal}}</span></span>
         <span>错误: <span id="wrongCount">{{wrongQuestions.length}}</span></span>
       </view>
       <view class="progress-bar">
-        <view class="progress" style="width: {{(currentIndex / currentTotal) * 100}}%;"></view>
+        <view class="progress" style="width: {{(currentIndex / currentTotal) * 100}}%;">
+          <view class="progress-icon">🚀</view>
+        </view>
       </view>
     </view>
-       
-    <view class="selecter {{errorShake? ' shake' : ''}}">
+    <view id="feedback">{{feedbackMessage}}</view>
+    <view class="problem {{errorShake? ' shake' : ''}}">
       <view id="problem">{{currentProblem}}</view>
-      <view style="display: flex;line-height: 80rpx; font-size: 32px;font-weight: 800;"> ? = <input type="number" bindinput="inputChange" value="{{userAnswer}}" focus="{{inputFocus}}" /></view>
+      <view class="question-ans"> ? = <input type="number" bindinput="inputChange" value="{{userAnswer}}" focus="{{inputFocus}}" /></view>
     </view>
 
 
       <button id="nextQuestion" type="primary" bindtap="nextProblem">下一题</button>
-      <view id="feedback">{{feedbackMessage}}</view>
+     
 	</view>
 
  <!-- 错题本区域 -->
@@ -51,5 +51,4 @@
   </view>
   
   <button class="restart-btn" open-type="getUserInfo" bindtap="restartQuiz">再来一次😠</button>
-</view>
 </view>

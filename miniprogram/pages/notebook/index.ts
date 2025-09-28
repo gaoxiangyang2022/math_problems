@@ -1,4 +1,5 @@
 // pages/notebook/index.ts
+import { MathOperationAnalyzer, AdditionStep, SubtractionStep } from '../../utils/MathOperationAnalyzer';
 Page({
 
   /**
@@ -7,14 +8,21 @@ Page({
   data: {
     num1Array:[4,2,5],
     num2Array:[6,1,8],
+    answerArray:[1,0,4,3],
     operator:'+',
+    animation:wx.createAnimation(),
+    addSteps:[]
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad() {
-
+    const addSteps = MathOperationAnalyzer.analyzeAddition(Number(this.data.num1Array.join("")), Number(this.data.num2Array.join("")));
+    console.log(addSteps)
+    this.setData({
+      addSteps:addSteps
+    })
   },
 
   /**
@@ -59,10 +67,7 @@ Page({
 
   },
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
+  showAnimation() {
+    
   }
 })

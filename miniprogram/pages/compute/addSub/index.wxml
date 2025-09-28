@@ -22,7 +22,9 @@
         <span>错误: <span id="wrongCount">{{wrongQuestions.length}}</span></span>
       </view>
       <view class="progress-bar">
-        <view class="progress" style="width: {{(currentIndex / currentTotal) * 100}}%;"></view>
+        <view class="progress" style="width: {{(currentIndex / currentTotal) * 100}}%;">
+          <view class="progress-icon">🚀</view>
+        </view>
       </view>
     </view>
        
@@ -53,7 +55,7 @@
             <view class="line"></view>
             
             <!-- 结果输入区域（逆向排列） -->
-            <view class="result-inputs">
+            <view class="result-inputs {{errorShake? ' shake' : ''}}">
                 <input  wx:for="{{correctAnswerArray}}" wx:key="index" type="number" class="result-input" maxlength="1" data-val="{{item}}" data-index="{{index}}" placeholder="{{['个','十','百','千','万'][index]}}" bindinput="inputChange" focus="{{inputFocus==index}}"  value="{{userAnswer}}" /> 
             </view>
         </view>

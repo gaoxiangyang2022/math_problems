@@ -18,6 +18,7 @@ Page({
     timer: 0,
     debounce_time:700,
     inputFocus:false,
+    errorShake: false,
     nums: [2,3,4,5,6,7,8,9]
   },
 
@@ -86,7 +87,6 @@ Page({
       });
     } else if (this.data.userAnswer === this.data.correctAnswer) {
       this.setData({
-        feedbackMessage: "😏答对了！",
         currentIndex: this.data.currentIndex + 1
       });
       this.nextProblem();
@@ -96,18 +96,17 @@ Page({
       this.setData({
         feedbackMessage: `😢答错了！正确答案是 ${this.data.correctAnswer}`,
         currentIndex: this.data.currentIndex + 1,
-        wrongQuestions: wqTmp
+        wrongQuestions: wqTmp,
+        errorShake:true
       });
-     
-      setTimeout(() => {
-        this.nextProblem();
-      }, 800);
     }
   },
 
   nextProblem() {
     this.setData({
-      userAnswer: ""
+      feedbackMessage:"",
+      userAnswer: "",
+      errorShake:false
     });
 
     if (this.data.currentIndex > this.data.currentTotal) {

@@ -13,28 +13,6 @@ page{
   text-align: center;
 }
 
-.selecter {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  margin: 20rpx 0;
-  button {
-    flex: 1;
-    margin: 0 5rpx;
-    font-size: 28rpx;
-    color: #fff;
-    transition: all 0.3s;
-  }
-  button[type="default"] {
-    background-color: #f0f0f0;
-    color: #333;
-  }
-  button[type="primary"] {
-    background-color: #07c160;
-  }
-}
 /* 竖式容器 */
 .vertical-equation {
     display: flex; flex-direction: column; align-items: flex-end; margin-bottom: 2rem;
@@ -89,41 +67,3 @@ page{
 .feedback { text-align: center; margin-top: 1rem; min-height: 24px; font-size: 1.1rem; font-weight: bold; }
 .success { color: #2ecc71; }
 .error { color: #e74c3c; }
-
-
-
-#feedback {
-  height: 30px;
-  text-align: center;
-  font-size: 1.1rem;
-  font-weight: bold;
-  margin: 15px 0;
-}
-
-.progress-container {
-  margin-bottom: 25px;
-  width: 100%;
-}
-
-.progress-info {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  color: #555;
-  font-size: 1rem;
-}
-
-.progress-bar {
-  height: 10px;
-  background: #f0f4ff;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.progress {
-  height: 100%;
-  background: linear-gradient(to right, #6e8efb, #a777e3);
-  border-radius: 5px;
-  width: 0%;
-  transition: width 0.5s ease;
-}

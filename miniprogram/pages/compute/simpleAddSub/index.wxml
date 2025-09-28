@@ -31,16 +31,19 @@
         <span>错误: <span id="wrongCount">{{wrongQuestions.length}}</span></span>
       </view>
       <view class="progress-bar">
-        <view class="progress" style="width: {{(currentIndex / currentTotal) * 100}}%;"></view>
+        <view class="progress" style="width: {{(currentIndex / currentTotal) * 100}}%;">
+          <view class="progress-icon">🚀</view>
+        </view>
       </view>
     </view>
-    <view class="selecter {{errorShake? ' shake' : ''}}">
+    <view id="feedback">{{feedbackMessage}}</view>
+    <view class="problem {{errorShake? ' shake' : ''}}">
       <view id="problem">{{currentProblem}}</view>
-      <view><input type="number" bindinput="inputChange" value="{{userAnswer}}" focus="{{inputFocus}}" /></view>
+      <view class="question-ans"><input type="number" bindinput="inputChange" value="{{userAnswer}}" focus="{{inputFocus}}" /></view>
     </view>
 
     <button id="nextQuestion" type="primary" bindtap="nextProblem">下一题</button>
-    <view id="feedback">{{feedbackMessage}}</view>
+    
   </view>
 
 

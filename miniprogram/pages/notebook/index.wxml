@@ -1,23 +1,27 @@
+
  <!-- 竖式计算区域 -->
 <view class="vertical-equation">
     <!--计算动画演示 -->
+    <view class="number-row">
+        <view wx:for="{{addSteps}}" wx:key="index" class="digit-cell"  >{{item.carryOut}}</view>
+    </view>
     <!--数字1 -->
     <view class="number-row">
-        <view wx:for="{{num1Array}}" wx:key="index" class="digit-cell {{index==num1Selected?'selected':''}}"  >{{item}}</view>
+        <view wx:for="{{num1Array}}" wx:key="index" class="digit-cell"  >{{item}}</view>
     </view>
     
     <!-- 数字2 -->
     <view class="number-row">
         <!-- 计算符号 -->
         <view class="digit-cell operator">{{operator}}</view>
-        <view wx:for="{{num2Array}}" wx:key="index" class="digit-cell {{index==num2Selected ? 'selected' : '' }}"  >{{item}}</view>
+        <view wx:for="{{num2Array}}" wx:key="index" class="digit-cell"  >{{item}}</view>
     </view>
     
     <!-- 横线 -->
     <view class="line"></view>
     
     <!-- 结果输入区域（逆向排列） -->
-    <view class="result-inputs">
-        <input  wx:for="{{correctAnswerArray}}" wx:key="index" type="number" class="result-input" maxlength="1" data-val="{{item}}" data-index="{{index}}" placeholder="{{['个','十','百','千','万'][index]}}" bindinput="inputChange" focus="{{inputFocus==index}}"  value="{{userAnswer}}" /> 
+    <view class="number-row">
+      <view wx:for="{{answerArray}}" wx:key="index" class="digit-cell"  >{{item}}</view>
     </view>
 </view>

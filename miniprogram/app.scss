@@ -4,6 +4,13 @@ page {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
+h1 {
+  color: #2c3e50;
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  position: relative;
+  display: inline-block;
+}
 
 .container {
   padding: 15px;
@@ -15,3 +22,128 @@ page {
   overflow: hidden;
 }
 
+
+.progress-container {
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #555;
+  font-size: 1rem;
+}
+
+.progress-bar {
+  height: 10px;
+  background: #f0f4ff;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: linear-gradient(to right, #6e8efb, #a777e3);
+  border-radius: 5px;
+  width: 0%;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.progress-icon{
+  position: absolute;
+  right: 0px;
+  font-size: 12px;
+  transform: rotate(45deg);
+  line-height: 19rpx;
+  z-index: 200;
+}
+
+.selecter {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 20rpx 0;
+  button {
+    flex: 1;
+    margin: 0 5rpx;
+    font-size: 28rpx;
+    color: #fff;
+    transition: all 0.3s;
+  }
+  button[type="default"] {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+  button[type="primary"] {
+    background-color: #07c160;
+  }
+}
+
+
+.problem {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 20rpx 0;
+  #problem {
+    font-size: 2.5rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2c3e50;
+    font-weight: bold;
+  }
+  .question-ans{
+    display: flex;
+    line-height: 80rpx; 
+    font-size: 2.5rem;
+    font-weight: 800;
+    input[type="number"] {
+      width: 100px;
+      height: 40px;
+      text-align: center;
+      font-size: 1.8rem;
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      outline: none;
+      transition: all 0.3s;
+    }
+  }
+}
+
+#feedback {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px);}
+  40%, 80% { transform: translateX(8px); }
+}
+@keyframes breathe {
+  0%, 100% {
+      opacity: 0.8;
+      text-shadow: 
+          0 0 5px rgba(0, 255, 255, 0.5),
+          0 0 10px rgba(0, 255, 255, 0.3);
+  }
+  50% {
+      opacity: 1;
+      text-shadow: 
+          0 0 15px rgba(255, 51, 0, 0.8),
+          0 0 30px rgba(255, 187, 0, 0.5),
+          0 0 45px rgba(202, 231, 37, 0.3);
+  }
+}
+.shake { animation: shake 0.7s,breathe 1s ease-in-out infinite; }

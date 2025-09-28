@@ -1,5 +1,5 @@
 {
-  "libVersion": "2.32.3",
+  "libVersion": "3.10.0",
   "projectname": "mongoplay",
   "setting": {
     "urlCheck": true,

@@ -14,7 +14,6 @@ Page({
     correctAnimationArray:[],
     userAnswerArray:[0],
     showWherePage:0,
-    currentRange: 10,
     currentTotal: 50,
     currentIndex: 1,
     wrongQuestions:[],
@@ -27,22 +26,9 @@ Page({
     errorShake:false
   },
 
-  changeRange(e) {
-    const { range } = e.currentTarget.dataset;
+  startTest(e) {    
     this.setData({
-      currentRange: range
-    });
-  },
-
-  changeTotal(e) {
-    const { total } = e.currentTarget.dataset;
-    this.setData({
-      currentTotal: total
-    });
-  },
-
-  startTest() {
-    this.setData({
+      currentTotal:e.detail.total,
       currentIndex: 1,
       wrongQuestions: [],
       showWherePage: 1
@@ -145,6 +131,9 @@ Page({
       wrongQuestions: wqTmp,
       errorShake:true
     });
+    setTimeout(() => {
+      this.nextProblem();
+    }, 1500);
     } else {
       this.setData({
         currentIndex: this.data.currentIndex + 1

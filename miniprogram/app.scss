@@ -4,13 +4,7 @@ page {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
-h1 {
-  color: #2c3e50;
-  font-size: 1.8rem;
-  margin-bottom: 15px;
-  position: relative;
-  display: inline-block;
-}
+
 
 .container {
   padding: 15px;
@@ -21,69 +15,6 @@ h1 {
   width: 95%;
   overflow: hidden;
 }
-
-
-.progress-container {
-  margin-bottom: 5px;
-  width: 100%;
-}
-
-.progress-info {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  color: #555;
-  font-size: 1rem;
-}
-
-.progress-bar {
-  height: 10px;
-  background: #f0f4ff;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.progress {
-  height: 100%;
-  background: linear-gradient(to right, #6e8efb, #a777e3);
-  border-radius: 5px;
-  width: 0%;
-  transition: width 0.5s ease;
-  position: relative;
-}
-
-.progress-icon{
-  position: absolute;
-  right: 0px;
-  font-size: 12px;
-  transform: rotate(45deg);
-  line-height: 19rpx;
-  z-index: 200;
-}
-
-.selecter {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  margin: 20rpx 0;
-  button {
-    flex: 1;
-    margin: 0 5rpx;
-    font-size: 28rpx;
-    color: #fff;
-    transition: all 0.3s;
-  }
-  button[type="default"] {
-    background-color: #f0f0f0;
-    color: #333;
-  }
-  button[type="primary"] {
-    background-color: #07c160;
-  }
-}
-
 
 .problem {
   display: flex;

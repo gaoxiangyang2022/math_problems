@@ -16,23 +16,10 @@ Page({
     feedbackMessage: "",
     showWherePage: 0
   },
-
-  changeRange(e) {
-    const { range } = e.currentTarget.dataset;
+  startTest(e) {
     this.setData({
-      currentRange: range
-    });
-  },
-
-  changeTotal(e) {
-    const { total } = e.currentTarget.dataset;
-    this.setData({
-      currentTotal: total
-    });
-  },
-
-  startTest() {
-    this.setData({
+      currentRange:e.detail.range,
+      currentTotal:e.detail.total,
       currentIndex: 1,
       wrongQuestions: [],
       showWherePage: 1
@@ -41,29 +28,22 @@ Page({
   },
 
   generateNewProblem() {
-    const isAddition = Math.random() > 0.5;
-    let nums = getAddSubNums(this.data.currentRange)
-    var _currentProblem,_correctAnswer;
-    _currentProblem = isAddition ? `${nums[1]} + ${nums[2]} = ` : `${nums[0]} - ${nums[1]} = `;
-    _correctAnswer = isAddition ? nums[0] : nums[2];
+    let _p = getAddSubNums(this.data.currentRange)
     this.setData({
-      currentProblem: _currentProblem,
-      correctAnswer: _correctAnswer,
+      currentProblem: _p.problem,
+      correctAnswer: _p.answer,
       inputFocus: true
     });
   },
 
   inputChange(e) {
     const _userAnswer = parseInt(e.detail.value);
-
     if (this.data.timer) {
       clearTimeout(this.data.timer);
     }
-
     const debounceTimer = setTimeout(() => {
       this.checkAnswer();
     }, this.data.debounce_time);
-
     this.setData({
       userAnswer: _userAnswer,
       timer: debounceTimer
@@ -89,6 +69,9 @@ Page({
         wrongQuestions: wqTmp,
         errorShake:true
       });
+      setTimeout(() => {
+        this.nextProblem();
+      }, 1500);
     }
   },
 

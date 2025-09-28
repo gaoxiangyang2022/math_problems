@@ -34,11 +34,15 @@ const getNumsByRange = (range: number) => {
  * @param range 生成值的范围
  */
 export const getAddSubNums = (range: number) => {
+  const isAddition = Math.random() > 0.5;
   var nums = getNumsByRange(range);
   var num1 = Math.max(nums[0],nums[1],nums[2])
   var num2 = Math.min(nums[0],nums[1],nums[2])
   var num3 = num1-num2
-  return [num1,num2,num3]
+  return {
+    problem: isAddition ? `${num3} + ${num2} = ` : `${num1} - ${num2} = `,
+    answer: isAddition ? num1 : num3
+  }
 }
 
 /**
@@ -78,3 +82,4 @@ const getProblem = (num1: number,num2: number,num3: number,isAddFirst: boolean) 
     answer:answer}
   }
 }
+

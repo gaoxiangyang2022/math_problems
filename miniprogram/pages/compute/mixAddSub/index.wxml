@@ -1,41 +1,14 @@
 <view style="width: 100%;">
   <!-- 选择界面 -->
   <view wx:if="{{showWherePage==0}}" class="container">
-    <h1>请选择出题范围？多少以内的加减法呢？</h1>
-    <view class="selecter">
-      <button type="{{currentRange==10?'primary':'default'}}" data-range="10" bindtap="changeRange">10</button>
-      <button type="{{currentRange==20?'primary':'default'}}" data-range="20" bindtap="changeRange">20</button>
-      <button type="{{currentRange==30?'primary':'default'}}" data-range="30" bindtap="changeRange">30</button>
-      <button type="{{currentRange==50?'primary':'default'}}" data-range="50" bindtap="changeRange">50</button>
-      <button type="{{currentRange==100?'primary':'default'}}" data-range="100" bindtap="changeRange">100</button>
-    </view>
-
-    <h1>请选择出多少道题目呢？</h1>
-    <view class="selecter">
-      <button type="{{currentTotal==10?'primary':'default'}}" data-total="10" bindtap="changeTotal">10</button>
-      <button type="{{currentTotal==50?'primary':'default'}}" data-total="50" bindtap="changeTotal">50</button>
-      <button type="{{currentTotal==100?'primary':'default'}}" data-total="100" bindtap="changeTotal">100</button>
-      <button type="{{currentTotal==300?'primary':'default'}}" data-total="300" bindtap="changeTotal">300</button>
-      <button type="{{currentTotal==500?'primary':'default'}}" data-total="500" bindtap="changeTotal">500</button>
-      <button type="{{currentTotal==1000?'primary':'default'}}" data-total="1000" bindtap="changeTotal">1000</button>
-    </view>
-
-    <button id="startTest" type="primary" bindtap="startTest">我们开始吧</button>
+    <range-total bind:beginTest="startTest"></range-total>
   </view>
 
   <!-- 做题界面 -->
   <view wx:if="{{showWherePage==1}}" class="container">
-    <view class="progress-container">
-      <view class="progress-info">
-        <span>进度: <span id="progressText">{{currentIndex}}/{{currentTotal}}</span></span>
-        <span>错误: <span id="wrongCount">{{wrongQuestions.length}}</span></span>
-      </view>
-      <view class="progress-bar">
-        <view class="progress" style="width: {{(currentIndex / currentTotal) * 100}}%;">
-          <view class="progress-icon">🚀</view>
-        </view>
-      </view>
-    </view>
+    
+    <progress-bar index="{{currentIndex}}" total="{{currentTotal}}" wrongNum="{{wrongQuestions.length}}"></progress-bar>
+    
     <view id="feedback">{{feedbackMessage}}</view>
     <view class="problem {{errorShake? ' shake' : ''}}">
       <view id="problem">{{currentProblem}}</view>
@@ -45,26 +18,8 @@
       <button id="nextQuestion" type="primary" bindtap="nextProblem">下一题</button>
     </view>   
   </view>
-
-
-
-
-<!-- 错题展示界面 -->
-<view wx:if="{{showWherePage==2}}" class="container">
-  <h1 class="title">🐶错题小本本📙</h1>
-  
-  <!-- 自适应高度容器（替代scroll-view） -->
-  <view class="questions-wrapper">
-    <block wx:for="{{wrongQuestions}}" wx:key="index">
-      <view class="question-card ">
-        <view class="question-text">{{item.question}} {{item.correctAnswer}} 你的答案： {{item.yourAnswer}}</view>
-
-      </view>
-    </block>
-  </view>
-  
-  <button class="restart-btn" open-type="getUserInfo" bindtap="restartQuiz">再来一次😠</button>
-</view>
-
-
+ <!-- 错题本区域 -->
+ <view wx:if="{{showWherePage==2}}" class="container">
+    <wrong-list wrongList="{{wrongQuestions}}"></wrong-list>
+ </view>
 </view>

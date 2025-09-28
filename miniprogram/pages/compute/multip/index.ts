@@ -28,14 +28,11 @@ Page({
   onLoad() {
 
   },
-  changeTotal(e) {
-    const { total } = e.currentTarget.dataset;
+
+
+  startTest(e) {    
     this.setData({
-      currentTotal: total
-    });
-  },
-  startTest() {
-    this.setData({
+      currentTotal:e.detail.total,
       currentIndex: 1,
       wrongQuestions: [],
       showWherePage: 1
@@ -99,6 +96,9 @@ Page({
         wrongQuestions: wqTmp,
         errorShake:true
       });
+      setTimeout(() => {
+        this.nextProblem();
+      }, 1500);
     }
   },
 

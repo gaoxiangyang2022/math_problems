@@ -1,0 +1,20 @@
+    <h1 wx:if="{{range}}">请选择出题范围？多少以内的加减法呢？</h1>
+    <view class="selecter" wx:if="{{range}}">
+      <button type="{{currentRange==10?'primary':'default'}}" data-range="10" bindtap="changeRange">10</button>
+      <button type="{{currentRange==20?'primary':'default'}}" data-range="20" bindtap="changeRange">20</button>
+      <button type="{{currentRange==30?'primary':'default'}}" data-range="30" bindtap="changeRange">30</button>
+      <button type="{{currentRange==50?'primary':'default'}}" data-range="50" bindtap="changeRange">50</button>
+      <button type="{{currentRange==100?'primary':'default'}}" data-range="100" bindtap="changeRange">100</button>
+    </view>
+
+    <h1 wx:if="{{total}}">请选择出多少道题目呢？</h1>
+    <view class="selecter"  wx:if="{{total}}">
+      <button type="{{currentTotal==10?'primary':'default'}}" data-total="10" bindtap="changeTotal">10</button>
+      <button type="{{currentTotal==50?'primary':'default'}}" data-total="50" bindtap="changeTotal">50</button>
+      <button type="{{currentTotal==100?'primary':'default'}}" data-total="100" bindtap="changeTotal">100</button>
+      <button type="{{currentTotal==300?'primary':'default'}}" data-total="300" bindtap="changeTotal">300</button>
+      <button type="{{currentTotal==500?'primary':'default'}}" data-total="500" bindtap="changeTotal">500</button>
+      <button type="{{currentTotal==1000?'primary':'default'}}" data-total="1000" bindtap="changeTotal">1000</button>
+    </view>
+
+    <button id="startTest" type="primary" bindtap="startTest">我们开始吧</button>

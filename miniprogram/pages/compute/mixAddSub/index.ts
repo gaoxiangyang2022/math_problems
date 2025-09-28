@@ -17,23 +17,10 @@ Page({
     feedbackMessage: "",
     showWherePage: 0
   },
-
-  changeRange(e) {
-    const { range } = e.currentTarget.dataset;
+  startTest(e) {
     this.setData({
-      currentRange: range
-    });
-  },
-
-  changeTotal(e) {
-    const { total } = e.currentTarget.dataset;
-    this.setData({
-      currentTotal: total
-    });
-  },
-
-  startTest() {
-    this.setData({
+      currentRange:e.detail.range,
+      currentTotal:e.detail.total,
       currentIndex: 1,
       wrongQuestions: [],
       showWherePage: 1
@@ -74,6 +61,7 @@ Page({
       });
     } else if (this.data.userAnswer === this.data.correctAnswer) {
       this.setData({
+        feedbackMessage: "😏答对了！",
         currentIndex: this.data.currentIndex + 1
       });
       this.nextProblem();
@@ -86,6 +74,10 @@ Page({
         wrongQuestions: wqTmp,
         errorShake:true
       });
+     
+      setTimeout(() => {
+        this.nextProblem();
+      }, 1500);
     }
   },
 

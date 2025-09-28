@@ -1,0 +1,39 @@
+/* components/progress-bar/progress-bar.wxss */
+
+.progress-container {
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #555;
+  font-size: 1rem;
+}
+
+.progress-bar {
+  height: 10px;
+  background: #f0f4ff;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: linear-gradient(to right, #6e8efb, #a777e3);
+  border-radius: 5px;
+  width: 0%;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.progress-icon{
+  position: absolute;
+  right: 0px;
+  font-size: 12px;
+  transform: rotate(45deg);
+  line-height: 19rpx;
+  z-index: 200;
+}

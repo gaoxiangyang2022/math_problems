@@ -175,7 +175,7 @@ Page({
       this.setData({
         checked:true,
         checkResult:_checkResult,
-        feedbackMessage: `非常正常！相当的棒！`,
+        feedbackMessage: `🌸答案正确！很棒🌸！`,
         currentIndex: this.data.currentIndex + 1
       });
     }

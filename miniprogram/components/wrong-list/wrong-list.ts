@@ -26,6 +26,14 @@ Component({
         emojiStr:[...app.globalData.emojiArray].sort(()=>Math.random()-0.5),
         guli:[...this.data.guli].sort(()=>Math.random()-0.5)
       })
+    },
+    goDemo(){
+      wx.showToast({
+        title: '正在开发...',
+        icon: 'none',
+        duration: 2000
+      })
     }
+
   }
 })

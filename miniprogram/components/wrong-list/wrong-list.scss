@@ -1,6 +1,57 @@
 /* components/wrong-list/wrong-list.wxss */
 
 
+/* 标题样式 */
+.title {
+  text-align: center;
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #ff2222;
+  margin: 60rpx 40rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
+  padding: 20rpx;
+}
+
+/* 问题列表容器 */
+.questions-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+  padding-bottom: 40rpx;
+}
+
+/* 问题卡片样式 */
+.question-card {
+  background: #d8cbcb;
+  display: flex;
+  gap: 18rpx;
+  padding: .5rem 1rem;
+  border-radius: 20rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+.question-content {
+  display: block;
+  margin-bottom: 16rpx;
+  font-weight: 800;
+  color: #2c3e50;
+}
+
+
+.your-answer {
+  display: block;
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+.demo-btn {
+  color: #665cf7 !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+}
+
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-20px); }
@@ -43,7 +94,7 @@
     flex-direction: column;
     justify-content: center;
     .item-icon{
-      font-size: 1.5rem;
+      font-size: 2.5rem;
       line-height: 4rem;
       border-radius: 9999px;
     }

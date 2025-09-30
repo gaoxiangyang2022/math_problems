@@ -1,12 +1,18 @@
 <view wx:if="{{wrongList.length>0}}">
-  <h1 class="title">{{emojiStr[0]}}错题小本本📙</h1>
-  <view class="questions-wrapper">
-    <block wx:for="{{wrongList}}" wx:key="index">
-      <view class="question-card ">
-        <view class="question-text">{{item.question}} {{item.correctAnswer}} 你的答案： {{item.yourAnswer}}</view>
-      </view>
-    </block>
-  </view>
+
+  <scroll-view type="list"
+  scroll-y style="height: 100vh;">
+    <h1 class="title">{{emojiStr[0]}}错题小本本📙</h1>
+    <view class="questions-wrapper">
+      <block wx:for="{{wrongList}}" wx:key="index">
+        <view class="question-card">
+            <text class="question-content">{{item.question}}{{item.correctAnswer}}</text>
+            <text class="your-answer">你的答案：{{item.yourAnswer}}</text>
+            <text class="demo-btn" bindtap="goDemo">演示</text>
+        </view>
+      </block>
+    </view>
+  </scroll-view>
   <!-- <button class="restart-btn" open-type="getUserInfo" bindtap="restartQuiz">再来一次😠</button> -->
 </view>
 <view wx:if="{{wrongList.length==0}}">

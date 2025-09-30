@@ -8,21 +8,21 @@
     </view>
     
     <!-- 云朵装饰 -->
-    <view class="cloud cloud1">{{emo3}}</view>
-    <view class="cloud cloud2">{{emo4}}</view>
+    <view class="cloud cloud1 {{animalMove == 3 ? 'animal-move' : ''}}" bind:tap="emojiClick" data-index="3">{{emo3}}</view>
+    <view class="cloud cloud2 {{animalMove == 4 ? 'animal-move' : ''}}" bind:tap="emojiClick" data-index="4">{{emo4}}</view>
     
     <!-- 主要内容区域 -->
     <view class="grid-container">
         <view class="grid-item"  bind:tap="goToSimpleAddSub">
-            <view class="icon">➕➖</view>
+            <view class="icon">➕</view>
             <view>加减口算</view>
             <view>简单的加减法练习</view>
         </view>
         
         <view class="grid-item" bind:tap="goToAddSub">
             <view class="icon">🧮</view>
-            <view>加减复杂计算</view>
-            <view>多位数的加减法</view>
+            <view>加减竖式</view>
+            <view>多位数加减列竖式计算</view>
         </view>
         
         <view class="grid-item" bind:tap="goToMultip">
@@ -50,21 +50,22 @@
             <view>乘与加减混合</view>
             <view>乘法与加减混合计算的练习</view>
         </view>
+        <view class="grid-item" bind:tap="goMulEquationFun">
+            <view class="icon">*️⃣</view>
+            <view>乘法竖式</view>
+            <view>练习2-3位数乘法竖式</view>
+        </view>
         <view class="grid-item" bind:tap="goTotenFun">
             <view class="icon">🔟</view>
             <view>凑、破10法</view>
             <view>学习如何凑10和破10的方法</view>
         </view>
-        <view class="grid-item" bind:tap="goMulEquationFun">
-            <view class="icon">*️⃣</view>
-            <view>乘法竖式</view>
-            <view>练习乘法竖式</view>
-        </view>
+        
     </view>
     
     <!-- 卡通动物 -->
-    <view class="cartoon-animal bunny" bind:tap="goAboutFun">{{emo1}}</view>
-    <view class="cartoon-animal panda">{{emo2}}</view>
+    <view class="cartoon-animal bunny" bind:tap="goAboutFun" >{{emo1}}</view>
+    <view class="cartoon-animal panda {{animalMove == 2 ? 'animal-move' : ''}}"  bind:tap="emojiClick" data-index="2">{{emo2}}</view>
     
     <!-- 底部 -->
     <view class="footer">

@@ -142,7 +142,37 @@
   animation: float 6s ease-in-out infinite;
   animation-delay: 1s;
 }
-
+@keyframes naturalBounce {
+  0% {
+    transform: scale(1);
+    animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  30% {
+    transform: scale(1.4);
+    animation-timing-function: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+  }
+  45% {
+    transform: scale(1.4) translateY(-25px);
+  }
+  60% {
+    transform: scale(1.4) translateY(0);
+  }
+  70% {
+    transform: scale(1.4) translateY(-12px);
+  }
+  80% {
+    transform: scale(1.4) translateY(0);
+  }
+  90% {
+    transform: scale(1.4) translateY(-4px);
+  }
+  100% {
+    transform: scale(1.4) translateY(0);
+  }
+}
+.animal-move{
+  animation: naturalBounce 1.5s forwards;
+}
 /* 底部装饰 */
 .footer {
   text-align: center;

@@ -8,6 +8,7 @@ Component({
     emo2:"",
     emo3:"",
     emo4:"",
+    animalMove: 1,
   },
   lifetimes: {
     attached() {
@@ -82,7 +83,16 @@ Component({
         duration: 2000
       })
     },
-
+    emojiClick(e){
+      const { index } = e.currentTarget.dataset;
+      const isChange = Math.random() > 0.8;
+      if(isChange){
+        this.getEmoji()
+      }else if(this.data.animalMove == 1){
+        this.setData({animalMove: index})
+        setTimeout(() => {this.setData({animalMove: 1})}, 5000);
+      }
+    },
     getEmoji(){
       const emojis = [...app.globalData.emojiArray].sort(()=>Math.random()-0.5)
       const index = Math.ceil(Math.random()*10)

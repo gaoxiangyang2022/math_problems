@@ -107,5 +107,10 @@ Page({
       showWherePage: 2
     });
   },
-
+  // onShareAppMessage() {
+  //   return {
+  //     title: '一起来练习乘法口决吧！',
+  //     path: '/pages/compute/multip/index',
+  //   }
+  //  },
 })

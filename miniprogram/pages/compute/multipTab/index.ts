@@ -53,4 +53,10 @@ Page({
       // 更新数据
       this.setData({groupData:_GroupData,explanationHeader:`${i} × ${j} = ${result}`})
   },
+  // onShareAppMessage() {
+  //   return {
+  //     title: '一起来学习乘法口决吧！',
+  //     path: '/pages/compute/multipTab/index',
+  //   }
+  //  },
 })

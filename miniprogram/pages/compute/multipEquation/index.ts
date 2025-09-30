@@ -184,4 +184,10 @@ Page({
   
   checkAnswer() {
   },
+  // onShareAppMessage() {
+  //   return {
+  //     title: '一起来学习乘法竖式吧！',
+  //     path: '/pages/compute/multipEquation/index',
+  //   }
+  //  },
 })

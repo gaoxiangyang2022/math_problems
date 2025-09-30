@@ -196,5 +196,11 @@ Page({
       this.setData({
         processOfProblemIndex:this.data.processOfProblemIndex+1
       })
-  },
+  }, 
+  // onShareAppMessage() {
+  //   return {
+  //     title: '一起来练习加法竖式吧！',
+  //     path: '/pages/compute/addSub/index',
+  //   }
+  //  },
 })

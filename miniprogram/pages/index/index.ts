@@ -17,7 +17,15 @@ Component({
   },
 
   methods: {
-   
+  /**
+  * 用户点击右上角分享
+  */
+//  onShareAppMessage() {
+//   return {
+//     title: '一起来学习吧！',
+//     path: '/pages/index/index',
+//   }
+//  },
     goToSimpleAddSub(){
       wx.navigateTo({
         url: '/pages/compute/simpleAddSub/index'

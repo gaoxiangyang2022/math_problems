@@ -109,5 +109,10 @@ Page({
       showWherePage: 2
     });
   },
-
+  // onShareAppMessage() {
+  //   return {
+  //     title: '一起来练习乘法计算吧！',
+  //     path: '/pages/compute/mixMultip/index',
+  //   }
+  //  },
 })

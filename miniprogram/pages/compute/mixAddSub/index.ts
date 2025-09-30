@@ -106,5 +106,11 @@ Page({
       showWherePage: 0,
       currentProblem: "请选择难度开始练习"
     });
-  }
+  },
+  // onShareAppMessage() {
+  //   return {
+  //     title: '一起来混合加减法计算吧！',
+  //     path: '/pages/compute/mixAddSub/index',
+  //   }
+  //  },
 });

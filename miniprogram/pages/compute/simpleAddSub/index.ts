@@ -100,5 +100,14 @@ Page({
       showWherePage: 0,
       currentProblem: "请选择难度开始练习"
     });
-  }
+  }, 
+  /**
+  * 用户点击右上角分享
+  */
+//  onShareAppMessage() {
+//   return {
+//     title: '一起来学习吧！',
+//     path: '/pages/compute/simpleAddSub/index',
+//   }
+//  },
 });

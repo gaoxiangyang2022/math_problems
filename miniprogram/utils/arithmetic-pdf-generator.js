@@ -3,295 +3,245 @@ class ArithmeticPDFGenerator {
   /**
    * 生成口算题图片（A4纸比例）
    */
-  static generateImage(pageInstance, problems, options = {}) {
-    return new Promise((resolve, reject) => {
-      const {
-        title = '练习题',
-        showAnswers = false,
-        pageNumber = 1,
-        totalPages = 1,
-        columns = 4,
-        rowSpacing=1,
-      } = options;
+  static async generateImage(pageInstance, problems, options = {}) {
+    const {
+      title = '练习题',
+      showAnswers = false,
+      pageNumber = 1,
+      totalPages = 1,
+      columns = 4,
+      rowSpacing = 1,
+      startIndex = 1 // 新增：起始编号
+    } = options;
 
-      // 使用页面中的canvas
-      const query = wx.createSelectorQuery().in(pageInstance);
-      query.select('#mathCanvas')
-        .fields({ node: true, size: true })
-        .exec((res) => {
-          if (!res[0]) {
-            reject(new Error('Canvas 未找到'));
-            return;
-          }
+    const canvas = await this.getCanvas(pageInstance);
+    const ctx = canvas.getContext('2d');
+    const dpr = wx.getSystemInfoSync().pixelRatio;
+    
+    // A4纸尺寸
+    const width = 794, height = 1123;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr);
 
-          const canvas = res[0].node;
-          const ctx = canvas.getContext('2d');
-          const dpr = wx.getSystemInfoSync().pixelRatio;
-          
-          // A4纸尺寸：210mm × 297mm，按96dpi换算为像素
-          const width = 794; // 210mm * 96 / 25.4 ≈ 794px
-          const height = 1123; // 297mm * 96 / 25.4 ≈ 1123px
-          
-          canvas.width = width * dpr;
-          canvas.height = height * dpr;
-          ctx.scale(dpr, dpr);
+    this.drawBackground(ctx, width, height);
+    this.drawHeader(ctx, width, title, showAnswers, pageNumber, totalPages, problems.length);
+    this.drawProblems(ctx, problems, width, height, columns, rowSpacing, showAnswers, startIndex);
+    this.drawFooter(ctx, width, height, title);
 
-          // 清空画布
-          ctx.clearRect(0, 0, width, height);
-
-          // 绘制背景
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(0, 0, width, height);
-
-          // 绘制标题
-          ctx.fillStyle = '#333333';
-          ctx.font = 'bold 24px "Microsoft YaHei"';
-          ctx.textAlign = 'center';
-          const pageTitle = showAnswers ? `${title} - 答案` : `${title} - 题目`;
-          ctx.fillText(pageTitle, width / 2, 60);
-
-          // 绘制页码信息
-          ctx.font = '16px "Microsoft YaHei"';
-          ctx.fillStyle = '#666666';
-          ctx.fillText(`第${pageNumber}页/共${totalPages}页 • 共${problems.length}题 • ${showAnswers ? '答案' : '题目'}`, width / 2, 95);
-
-          // 绘制题目
-          ctx.textAlign = 'left';
-          ctx.font = '20px "Microsoft YaHei"';
-          
-          const margin = 40;
-          const contentWidth = width - 2 * margin;
-          const colWidth = contentWidth / columns;
-          const lineHeight = 50*rowSpacing; // 行高
-          let y = 140; // 起始Y坐标
-
-          problems.forEach((problem, index) => {
-            const row = Math.floor(index / columns);
-            const col = index % columns;
-            const x = margin + col * colWidth;
-            const currentY = y + row * lineHeight;
-
-            // 检查是否需要换页（在绘制前检查）
-            if (currentY + lineHeight > height - 10) {
-              // 如果超出页面，应该分页处理，这里先简单处理
-              console.warn('题目超出页面范围，需要分页');
-            }
-
-            let text = '';
-            if (showAnswers) {
-              text = `${index+1}. ${problem.problem}${problem.answer}`;
-              ctx.fillStyle = '#2e7d32'; // 答案用绿色
-            } else {
-              text = `${problem.problem}____`;
-              ctx.fillStyle = '#333333'; // 题目用黑色
-            }
-
-            // 绘制题目编号（灰色，较小）
-            ctx.fillStyle = '#666666';
-            ctx.font = '16px "Microsoft YaHei"';
-            ctx.fillText(`${index+1}.`, x, currentY);
-            
-            // 绘制题目内容
-            ctx.fillStyle = showAnswers ? '#2e7d32' : '#333333';
-            ctx.font = '20px "Microsoft YaHei"';
-            const textWidth = ctx.measureText(`${index+1}. `).width;
-            ctx.fillText(showAnswers ? 
-              `${problem.problem}${problem.answer}` : 
-              `${problem.problem}`, 
-              x + textWidth, currentY);
-          });
-
-          // 绘制底部信息
-          ctx.font = '14px "Microsoft YaHei"';
-          ctx.fillStyle = '#999999';
-          ctx.textAlign = 'center';
-          ctx.fillText(`${new Date().toLocaleDateString()} • ${title}`, width / 2, height - 30);
-
-          // 绘制边框（可选）
-          ctx.strokeStyle = '#e0e0e0';
-          ctx.lineWidth = 1;
-          ctx.strokeRect(10, 10, width - 20, height - 20);
-
-          // 将canvas转换为图片
-          setTimeout(() => {
-            wx.canvasToTempFilePath({
-              canvas: canvas,
-              success: (res) => {
-                resolve([res.tempFilePath]);
-              },
-              fail: (error) => {
-                reject(error);
-              }
-            }, pageInstance);
-          }, 300);
-        });
-    });
+    return this.canvasToImage(canvas, pageInstance);
   }
 
   /**
    * 智能分页生成图片
    */
-  static generateAllImages(pageInstance, problems, options) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const { columns = 4,rowSpacing=1 } = options;
-        const allImages = [];
-        
-        // 计算每页能放多少题目
-        const problemsPerPage = this.calculateProblemsPerPage(columns,rowSpacing);
-        
-        // 分页处理
-        const totalPages = Math.ceil(problems.length / problemsPerPage);
-        
-        console.log(`总题目数: ${problems.length}, 每页: ${problemsPerPage}, 总页数: ${totalPages}`);
-
-        // 生成题目图片
-        for (let i = 0; i < totalPages; i++) {
-          const start = i * problemsPerPage;
-          const end = start + problemsPerPage;
-          const pageProblems = problems.slice(start, end);
-          
-          console.log(`生成题目页 ${i + 1}: ${start + 1}-${end}题`);
-          
-          const imagePaths = await this.generateImage(pageInstance, pageProblems, {
-            ...options,
-            showAnswers: false,
-            pageNumber: i + 1,
-            totalPages: totalPages,
-            columns: columns
-          });
-          
-          allImages.push(...imagePaths);
-          
-          // 更新进度
-          const progress = Math.round(((i + 1) / (totalPages * 2)) * 100);
-          pageInstance.setData({ imageProgress: progress });
-          
-          // 延迟一下，避免生成太快
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
-
-        // 生成答案图片
-        for (let i = 0; i < totalPages; i++) {
-          const start = i * problemsPerPage;
-          const end = start + problemsPerPage;
-          const pageProblems = problems.slice(start, end);
-          
-          console.log(`生成答案页 ${i + 1}: ${start + 1}-${end}题`);
-          
-          const imagePaths = await this.generateImage(pageInstance, pageProblems, {
-            ...options,
-            showAnswers: true,
-            pageNumber: i + 1,
-            totalPages: totalPages,
-            columns: columns
-          });
-          
-          allImages.push(...imagePaths);
-          
-          // 更新进度
-          const progress = Math.round(((totalPages + i + 1) / (totalPages * 2)) * 100);
-          pageInstance.setData({ imageProgress: progress });
-          
-          // 延迟一下，避免生成太快
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
-
-        console.log(`所有图片生成完成，共 ${allImages.length} 张`);
-        resolve(allImages);
-      } catch (error) {
-        reject(error);
-      }
-    });
-  }
-
-  /**
-   * 计算每页题目数量
-   */
-  static calculateProblemsPerPage(columns,rowSpacing) {
-    // A4纸可用的行数
-    const usableHeight = 1123 - 140 - 10; // 总高度 - 标题区域 - 底部区域
-    const lineHeight = 50*rowSpacing; // 每行高度
-    const rowsPerPage = Math.floor(usableHeight / lineHeight);
+  static async generateAllImages(pageInstance, problems, options) {
+    const { columns = 4, rowSpacing = 1 } = options;
+    const allImages = [];
     
-    return rowsPerPage * columns;
+    // 生成题目页和答案页
+    const pages = [
+      { showAnswers: false, type: '题目' },
+      { showAnswers: true, type: '答案' }
+    ];
+
+    for (const [pageIndex, pageConfig] of pages.entries()) {
+      const problemsPerPage = this.calculateProblemsPerPage(columns, rowSpacing, pageConfig.showAnswers);
+      const totalPages = Math.ceil(problems.length / problemsPerPage);
+
+      for (let i = 0; i < totalPages; i++) {
+        const startIndex = i * problemsPerPage + 1; // 计算起始编号
+        const pageProblems = problems.slice(i * problemsPerPage, (i + 1) * problemsPerPage);
+        
+        const imagePaths = await this.generateImage(pageInstance, pageProblems, {
+          ...options,
+          ...pageConfig,
+          pageNumber: i + 1,
+          totalPages,
+          startIndex // 传递起始编号
+        });
+
+        allImages.push(...imagePaths);
+        
+        // 更新进度
+        const baseProgress = pageIndex * 50;
+        const currentProgress = Math.round(((i + 1) / totalPages) * 50);
+        pageInstance.setData({ imageProgress: baseProgress + currentProgress });
+        
+        await this.delay(500);
+      }
+    }
+
+    console.log(`所有图片生成完成，共 ${allImages.length} 张`);
+    return allImages;
   }
 
   /**
-   * 保存图片到相册
+   * 绘制题目
    */
-  static saveImagesToAlbum(imagePaths) {
-    return new Promise((resolve, reject) => {
-      let savedCount = 0;
-      const total = imagePaths.length;
+  static drawProblems(ctx, problems, width, height, columns, rowSpacing, showAnswers, startIndex = 1) {
+    const margin = 40;
+    const colWidth = (width - 2 * margin) / columns;
+    const lineHeight = showAnswers ? 50 : 50 * rowSpacing;
+    let y = 140;
 
-      const saveNext = () => {
-        if (savedCount >= total) {
-          resolve(imagePaths);
-          return;
-        }
+    ctx.textAlign = 'left';
+    ctx.font = '20px "Microsoft YaHei"';
 
-        wx.saveImageToPhotosAlbum({
-          filePath: imagePaths[savedCount],
-          success: () => {
-            savedCount++;
-            if (savedCount < total) {
-              saveNext();
-            } else {
-              resolve(imagePaths);
-            }
-          },
-          fail: (error) => {
-            console.error('保存图片失败:', error);
-            savedCount++;
-            if (savedCount < total) {
-              saveNext();
-            } else {
-              resolve(imagePaths);
-            }
-          }
-        });
-      };
+    problems.forEach((problem, index) => {
+      const row = Math.floor(index / columns);
+      const col = index % columns;
+      const x = margin + col * colWidth;
+      const currentY = y + row * lineHeight;
 
-      saveNext();
+      // 使用连续编号，而不是从1开始
+      const problemNumber = startIndex + index;
+
+      // 绘制题目编号
+      ctx.fillStyle = '#666666';
+      ctx.font = '16px "Microsoft YaHei"';
+      ctx.fillText(`${problemNumber}.`, x, currentY);
+
+      // 绘制题目内容
+      const text = this.formatProblemText(problem, showAnswers);
+      ctx.fillStyle = showAnswers ? '#2e7d32' : '#333333';
+      ctx.font = '20px "Microsoft YaHei"';
+      
+      const textWidth = ctx.measureText(`${problemNumber}. `).width;
+      ctx.fillText(text, x + textWidth, currentY);
     });
   }
 
   /**
-   * 生成预览数据
+   * 生成预览数据 - 保持连续编号
    */
   static generatePreview(problems, options = {}) {
-    const { showAnswers = false, columns = 4,rowSpacing=1 } = options;
-    
-    const problemsPerPage = this.calculateProblemsPerPage(columns,rowSpacing);
+    const { columns = 4, rowSpacing = 1, showAnswers = false } = options;
+    const problemsPerPage = this.calculateProblemsPerPage(columns, rowSpacing, false);
     const problemPages = Math.ceil(problems.length / problemsPerPage);
-    const answerStartPage = problemPages + 1;
-    
+
+    // 生成连续编号的预览数据
+    const problemsWithNumbers = problems.map((problem, index) => ({
+      ...problem,
+      number: index + 1,
+      display: this.formatProblemText(problem, false)
+    }));
+
+    const answersWithNumbers = problems.map((problem, index) => ({
+      ...problem,
+      number: index + 1,
+      display: this.formatProblemText(problem, true)
+    }));
+
     return {
-      problems: this.formatForPreview(problems, columns, false),
-      answers: this.formatForPreview(problems, columns, true),
+      problems: this.formatForPreview(problemsWithNumbers, columns),
+      answers: this.formatForPreview(answersWithNumbers, columns),
       total: problems.length,
       problemPages,
-      answerStartPage,
+      answerStartPage: problemPages + 1,
       hasAnswers: showAnswers
     };
   }
 
   /**
-   * 格式化预览数据
+   * 格式化预览数据 - 适配连续编号
    */
-  static formatForPreview(problems, columns, showAnswers) {
-    const rows = [];
-    for (let i = 0; i < problems.length; i += columns) {
-      const row = problems.slice(i, i + columns).map(problem => ({
-        ...problem,
-        display: showAnswers ? 
-          `${problem.problem}${problem.answer}` : 
-          `${problem.problem}____`
-      }));
-      rows.push(row);
+  static formatForPreview(problemsWithNumbers, columns) {
+    return Array.from(
+      { length: Math.ceil(problemsWithNumbers.length / columns) },
+      (_, i) => problemsWithNumbers.slice(i * columns, (i + 1) * columns)
+    );
+  }
+
+  // 以下方法保持不变
+  static getCanvas(pageInstance) {
+    return new Promise((resolve, reject) => {
+      wx.createSelectorQuery().in(pageInstance)
+        .select('#mathCanvas')
+        .fields({ node: true, size: true })
+        .exec((res) => res[0] ? resolve(res[0].node) : reject(new Error('Canvas 未找到')));
+    });
+  }
+
+  static canvasToImage(canvas, pageInstance) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        wx.canvasToTempFilePath({
+          canvas,
+          success: res => resolve([res.tempFilePath]),
+          fail: reject
+        }, pageInstance);
+      }, 300);
+    });
+  }
+
+  static delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  static drawBackground(ctx, width, height) {
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, width, height);
+  }
+
+  static drawHeader(ctx, width, title, showAnswers, pageNumber, totalPages, problemCount) {
+    const pageTitle = `${title} - ${showAnswers ? '答案' : '题目'}`;
+    const pageInfo = `第${pageNumber}页/共${totalPages}页 • 共${problemCount}题 • ${showAnswers ? '答案' : '题目'}`;
+
+    ctx.fillStyle = '#333333';
+    ctx.textAlign = 'center';
+    
+    ctx.font = 'bold 24px "Microsoft YaHei"';
+    ctx.fillText(pageTitle, width / 2, 60);
+    
+    ctx.font = '16px "Microsoft YaHei"';
+    ctx.fillStyle = '#666666';
+    ctx.fillText(pageInfo, width / 2, 95);
+  }
+
+  static drawFooter(ctx, width, height, title) {
+    ctx.font = '14px "Microsoft YaHei"';
+    ctx.fillStyle = '#999999';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${new Date().toLocaleDateString()} • ${title}`, width / 2, height - 30);
+
+    // 绘制边框
+    ctx.strokeStyle = '#e0e0e0';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(10, 10, width - 20, height - 20);
+  }
+
+  static formatProblemText(problem, showAnswers) {
+    if (problem.problem.includes("?")) {
+      return showAnswers ? 
+        problem.problem.replaceAll("?", problem.answer) : 
+        problem.problem.replaceAll("?", "___");
     }
-    return rows;
+    return showAnswers ? `${problem.problem}${problem.answer}` : `${problem.problem}`;
+  }
+
+  static calculateProblemsPerPage(columns, rowSpacing, showAnswers = false) {
+    const usableHeight = 1123 - 140 - 10;
+    const lineHeight = showAnswers ? 50 : 50 * rowSpacing;
+    const rowsPerPage = Math.floor(usableHeight / lineHeight);
+    return rowsPerPage * columns;
+  }
+
+  static async saveImagesToAlbum(imagePaths) {
+    for (const imagePath of imagePaths) {
+      try {
+        await new Promise((resolve, reject) => {
+          wx.saveImageToPhotosAlbum({
+            filePath: imagePath,
+            success: resolve,
+            fail: reject
+          });
+        });
+      } catch (error) {
+        console.error('保存图片失败:', error);
+      }
+    }
+    return imagePaths;
   }
 }
 

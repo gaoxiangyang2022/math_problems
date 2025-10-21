@@ -172,9 +172,11 @@ Page({
   }, 
 
   beginPrint(e){
-    this.setData({
-      currentTotal:e.detail.total,
-    });
+    if(e.detail.total){
+      this.setData({
+        currentTotal:e.detail.total,
+      });
+    }
     var pros = []
     for (let index = 0; index < this.data.currentTotal; index++) {
       pros.push(getAddSubProblemShu())      

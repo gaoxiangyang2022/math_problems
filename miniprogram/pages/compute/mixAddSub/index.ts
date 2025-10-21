@@ -15,7 +15,8 @@ Page({
     errorShake: false,
     wrongQuestions: [],
     feedbackMessage: "",
-    showWherePage: 0
+    showWherePage: 0,
+    problemList:[]
   },
   startTest(e) {
     this.setData({
@@ -106,6 +107,24 @@ Page({
       showWherePage: 0,
       currentProblem: "请选择难度开始练习"
     });
+  },
+  beginPrint(e){
+    if(e.detail.total){
+      this.setData({
+        currentRange:e.detail.range,
+        currentTotal:e.detail.total,
+      });
+    }
+
+    var pros = []
+    for (let index = 0; index < this.data.currentTotal; index++) {
+      pros.push(getComplexAddSubProblem(this.data.currentRange))      
+    }
+    console.log(pros)
+    this.setData({
+      problemList:pros,
+      showWherePage:3
+    })
   },
   // onShareAppMessage() {
   //   return {

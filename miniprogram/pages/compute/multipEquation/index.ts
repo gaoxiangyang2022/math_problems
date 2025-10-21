@@ -1,5 +1,5 @@
 // pages/compute/addSub/index.ts
-import { isValidNumber } from '../../../utils/util';
+import { isValidNumber,getMultipProblemShu } from '../../../utils/util';
 import { multiplicationSteps } from '../../../utils/multipTools';
 Page({
 
@@ -26,7 +26,8 @@ Page({
     processSteps:[],
     checked:false,
     checkResult:{},
-    nullChar:''
+    nullChar:'',
+    problemList:[]
   },
 
   startTest(e) {    
@@ -63,31 +64,19 @@ Page({
     });
   },
   generateNewProblem() {
-    let num1, num2, _currentProblem, _correctAnswer;
-    // 生成2-4位随机数（10-9999）
-    const getRandomNum2 = () => Math.floor(Math.random() * (99 - 10 + 1)) + 10;
-    const getRandomNum3 = () => Math.floor(Math.random() * (999 - 10 + 1)) + 10;
-    num1 = getRandomNum2()>70 ? getRandomNum3() : getRandomNum2();
-    num2 = getRandomNum3()>750 ? getRandomNum3() : getRandomNum2();   
-      _currentProblem = `${num1} X ${num2} = `;
-      _correctAnswer = num1 * num2;
-    const _num1Array = String(num1).split('').map(Number);
-    const _num2Array = String(num2).split('').map(Number);
-    const _correctAnswerArray = String(_correctAnswer).split('').map(Number);
-    
-    const o = multiplicationSteps(num1,num2)
+    let _p = getMultipProblemShu()
+    const o = multiplicationSteps(_p.num1,_p.num2)
     console.log(o)
-    
 
     this.setData({
       processSteps:o.steps,
       focus2:o.steps[0].detailSteps.length-1,
-      currentProblem: _currentProblem,
-      correctAnswer: _correctAnswer,
-      num1Array: _num1Array,
-      num2Array: _num2Array,
-      correctAnswerArray: _correctAnswerArray,
-      userAnswerArray: _correctAnswerArray.map(() => null),
+      currentProblem: _p.problem,
+      correctAnswer: _p.answer,
+      num1Array: _p.num1Array,
+      num2Array: _p.num2Array,
+      correctAnswerArray: _p.answerArray,
+      userAnswerArray: _p.answerArray.map(() => null),
     });
   },
 
@@ -183,6 +172,24 @@ Page({
   },
   
   checkAnswer() {
+  },
+
+  beginPrint(e){
+
+    if(e.detail.total){
+      this.setData({
+        currentTotal:e.detail.total,
+      });
+    }
+    var pros = []
+    for (let index = 0; index < this.data.currentTotal; index++) {
+      pros.push(getMultipProblemShu())      
+    }
+    console.log(pros)
+    this.setData({
+      problemList:pros,
+      showWherePage:3
+    })
   },
   // onShareAppMessage() {
   //   return {

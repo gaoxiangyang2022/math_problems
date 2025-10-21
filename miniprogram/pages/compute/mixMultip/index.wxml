@@ -1,6 +1,7 @@
 <!-- 选择界面 -->
 <view wx:if="{{showWherePage==0}}" class="container">
-  <range-total bind:beginTest="startTest" range="{{false}}"></range-total>
+
+  <range-total bind:beginTest="startTest" range="{{false}}" bind:beginPrint="beginPrint"></range-total>
 </view>
 
   <view wx:if="{{showWherePage==1}}" class="container">
@@ -21,3 +22,9 @@
  <view wx:if="{{showWherePage==2}}" class="container">
     <wrong-list wrongList="{{wrongQuestions}}"></wrong-list>
  </view>
+
+ <!-- 打印题展示界面 -->
+<view wx:if="{{showWherePage==3}}" class="container">
+ 
+ <print-view problemList="{{problemList}}" column="2" pcolumn="2" rowGap="1" bind:beginPrint="beginPrint"></print-view>
+</view>

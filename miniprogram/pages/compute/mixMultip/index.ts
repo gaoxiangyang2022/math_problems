@@ -18,7 +18,8 @@ Page({
     debounce_time:700,
     inputFocus:false,
     errorShake: false,
-    nums: [2,3,4,5,6,7,8,9]
+    nums: [2,3,4,5,6,7,8,9],
+    problemList:[]
   },
 
   /**
@@ -108,6 +109,22 @@ Page({
     this.setData({
       showWherePage: 2
     });
+  },
+  beginPrint(e){
+    if(e.detail.total){
+      this.setData({
+        currentTotal:e.detail.total,
+      });
+    }
+    var pros = []
+    for (let index = 0; index < this.data.currentTotal; index++) {
+      pros.push(getComplexMultipProblem())      
+    }
+    console.log(pros)
+    this.setData({
+      problemList:pros,
+      showWherePage:3
+    })
   },
   // onShareAppMessage() {
   //   return {

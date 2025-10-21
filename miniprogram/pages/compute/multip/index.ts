@@ -18,6 +18,7 @@ Page({
     debounce_time:700,
     inputFocus:false,
     errorShake: false,
+    problemList:[]
   },
 
   /**
@@ -106,6 +107,23 @@ Page({
     this.setData({
       showWherePage: 2
     });
+  },
+
+  beginPrint(e){
+    if(e.detail.total){
+      this.setData({
+        currentTotal:e.detail.total,
+      });
+    }
+    var pros = []
+    for (let index = 0; index < this.data.currentTotal; index++) {
+      pros.push(getMultipProblem())      
+    }
+    console.log(pros)
+    this.setData({
+      problemList:pros,
+      showWherePage:3
+    })
   },
   // onShareAppMessage() {
   //   return {

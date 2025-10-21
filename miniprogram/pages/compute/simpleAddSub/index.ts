@@ -103,10 +103,12 @@ Page({
     });
   }, 
   beginPrint(e){
-    this.setData({
-      currentRange:e.detail.range,
-      currentTotal:e.detail.total,
-    });
+    if(e.detail.total){
+      this.setData({
+        currentRange:e.detail.range,
+        currentTotal:e.detail.total,
+      });
+    }
     var pros = []
     for (let index = 0; index < this.data.currentTotal; index++) {
       pros.push(getAddSubProblem(this.data.currentRange))      

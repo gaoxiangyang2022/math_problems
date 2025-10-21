@@ -3,10 +3,9 @@ const ArithmeticPDFGenerator = require('../../utils/arithmetic-pdf-generator.js'
 
 Page({
   data: {
-    // 配置参数
     config: {
-      title:"练习题",
-      rowSpacing:1,//行间距50*
+      title: "练习题",
+      rowSpacing: 1,
       lineSpacing: 2,
       fontSize: 14,
       columns: 3
@@ -28,190 +27,137 @@ Page({
   },
 
   onLoad(option) {
-    const _p = JSON.parse(wx.getStorageSync("problemList"))
-    console.log(wx.getStorageSync("paperTitle"))
-    const paperTitle = wx.getStorageSync("paperTitle")?wx.getStorageSync("paperTitle"):"练习题"
+    const problems = JSON.parse(wx.getStorageSync("problemList"));
+    const paperTitle = wx.getStorageSync("paperTitle") || "练习题";
+    
     this.setData({
-      problems:_p,
-      'config.title':paperTitle
-    })
-    console.log(this.data.problems)
-    if(option.column&&option.rowGap){
+      problems,
+      'config.title': paperTitle
+    });
+
+    if (option.column && option.rowGap) {
       this.setData({
-        "config.rowSpacing":option.rowGap,
-        "config.columns":option.column,
-      })
+        "config.rowSpacing": option.rowGap,
+        "config.columns": option.column,
+      });
     }
+    
     this.generateProblems();
   },
 
   onReady() {
-    setTimeout(() => {
-      this.setData({ showCanvas: true });
-    }, 1000);
+    setTimeout(() => this.setData({ showCanvas: true }), 1000);
   },
 
-  changeTitle(e){
-    this.setData({'config.title':e.detail.value})
+  changeTitle(e) {
+    this.setData({ 'config.title': e.detail.value });
   },
-  // 生成题目
+
   generateProblems() {    
     setTimeout(() => {      
       const previewData = ArithmeticPDFGenerator.generatePreview(this.data.problems, this.data.config);
       this.setData({
         previewData,
         generatedImages: [],
-        showGeneratedImages: false // 重置图片显示状态
+        showGeneratedImages: false
       });
     }, 300);
   },
 
-  // 生成图片
   async generateImages() {
     const { problems, config } = this.data;
-    wx.setStorageSync("paperTitle",config.title)
-    if (problems.length === 0) {
-      wx.showToast({
-        title: '请先生成题目',
-        icon: 'none'
-      });
+    
+    if (!problems.length) {
+      wx.showToast({ title: '请先生成题目', icon: 'none' });
       return;
     }
 
+    wx.setStorageSync("paperTitle", config.title);
+    
     this.setData({ 
       generatingImages: true,
       imageProgress: 0,
       showCanvas: true,
-      showGeneratedImages: false // 先隐藏，生成完成后再显示
+      showGeneratedImages: false
     });
 
     try {
-      wx.showLoading({
-        title: '正在生成图片...',
-        mask: true
-      });
-
-      // 等待canvas渲染
+      wx.showLoading({ title: '正在生成图片...', mask: true });
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // 生成所有图片
       const allImages = await ArithmeticPDFGenerator.generateAllImages(this, problems, config);
       
       this.setData({
         generatedImages: allImages,
         imageProgress: 100,
-        showGeneratedImages: true, // 生成完成后显示图片
-        currentImageIndex: 0 // 默认显示第一张
+        showGeneratedImages: true,
+        currentImageIndex: 0
       });
 
       wx.hideLoading();
-
-      // 隐藏canvas
       this.setData({ showCanvas: false });
-
-      wx.showToast({
-        title: `生成${allImages.length}张图片`,
-        icon: 'success'
-      });
-      this.setData({ 
-        generatingImages: false,
-        showCanvas: false 
-      });
+      
+      wx.showToast({ title: `生成${allImages.length}张图片`, icon: 'success' });
     } catch (error) {
       console.error('生成图片失败:', error);
       wx.hideLoading();
-      wx.showToast({
-        title: '生成失败: ' + error.message,
-        icon: 'error'
-      });
-      this.setData({ 
-        generatingImages: false,
-        showCanvas: false 
-      });
+      wx.showToast({ title: '生成失败: ' + error.message, icon: 'error' });
+    } finally {
+      this.setData({ generatingImages: false, showCanvas: false });
     }
   },
 
-  // 保存所有图片到相册
   async saveAllImagesToAlbum() {
     const { generatedImages } = this.data;
     
-    if (generatedImages.length === 0) {
-      wx.showToast({
-        title: '没有可保存的图片',
-        icon: 'none'
-      });
+    if (!generatedImages.length) {
+      wx.showToast({ title: '没有可保存的图片', icon: 'none' });
       return;
     }
 
     wx.showLoading({ title: '保存中...' });
     
     try {
-      // 请求相册权限
       await this.requestAlbumPermission();
-      
-      // 保存图片
       await ArithmeticPDFGenerator.saveImagesToAlbum(generatedImages);
       
       wx.hideLoading();
-      wx.showToast({
-        title: `已保存${generatedImages.length}张图片`,
-        icon: 'success',
-        duration: 2000
-      });
+      wx.showToast({ title: `已保存${generatedImages.length}张图片`, icon: 'success' });
     } catch (error) {
       wx.hideLoading();
-      wx.showToast({
-        title: '保存失败',
-        icon: 'error'
-      });
+      wx.showToast({ title: '保存失败', icon: 'error' });
     }
   },
 
-  // 保存单张图片到相册
   async saveCurrentImage() {
     const { generatedImages, currentImageIndex } = this.data;
     
-    if (generatedImages.length === 0) {
-      wx.showToast({
-        title: '没有可保存的图片',
-        icon: 'none'
-      });
+    if (!generatedImages.length) {
+      wx.showToast({ title: '没有可保存的图片', icon: 'none' });
       return;
     }
 
-    const currentImage = generatedImages[currentImageIndex];
-    
     wx.showLoading({ title: '保存中...' });
     
     try {
-      // 请求相册权限
       await this.requestAlbumPermission();
       
-      // 保存单张图片
       await new Promise((resolve, reject) => {
         wx.saveImageToPhotosAlbum({
-          filePath: currentImage,
+          filePath: generatedImages[currentImageIndex],
           success: resolve,
           fail: reject
         });
       });
       
       wx.hideLoading();
-      wx.showToast({
-        title: '图片已保存',
-        icon: 'success',
-        duration: 1500
-      });
+      wx.showToast({ title: '图片已保存', icon: 'success' });
     } catch (error) {
       wx.hideLoading();
-      wx.showToast({
-        title: '保存失败',
-        icon: 'error'
-      });
+      wx.showToast({ title: '保存失败', icon: 'error' });
     }
   },
 
-  // 请求相册权限
   requestAlbumPermission() {
     return new Promise((resolve, reject) => {
       wx.authorize({
@@ -222,19 +168,10 @@ Page({
             title: '需要相册权限',
             content: '请允许访问相册以保存图片',
             success: (res) => {
-              if (res.confirm) {
+              res.confirm ? 
                 wx.openSetting({
-                  success: (res) => {
-                    if (res.authSetting['scope.writePhotosAlbum']) {
-                      resolve();
-                    } else {
-                      reject(new Error('用户拒绝授权'));
-                    }
-                  }
-                });
-              } else {
-                reject(new Error('用户取消授权'));
-              }
+                  success: (res) => res.authSetting['scope.writePhotosAlbum'] ? resolve() : reject(new Error('用户拒绝授权'))
+                }) : reject(new Error('用户取消授权'));
             }
           });
         }
@@ -242,56 +179,29 @@ Page({
     });
   },
 
-  // 切换图片
   switchImage(e) {
     const { direction } = e.currentTarget.dataset;
     const { generatedImages, currentImageIndex } = this.data;
     
-    let newIndex = currentImageIndex;
-    if (direction === 'prev') {
-      newIndex = currentImageIndex - 1;  // 修复：使用 currentImageIndex
-      if (newIndex < 0) newIndex = generatedImages.length - 1;
-    } else {
-      newIndex = currentImageIndex + 1;  // 修复：使用 currentImageIndex
-      if (newIndex >= generatedImages.length) newIndex = 0;
-    }
+    let newIndex = direction === 'prev' ? currentImageIndex - 1 : currentImageIndex + 1;
+    
+    if (newIndex < 0) newIndex = generatedImages.length - 1;
+    if (newIndex >= generatedImages.length) newIndex = 0;
     
     this.setData({ currentImageIndex: newIndex });
   },
 
-  // 直接跳转到某张图片
   goToImage(e) {
-    const index = parseInt(e.currentTarget.dataset.index);
-    this.setData({ currentImageIndex: index });
+    this.setData({ currentImageIndex: parseInt(e.currentTarget.dataset.index) });
   },
 
-  // 预览当前图片（大图模式）
   previewCurrentImage() {
     const { generatedImages, currentImageIndex } = this.data;
-    if (generatedImages.length > 0) {
+    if (generatedImages.length) {
       wx.previewImage({
         urls: generatedImages,
         current: generatedImages[currentImageIndex]
       });
     }
   },
-
-  setQuickCount(e) {
-    const count = parseInt(e.currentTarget.dataset.count);
-    this.setData({
-      'config.problemCount': count
-    }, () => {
-      this.generateProblems();
-    });
-  },
-
-  onColumnsChange(e) {
-    const index = parseInt(e.detail.value);
-    const columns = [2, 3, 4, 5][index];
-    this.setData({
-      'config.columns': columns
-    }, () => {
-      this.generateProblems();
-    });
-  }
 });

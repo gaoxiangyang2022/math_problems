@@ -149,7 +149,29 @@ export const getMultipProblem = () => {
   }
   
 }
-
+/**
+ * 乘法竖式
+ */
+export const getMultipProblemShu = () => {
+  let num1, num2, _currentProblem, _correctAnswer;
+    // 生成2-4位随机数（10-9999）
+    const getRandomNum2 = () => Math.floor(Math.random() * (99 - 10 + 1)) + 10;
+    const getRandomNum3 = () => Math.floor(Math.random() * (999 - 10 + 1)) + 10;
+    num1 = getRandomNum2()>70 ? getRandomNum3() : getRandomNum2();
+    num2 = getRandomNum3()>750 ? getRandomNum3() : getRandomNum2();   
+      _currentProblem = `${num1} * ${num2} = `;
+      _correctAnswer = num1 * num2;
+  return {
+    problem : _currentProblem,
+    answer : _correctAnswer,
+    answerArray : String(_correctAnswer).split('').map(Number),
+    num1Array : String(num1).split('').map(Number),
+    num2Array : String(num2).split('').map(Number),
+    num1:num1,
+    num2:num2
+  }
+  
+}
 /**
  * 生成算式
  * 生成乘法与加减混合算式

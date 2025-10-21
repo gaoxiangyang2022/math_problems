@@ -68,7 +68,7 @@ Page({
       num1Array: p.num1Array,
       num2Array: p.num2Array,
       correctAnswerArray: p.answerArray,
-      userAnswerArray: p.answer.map(() => null),
+      userAnswerArray: p.answerArray.map(() => null),
       operator: p.operator
     });
   },

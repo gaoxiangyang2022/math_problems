@@ -11,7 +11,9 @@ class ArithmeticPDFGenerator {
       totalPages = 1,
       columns = 4,
       rowSpacing = 1,
-      startIndex = 1 // 新增：起始编号
+      startIndex = 1,
+      showNum = true,
+      showPage = true
     } = options;
 
     const canvas = await this.getCanvas(pageInstance);
@@ -25,8 +27,8 @@ class ArithmeticPDFGenerator {
     ctx.scale(dpr, dpr);
 
     this.drawBackground(ctx, width, height);
-    this.drawHeader(ctx, width, title, showAnswers, pageNumber, totalPages, problems.length);
-    this.drawProblems(ctx, problems, width, height, columns, rowSpacing, showAnswers, startIndex);
+    this.drawHeader(ctx, width, title, showAnswers, pageNumber, totalPages, problems.length, showPage);
+    this.drawProblems(ctx, problems, width, height, columns, rowSpacing, showAnswers, startIndex, showNum);
     this.drawFooter(ctx, width, height, title);
 
     return this.canvasToImage(canvas, pageInstance);
@@ -36,7 +38,7 @@ class ArithmeticPDFGenerator {
    * 智能分页生成图片
    */
   static async generateAllImages(pageInstance, problems, options) {
-    const { columns = 4, rowSpacing = 1 } = options;
+    const { columns = 4, rowSpacing = 1, showNum = true, showPage = true } = options;
     const allImages = [];
     
     // 生成题目页和答案页
@@ -58,7 +60,9 @@ class ArithmeticPDFGenerator {
           ...pageConfig,
           pageNumber: i + 1,
           totalPages,
-          startIndex // 传递起始编号
+          startIndex, // 传递起始编号
+          showNum,
+          showPage
         });
 
         allImages.push(...imagePaths);
@@ -79,7 +83,7 @@ class ArithmeticPDFGenerator {
   /**
    * 绘制题目
    */
-  static drawProblems(ctx, problems, width, height, columns, rowSpacing, showAnswers, startIndex = 1) {
+  static drawProblems(ctx, problems, width, height, columns, rowSpacing, showAnswers, startIndex = 1, showNum = true) {
     const margin = 40;
     const colWidth = (width - 2 * margin) / columns;
     const lineHeight = showAnswers ? 50 : 50 * rowSpacing;
@@ -97,26 +101,51 @@ class ArithmeticPDFGenerator {
       // 使用连续编号，而不是从1开始
       const problemNumber = startIndex + index;
 
-      // 绘制题目编号
-      ctx.fillStyle = '#666666';
-      ctx.font = '16px "Microsoft YaHei"';
-      ctx.fillText(`${problemNumber}.`, x, currentY);
+      // 绘制题目编号（根据showNum参数决定是否显示）
+      if (showNum) {
+        ctx.fillStyle = '#666666';
+        ctx.font = '16px "Microsoft YaHei"';
+        ctx.fillText(`${problemNumber}.`, x, currentY);
+      }
 
       // 绘制题目内容
       const text = this.formatProblemText(problem, showAnswers);
       ctx.fillStyle = showAnswers ? '#2e7d32' : '#333333';
       ctx.font = '20px "Microsoft YaHei"';
       
-      const textWidth = ctx.measureText(`${problemNumber}. `).width;
-      ctx.fillText(text, x + textWidth, currentY);
+      // 根据是否显示序号调整文本位置
+      const textX = showNum ? x + ctx.measureText(`${problemNumber}. `).width : x;
+      ctx.fillText(text, textX, currentY);
     });
+  }
+
+  /**
+   * 绘制页头
+   */
+  static drawHeader(ctx, width, title, showAnswers, pageNumber, totalPages, problemCount, showPage = true) {
+    const pageTitle = `${title} - ${showAnswers ? '答案' : '题目'}`;
+    
+    // 根据showPage参数决定是否显示页数信息
+    const pageInfo = showPage 
+      ? `第${pageNumber}页/共${totalPages}页 • 共${problemCount}题 • ${showAnswers ? '答案' : '题目'}`
+      : "";
+
+    ctx.fillStyle = '#333333';
+    ctx.textAlign = 'center';
+    
+    ctx.font = 'bold 24px "Microsoft YaHei"';
+    ctx.fillText(pageTitle, width / 2, 60);
+    
+    ctx.font = '16px "Microsoft YaHei"';
+    ctx.fillStyle = '#666666';
+    ctx.fillText(pageInfo, width / 2, 95);
   }
 
   /**
    * 生成预览数据 - 保持连续编号
    */
   static generatePreview(problems, options = {}) {
-    const { columns = 4, rowSpacing = 1, showAnswers = false } = options;
+    const { columns = 4, rowSpacing = 1, showAnswers = false, showNum = true } = options;
     const problemsPerPage = this.calculateProblemsPerPage(columns, rowSpacing, false);
     const problemPages = Math.ceil(problems.length / problemsPerPage);
 
@@ -124,13 +153,15 @@ class ArithmeticPDFGenerator {
     const problemsWithNumbers = problems.map((problem, index) => ({
       ...problem,
       number: index + 1,
-      display: this.formatProblemText(problem, false)
+      display: this.formatProblemText(problem, false),
+      showNum: showNum // 添加showNum参数
     }));
 
     const answersWithNumbers = problems.map((problem, index) => ({
       ...problem,
       number: index + 1,
-      display: this.formatProblemText(problem, true)
+      display: this.formatProblemText(problem, true),
+      showNum: showNum // 添加showNum参数
     }));
 
     return {
@@ -139,7 +170,9 @@ class ArithmeticPDFGenerator {
       total: problems.length,
       problemPages,
       answerStartPage: problemPages + 1,
-      hasAnswers: showAnswers
+      hasAnswers: showAnswers,
+      showNum: showNum,
+      showPage: options.showPage !== false // 默认显示页数信息
     };
   }
 
@@ -182,21 +215,6 @@ class ArithmeticPDFGenerator {
   static drawBackground(ctx, width, height) {
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, width, height);
-  }
-
-  static drawHeader(ctx, width, title, showAnswers, pageNumber, totalPages, problemCount) {
-    const pageTitle = `${title} - ${showAnswers ? '答案' : '题目'}`;
-    const pageInfo = `第${pageNumber}页/共${totalPages}页 • 共${problemCount}题 • ${showAnswers ? '答案' : '题目'}`;
-
-    ctx.fillStyle = '#333333';
-    ctx.textAlign = 'center';
-    
-    ctx.font = 'bold 24px "Microsoft YaHei"';
-    ctx.fillText(pageTitle, width / 2, 60);
-    
-    ctx.font = '16px "Microsoft YaHei"';
-    ctx.fillStyle = '#666666';
-    ctx.fillText(pageInfo, width / 2, 95);
   }
 
   static drawFooter(ctx, width, height, title) {

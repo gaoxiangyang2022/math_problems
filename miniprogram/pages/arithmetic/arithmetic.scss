@@ -20,11 +20,10 @@
   margin-bottom: 24rpx;
   box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 }
 .set-title input {
-  border: 1rpx solid #e0e0e0;
-  border-radius: 8rpx;
+  border-bottom: 1rpx solid #e0e0e0;
   padding: 16rpx;
   font-size: 28rpx;
   margin-top: 12rpx;

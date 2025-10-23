@@ -8,7 +8,9 @@ Page({
       rowSpacing: 1,
       lineSpacing: 2,
       fontSize: 14,
-      columns: 3
+      columns: 3,
+      showNum: true,
+      showPage: true
     },
     problems: [],
     previewData: {
@@ -204,4 +206,15 @@ Page({
       });
     }
   },
+
+  rowSpacingChange(e){
+    this.setData({ "config.rowSpacing" : parseInt(e.detail.value) });
+    this.generateProblems()
+  },
+  showNumChange(e){
+    this.setData({ "config.showNum" : e.detail.value });
+  },
+  showPageChange(e){
+    this.setData({ "config.showPage" : e.detail.value });
+  }
 });

@@ -51,7 +51,7 @@
 
   <!-- 打印题展示界面 -->
 <view wx:if="{{showWherePage==3}}" class="container">
-  <print-view problemList="{{problemList}}" column="1" pcolumn="2" rowGap="4" bind:beginPrint="beginPrint"></print-view>
+  <print-view problemList="{{problemList}}" column="1" pcolumn="3" rowGap="4" bind:beginPrint="beginPrint"></print-view>
 </view>
 
 

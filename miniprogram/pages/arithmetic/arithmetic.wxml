@@ -8,7 +8,27 @@
     <view class="panel-title">设置标题</view>
     <input value="{{config.title}}" bindinput="changeTitle"/>
   </view>
+  <view >
+    <label class="checkbox">
+      <switch checked="{{config.showNum}}" bindchange="showNumChange"/>显示序号
+      <switch checked="{{config.showPage}}" bindchange="showPageChange"/>显示页数
+      </label>
+  </view>
 
+  <view>
+    <view class="section section_gap">
+            <text class="section__title">行距</text>
+            <view class="body-view">
+                <slider bindchange="rowSpacingChange" min="1" max="5" show-value/>
+            </view>
+        </view>
+  </view>
+<!-- 操作按钮 -->
+<view class="action-bar">
+    <button class="btn export-btn" bindtap="generateImages" loading="{{generatingImages}}">
+      {{generatingImages ? imageProgress+'%' : '生成A4图片'}}
+    </button>
+  </view>
 
   <!-- 隐藏的canvas -->
   <view wx:if="{{showCanvas}}" style="position: fixed; left: -10000px; top: -10000px; width: 794px; height: 1123px;">
@@ -19,23 +39,8 @@
     ></canvas>
   </view>
 
-  <!-- 进度显示 -->
-  <view wx:if="{{generatingImages}}" class="progress-section">
-    <view class="progress-bar">
-      <view class="progress-inner" style="width: {{imageProgress}}%"></view>
-    </view>
-    <text class="progress-text">生成进度: {{imageProgress}}%</text>
-  </view>
-
   <!-- 生成的图片显示区域 -->
   <view wx:if="{{showGeneratedImages && generatedImages.length > 0}}" class="images-section">
-    <view class="section-header">
-      <text class="section-title">生成的图片 ({{generatedImages.length}}张)</text>
-      <button class="action-btn small" bindtap="saveAllImagesToAlbum">
-          保存全部
-        </button>
-    </view>
-
     <!-- 图片导航和显示 -->
     <view class="image-viewer">
       <!-- 图片导航 -->
@@ -62,6 +67,7 @@
       <!-- 图片操作按钮 -->
       <view class="image-actions">
         <button class="action-btn secondary" bindtap="saveCurrentImage">保存本张</button>
+        <button class="action-btn " bindtap="saveAllImagesToAlbum">保存全部</button>
       </view>
 
       <!-- 缩略图导航 -->
@@ -80,10 +86,5 @@
     </view>
   </view>
 
-  <!-- 操作按钮 -->
-  <view class="action-bar">
-    <button class="btn export-btn" bindtap="generateImages" loading="{{generatingImages}}">
-      {{generatingImages ? '生成中...' : '生成A4图片'}}
-    </button>
-  </view>
+  
 </view>

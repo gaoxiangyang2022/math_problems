@@ -1,35 +1,47 @@
 <!-- pages/arithmetic/arithmetic.wxml -->
 <view class="container">
-  <!-- 配置面板 -->
+  <!-- 页码展示 -->
   <text class="panel-title">
         共{{previewData.total}}题：(题目: 1-{{previewData.problemPages}}页, 答案: {{previewData.answerStartPage}}页起)
   </text>
-  <view class='set-title'>
-    <view class="panel-title">设置标题</view>
+  <!-- 设置标题 -->
+  <view class='set-item'>
+    <view class="set-label">设置标题</view>
     <input value="{{config.title}}" bindinput="changeTitle"/>
   </view>
-  <view >
-    <label class="checkbox">
-      <switch checked="{{config.showNum}}" bindchange="showNumChange"/>显示序号
-      <switch checked="{{config.showPage}}" bindchange="showPageChange"/>显示页数
-      </label>
+  <!-- 显示设置 -->
+  <view class='set-item'>
+    <switch checked="{{config.showNum}}" bindchange="showNumChange" type="checkbox"/><view class="set-label">显示序号</view>
+    <switch checked="{{config.showPage}}" bindchange="showPageChange" type="checkbox"/><view class="set-label">显示页数</view>
   </view>
 
-  <view>
-    <view class="section section_gap">
-            <text class="section__title">行距</text>
-            <view class="body-view">
-                <slider bindchange="rowSpacingChange" min="1" max="5" value="{{config.rowSpacing}}" show-value/>
-            </view>
-        </view>
+  <!-- 行距 -->
+  <view class='set-item'>
+    <view class="set-label">行距</view>
+    <view style="flex: 5;">
+      <slider bindchange="rowSpacingChange" min="1" max="5" value="{{config.rowSpacing}}" show-value/>
+    </view>    
   </view>
-<!-- 操作按钮 -->
-<view class="action-bar">
+
+    <!-- 间距 -->
+    <view class='set-item'>
+    <view class="set-label">几列</view>
+    <view style="flex: 5;">
+      <button size="mini" type="{{config.columns==2?'primary':''}}" bind:tap="columnsChange" data-value="2">2（宽松）</button>
+      <button size="mini" type="{{config.columns==3?'primary':''}}" bind:tap="columnsChange" data-value="3">3（标准）</button>
+      <button size="mini" type="{{config.columns==4?'primary':''}}" bind:tap="columnsChange" data-value="4">4（拥挤）</button>
+    </view>    
+  </view>
+
+
+  <!-- 操作按钮 -->
+  <view class="action-bar">
     <button class="btn export-btn" bindtap="generateImages" loading="{{generatingImages}}">
       {{generatingImages ? imageProgress+'%' : '生成A4图片'}}
     </button>
   </view>
-
+  
+</view>
   <!-- 隐藏的canvas -->
   <view wx:if="{{showCanvas}}" style="position: fixed; left: -10000px; top: -10000px; width: 794px; height: 1123px;">
     <canvas 
@@ -86,5 +98,3 @@
     </view>
   </view>
 
-  
-</view>

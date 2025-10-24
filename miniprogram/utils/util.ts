@@ -49,9 +49,11 @@ export const getAddSubProblem = (range: number) => {
   var num1 = Math.max(nums[0],nums[1],nums[2])
   var num2 = Math.min(nums[0],nums[1],nums[2])
   var num3 = num1-num2
-  return {
-    problem: isAddition ? `${num3} + ${num2} = ` : `${num1} - ${num2} = `,
-    answer: isAddition ? num1 : num3
+  var r = {problem: isAddition ? `${num3} + ${num2} = ` : `${num1} - ${num2} = `, answer: isAddition ? num1 : num3}
+  if(hasNoDuplicateInLast10(r.problem)){
+    return r
+  }else{
+    return getAddSubProblem(range)
   }
 }
 
@@ -84,13 +86,18 @@ export const getAddSubProblemShu = () => {
     console.log(_currentProblem,_correctAnswer)
   }
   const _correctAnswerArray = String(_correctAnswer).split('').map(Number).reverse();
-  return {
+  var r = {
     problem : _currentProblem,
     answer : _correctAnswer,
     answerArray : _correctAnswerArray,
     num1Array : String(num1).split('').map(Number),
     num2Array : String(num2).split('').map(Number),
     operator:_operator
+  }
+  if(hasNoDuplicateInLast10(r.problem)){
+    return r
+  }else{
+    return getAddSubProblemShu()
   }
 }
 /**
@@ -109,7 +116,12 @@ export const getComplexAddSubProblem = (range: number) => {
     num3 = na[0]
   }
   
-  return getProblem(num1,num2,num3,isAddFirst)
+  var r = getProblem(num1,num2,num3,isAddFirst)
+  if(hasNoDuplicateInLast10(r.problem)){
+    return r
+  }else{
+    return getComplexAddSubProblem(range)
+  }
 }
 
 const getProblem = (num1: number,num2: number,num3: number,isAddFirst: boolean) => {
@@ -143,11 +155,15 @@ export const getMultipProblem = () => {
   const _index = getNumsByRange(3)[0]-1;
   var _answer = rnums[_index]
   rnums[_index] = "?"
-  return {
+  var r = {
     problem: `${rnums[0]} * ${rnums[1]} = ${rnums[2]}`,
     answer: _answer
   }
-  
+  if(hasNoDuplicateInLast10(r.problem)){
+    return r
+  }else{
+    return getMultipProblem()
+  }
 }
 /**
  * 乘法竖式
@@ -161,7 +177,7 @@ export const getMultipProblemShu = () => {
     num2 = getRandomNum3()>750 ? getRandomNum3() : getRandomNum2();   
       _currentProblem = `${num1} * ${num2} = `;
       _correctAnswer = num1 * num2;
-  return {
+  var r = {
     problem : _currentProblem,
     answer : _correctAnswer,
     answerArray : String(_correctAnswer).split('').map(Number),
@@ -170,7 +186,11 @@ export const getMultipProblemShu = () => {
     num1:num1,
     num2:num2
   }
-  
+  if(hasNoDuplicateInLast10(r.problem)){
+    return r
+  }else{
+    return getMultipProblemShu()
+  }
 }
 /**
  * 生成算式
@@ -184,13 +204,13 @@ export const getComplexMultipProblem = () => {
   const isMultFirst = addN[9]%2==0;
   const isAdd = addN[5]%2==0;
   const _index = getNumsByRange(4)[0]-1;
-
+  var r
   if(isMultFirst){
     if(isAdd){//a*b+c
       const rnums = [multN1[1],multN2[2],addN[0],multN1[1]*multN2[2]+addN[0]]
       var _answer = rnums[_index]
       rnums[_index] = "?"
-      return {
+      r = {
         problem: `${rnums[0]} * ${rnums[1]} + ${rnums[2]} = ${rnums[3]}`,
         answer: _answer
       }
@@ -199,7 +219,7 @@ export const getComplexMultipProblem = () => {
       const rnums = [multN1[1] , multN2[2] , _r , (multN1[1]*multN2[2]-_r)]
       var _answer = rnums[_index]
       rnums[_index] = "?"
-      return {
+      r = {
         problem: `${rnums[0]} * ${rnums[1]} - ${rnums[2]} = ${rnums[3]}`,
         answer: _answer
       }
@@ -209,7 +229,7 @@ export const getComplexMultipProblem = () => {
       const rnums = [addN[0],multN1[1],multN2[2],addN[0]+multN1[1]*multN2[2]]
       var _answer = rnums[_index]
       rnums[_index] = "?"
-      return {
+      r = {
         problem: `${rnums[0]} + ${rnums[1]} * ${rnums[2]} = ${rnums[3]}`,
         answer: _answer
       }
@@ -218,14 +238,36 @@ export const getComplexMultipProblem = () => {
       const rnums = [ _r , multN1[1] , multN2[2] , (_r - multN1[1]*multN2[2])]
       var _answer = rnums[_index]
       rnums[_index] = "?"
-      return {
+      r = {
         problem: `${rnums[0]} - ${rnums[1]} * ${rnums[2]} = ${rnums[3]}`,
         answer: _answer
       }
     }
   }
+  if(hasNoDuplicateInLast10(r.problem)){
+    return r
+  }else{
+    return getComplexMultipProblem()
+  }
 }
 
+/**
+ * 判断最近10次是否有重复数据
+ * @param {string} currentData - 当前要判断的数据
+ * @returns {boolean} - 最近10次没有重复返回true，有重复返回false
+ */
+export const hasNoDuplicateInLast10 = (currentData)=>{
+  const app = getApp();
+  // 确保globalData中有dataHistory数组
+  if (!app.globalData.dataHistory) { app.globalData.dataHistory = []; }
+  const history = app.globalData.dataHistory;
+  // 检查当前数据是否在历史记录中存在
+  const isDuplicate = history.includes(currentData);
+  if (isDuplicate) {return false;}
+  // 没有重复，将当前数据添加到历史记录（最新的在前面）
+  app.globalData.dataHistory = [currentData, ...history].slice(0, 10);
+  return true; // 没有重复，返回true
+}
 export const isValidNumber = (value) => {
   if(value.length>0){
     const num = Number(value);

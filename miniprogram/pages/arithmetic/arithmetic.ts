@@ -211,6 +211,11 @@ Page({
     this.setData({ "config.rowSpacing" : parseInt(e.detail.value) });
     this.generateProblems()
   },
+  columnsChange(e){
+    console.log(parseInt(e.target.dataset.value))
+    this.setData({ "config.columns" : parseInt(e.target.dataset.value) });
+    this.generateProblems()
+  },
   showNumChange(e){
     this.setData({ "config.showNum" : e.detail.value });
   },

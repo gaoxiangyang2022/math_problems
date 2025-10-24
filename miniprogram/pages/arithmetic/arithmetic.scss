@@ -2,6 +2,7 @@
 .container{
   width: 100vw;
   padding: 15px 0;
+  margin-bottom: 8rpx;
 }
 
 .panel-title {
@@ -13,21 +14,17 @@
   display: flex;
   align-items: center;
 }
-.set-title{
-  background-color: #fff;
-  border-radius: 12rpx;
-  padding: 24rpx;
-  margin-bottom: 24rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
+.set-item{
   display: flex;
-  flex-direction: row;
+  margin: 30rpx;
+  font-size: 32rpx;
 }
-.set-title input {
+.set-label{
+  color: #585a5c;
+  margin-right: 25rpx;
+}
+.set-item input {
   border-bottom: 1rpx solid #e0e0e0;
-  padding: 16rpx;
-  font-size: 28rpx;
-  margin-top: 12rpx;
-  transition: border-color 0.3s ease;
 }
 .images-section {
   background: white;

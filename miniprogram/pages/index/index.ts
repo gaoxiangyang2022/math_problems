@@ -95,11 +95,12 @@ Component({
     emojiClick(e){
       const { index } = e.currentTarget.dataset;
       const isChange = Math.random() > 0.8;
-      if(isChange){
-        this.getEmoji()
-      }else if(this.data.animalMove == 1){
+      if(this.data.animalMove == 1){
         this.setData({animalMove: index})
-        setTimeout(() => {this.setData({animalMove: 1})}, 5000);
+        setTimeout(() => {this.setData({animalMove: 1})}, 1800);
+      }
+      if(isChange){
+        setTimeout(() => {this.getEmoji()}, 1800);
       }
     },
     getEmoji(){

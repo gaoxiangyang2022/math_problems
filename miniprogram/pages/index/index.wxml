@@ -3,69 +3,88 @@
 
    <!-- 顶部标题 -->
    <view class="header">
-        <view class="title">{{emo1}} 芒果学习工具 {{emo2}}</view>
-        <view class="subtitle">选择你想练习的数学内容吧！</view>
+        <view class="title">{{emo1}} 数学小天才 {{emo2}}</view>
+        <view class="subtitle">让数学变得简单有趣！</view>
     </view>
     
-    <!-- 云朵装饰 -->
-    <view class="cloud cloud1 {{animalMove == 3 ? 'animal-move' : ''}}" bind:tap="emojiClick" data-index="3">{{emo3}}</view>
-    <view class="cloud cloud2 {{animalMove == 4 ? 'animal-move' : ''}}" bind:tap="emojiClick" data-index="4">{{emo4}}</view>
-    
+
     <!-- 主要内容区域 -->
-    <view class="grid-container">
-        <view class="grid-item"  bind:tap="goToSimpleAddSub">
-            <view class="icon">➕</view>
-            <view>加减口算</view>
-            <view>简单的加减法练习</view>
-        </view>
-        
-        <view class="grid-item" bind:tap="goToAddSub">
-            <view class="icon">🧮</view>
-            <view>加减竖式</view>
-            <view>多位数加减列竖式计算</view>
-        </view>
-        
-        <view class="grid-item" bind:tap="goToMultip">
-            <view class="icon">✖️</view>
-            <view>乘法口决</view>
-            <view>背诵乘法表</view>
-        </view>
-        
-        <view class="grid-item" bind:tap="goToMult">
-            <view class="icon">➗</view>
-            <view>乘除口算</view>
-            <view>乘法和除法练习</view>
-        </view>
+    <view class="grid">
+      <view class="card" bind:tap="goToSimpleAddSub">
+          <view class="decoration"></view>
+          <view class="decoration"></view>
+          <view class="icon">+−</view>
+          <h3>简单加减法</h3>
+          <view class="card-des">简单的加减法练习</view>
+      </view>
+      <view class="card" bind:tap="goToAddSub">
+          <view class="decoration"></view>
+          <view class="decoration"></view>
+          <view class="icon">12+</view>
+          <h3>多位数加减法竖式</h3>
+          <view class="card-des">学习竖式计算方法</view>
+      </view>
+
+
+      <view class="card"  bind:tap="goToMultip">
+          <view class="decoration"></view>
+          <view class="decoration"></view>
+          <view class="icon">口诀</view>
+          <h3>简洁口诀</h3>
+          <view class="card-des">记忆数学口诀</view>
+      </view>
+      
+      <view class="card" bind:tap="goToMult">
+          <view class="decoration"></view>
+          <view class="decoration"></view>
+          <view class="icon">×</view>
+          <h3>乘除口算</h3>
+          <view class="card-des">乘法和除法基础练习</view>
+      </view>
+       
         
 
-        
-        <view class="grid-item" bind:tap="goToMixAdd">
-            <view class="icon">🔢</view>
-            <view>加减混合计算</view>
-            <view>加减混合计算的练习</view>
-        </view>
 
-        <view class="grid-item" bind:tap="goToMixMultip">
-            <view class="icon">🔡</view>
-            <view>乘与加减混合</view>
-            <view>乘法与加减混合计算的练习</view>
-        </view>
-        <view class="grid-item" bind:tap="goMulEquationFun">
-            <view class="icon">*️⃣</view>
-            <view>乘法竖式</view>
-            <view>练习2-3位数乘法竖式</view>
-        </view>
-        <view class="grid-item" bind:tap="goTotenFun">
-            <view class="icon">🔟</view>
-            <view>凑、破10法</view>
-            <view>学习如何凑10和破10的方法</view>
-        </view>
-        
+
+
+      <view class="card" bind:tap="goToMixAdd">
+          <view class="decoration"></view>
+          <view class="decoration"></view>
+          <view class="icon">±</view>
+          <h3>加减混合计算</h3>
+          <view class="card-des">加减混合运算练习</view>
+      </view>
+      
+      <view class="card" bind:tap="goToMixMultip">
+          <view class="decoration"></view>
+          <view class="decoration"></view>
+          <view class="icon">×±</view>
+          <h3>加减乘混合计算</h3>
+          <view class="card-des">综合运算能力提升</view>
+      </view>
+      
+      <view class="card" bind:tap="goMulEquationFun">
+          <view class="decoration"></view>
+          <view class="decoration"></view>
+          <view class="icon">12×</view>
+          <h3>多位数乘法竖式</h3>
+          <view class="card-des">乘法竖式计算练习</view>
+      </view>
+      
+      <view class="card" bind:tap="goTotenFun">
+          <view class="decoration"></view>
+          <view class="decoration"></view>
+          <view class="icon">10</view>
+          <h3>凑、破10法</h3>
+          <view class="card-des">学习凑10法和破10法技巧</view>
+      </view>
     </view>
     
     <!-- 卡通动物 -->
-    <view class="cartoon-animal bunny" bind:tap="goAboutFun" >{{emo1}}</view>
-    <view class="cartoon-animal panda {{animalMove == 2 ? 'animal-move' : ''}}"  bind:tap="emojiClick" data-index="2">{{emo2}}</view>
+    <view class="cartoon-animal animal1 " bind:tap="goAboutFun" >{{emo1}}</view>
+    <view class="cartoon-animal animal2 {{animalMove == 2 ? 'animal-move' : ''}}"  bind:tap="emojiClick" data-index="2">{{emo2}}</view>
+    <view class="cartoon-animal animal3 {{animalMove == 3 ? 'animal-move' : ''}}" bind:tap="emojiClick" data-index="3">{{emo3}}</view>
+    <view class="cartoon-animal animal4 {{animalMove == 4 ? 'animal-move' : ''}}" bind:tap="emojiClick" data-index="4">{{emo4}}</view>
     
     <!-- 底部 -->
     <view class="footer">

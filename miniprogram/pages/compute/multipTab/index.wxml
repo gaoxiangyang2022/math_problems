@@ -12,7 +12,8 @@
     </view>
   </scroll-view>
 
-  <view class="explanation-panel">
+
+  <view class="explanation-panel" wx:if="{{showExplanation}}">
     <h2 class="explanation-header">{{explanationHeader}}</h2>
     <scroll-view type="list" scroll-x enable-flex show-scrollbar="{{false}}" style="width: 100vw;">
     <view class="bunnies-container">
@@ -23,6 +24,7 @@
       
     </view>
   </scroll-view>
+  <button type="primary">关闭</button>
   </view>
 </view>
 

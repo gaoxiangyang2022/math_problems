@@ -7,6 +7,7 @@ Page({
   data: {
     multipData: [],
     groupData: [],
+    showExplanation:false,
     explanationHeader : "点击乘法口诀查看解释",
   },
   /**
@@ -51,7 +52,9 @@ Page({
         title:`${i} × ${j} = ${result}`
       })
       // 更新数据
-      this.setData({groupData:_GroupData,explanationHeader:`${i} × ${j} = ${result}`})
+      this.setData({groupData:_GroupData,
+        showExplanation:true,
+        explanationHeader:`${i} × ${j} = ${result}`})
   },
   // onShareAppMessage() {
   //   return {

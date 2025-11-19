@@ -76,7 +76,8 @@ h1 {
     display: flex;
     flex-wrap: nowrap;
     gap: 20px;
-    max-width: 350px;
+    max-width: 90vw;
+    margin: 0 auto;
     .bunny-group {
       display: flex;
       flex-direction: column;

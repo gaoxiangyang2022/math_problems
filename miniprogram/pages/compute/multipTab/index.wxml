@@ -15,7 +15,7 @@
 
   <view class="explanation-panel" wx:if="{{showExplanation}}">
     <h2 class="explanation-header">{{explanationHeader}}</h2>
-    <scroll-view type="list" scroll-x enable-flex show-scrollbar="{{false}}" style="width: 100vw;">
+    <scroll-view type="list" scroll-x enable-flex show-scrollbar="{{false}}" style="width: 90vw;" scroll-with-animation="true" scroll-left="{{scrollLeft}}">
     <view class="bunnies-container">
       <!-- 小兔子图形生成 -->
           <view class="bunny-group" wx:for="{{groupData}}" wx:key="index">
@@ -24,7 +24,7 @@
       
     </view>
   </scroll-view>
-  <button type="primary">关闭</button>
+  <button type="primary" bind:tap="closeExplanation" >关闭</button>
   </view>
 </view>
 

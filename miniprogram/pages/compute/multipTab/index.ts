@@ -9,6 +9,7 @@ Page({
     groupData: [],
     showExplanation:false,
     explanationHeader : "点击乘法口诀查看解释",
+    scrollLeft:0
   },
   /**
    * 生命周期函数--监听页面加载
@@ -55,6 +56,24 @@ Page({
       this.setData({groupData:_GroupData,
         showExplanation:true,
         explanationHeader:`${i} × ${j} = ${result}`})
+      
+         // 页面初次渲染完成后触发
+    setTimeout(() => {
+      // 先向右滚动一定距离
+      this.setData({
+        scrollLeft: 100
+      });
+      
+      // 延迟后回到第一列
+      setTimeout(() => {
+        this.setData({
+          scrollLeft: 0
+        });
+      }, 1500);
+    }, 1000);
+  },
+  closeExplanation(){
+    this.setData({showExplanation:false})
   },
   // onShareAppMessage() {
   //   return {

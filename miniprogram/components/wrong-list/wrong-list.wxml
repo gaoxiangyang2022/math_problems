@@ -1,8 +1,8 @@
 <view wx:if="{{wrongList.length>0}}">
-
+  <view class="title">{{emojiStr[0]}}错题小本本📙</view>
   <scroll-view type="list"
-  scroll-y style="height: 100vh;">
-    <h1 class="title">{{emojiStr[0]}}错题小本本📙</h1>
+  scroll-y style="height: 90vh;">
+    
     <view class="questions-wrapper">
       <block wx:for="{{wrongList}}" wx:key="index">
         <view class="question-card">

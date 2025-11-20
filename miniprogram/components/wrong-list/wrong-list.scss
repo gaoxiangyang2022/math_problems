@@ -7,9 +7,8 @@
   font-size: 36rpx;
   font-weight: bold;
   color: #ff2222;
-  margin: 60rpx 40rpx;
   text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
-  padding: 20rpx;
+  padding-bottom: 20rpx;
 }
 
 /* 问题列表容器 */
@@ -30,20 +29,18 @@
   box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
   border: 1rpx solid rgba(255, 255, 255, 0.3);
   position: relative;
-  overflow: hidden;
+  align-items: center;
 }
 .question-content {
-  display: block;
-  margin-bottom: 16rpx;
   font-weight: 800;
   color: #2c3e50;
+  flex: 0.2 0 auto;
 }
-
-
 .your-answer {
   display: block;
   color: #e74c3c;
   font-weight: 500;
+  flex: 0.8 0 auto;
 }
 
 .demo-btn {

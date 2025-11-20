@@ -81,7 +81,11 @@ margin-left: 10px; /* 间隔 */
     opacity: 0;
   }
 }
+.clone-text{
+  position: absolute;
+  color: red;
 
-.clone-text.animated {
-  animation: moveAndFade 0.8s ease-in-out forwards;
+  &.animated {
+    animation: moveAndFade 0.8s ease-in-out forwards;
+  }
 }

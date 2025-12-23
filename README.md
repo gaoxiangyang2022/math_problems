@@ -9,6 +9,12 @@
 线上体验版本：
 <img src="app-code.jpg" alt="输入图片说明" style="zoom:67%;" />
 
+
+代码地址：
+[gitee地址](https://gitee.com/a597966/math_problems)
+[github地址](https://github.com/gaoxiangyang2022/math_problems)
+
+
 ### 部分功能截图：
 #### 首页
 <img src="./readme/011.jpg" alt="输入图片说明" style="zoom:50%;" />

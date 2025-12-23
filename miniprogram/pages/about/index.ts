@@ -65,12 +65,12 @@ Page({
   },
   callme(){
     wx.makePhoneCall({
-      phoneNumber: '18538186452' //仅为示例，并非真实的电话号码
+      phoneNumber: '19138112344' //仅为示例，并非真实的电话号码
     })
   },
   copyPhone(){
     wx.setClipboardData({
-      data: '18538186452',
+      data: '19138112344',
       success () {
         wx.showToast({title:"复制成功"})
       }

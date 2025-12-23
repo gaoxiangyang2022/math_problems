@@ -1,7 +1,7 @@
 <view class="print-view">
   <view class="problem-list">
     <view class="item" style="flex: 1 1 {{minWidth}}; min-width: {{minWidth}};" wx:for="{{problemList}}" wx:key="index">
-      {{item.problem}}{{item.answer}}
+      {{item.problem}} | {{item.answer}}
     </view>
   </view>
   <view class="problem-bottom">

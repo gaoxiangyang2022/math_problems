@@ -69,9 +69,9 @@ Component({
     },
     goAboutFun(){
       wx.navigateTo({
-        // url: '/pages/about/index'
+        url: '/pages/about/index'
         // url: '/pages/arithmetic/arithmetic'
-        url: '/pages/demo/addSubDemo/index'
+        // url: '/pages/demo/addSubDemo/index'
       })
     },
     goMulEquationFun(){

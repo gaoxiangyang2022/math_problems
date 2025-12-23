@@ -6,7 +6,7 @@
     <view class="questions-wrapper">
       <block wx:for="{{wrongList}}" wx:key="index">
         <view class="question-card">
-            <text class="question-content">{{item.question}}{{item.correctAnswer}}</text>
+            <text class="question-content">{{item.question}} | {{item.correctAnswer}}</text>
             <text class="your-answer">你的答案：{{item.yourAnswer}}</text>
             <text class="demo-btn" bindtap="goDemo">演示</text>
         </view>

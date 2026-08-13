@@ -7,7 +7,7 @@
   <!-- 做题界面 -->
   <view wx:if="{{showWherePage==1}}" class="container">
     <progress-bar index="{{currentIndex}}" total="{{currentTotal}}" wrongNum="{{wrongQuestions.length}}"></progress-bar>
-    <practice-settings delay="{{debounce_time}}" autoNext="{{autoNext}}" checked="{{answerChecked}}" bind:change="changePracticeSettings" bind:verify="checkAnswer" bind:next="nextProblem"></practice-settings>
+    <practice-settings mode="manual" delay="{{debounce_time}}" autoNext="{{autoNext}}" checked="{{answerChecked}}" bind:change="changePracticeSettings" bind:verify="checkAnswer" bind:next="nextProblem"></practice-settings>
     <view id="feedback">{{feedbackMessage}}</view>
     <view class="problem {{errorShake? ' shake' : ''}}">
       <view id="problem">{{currentProblem}}</view>

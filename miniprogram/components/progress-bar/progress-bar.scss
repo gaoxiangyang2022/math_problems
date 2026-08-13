@@ -1,33 +1,55 @@
 /* components/progress-bar/progress-bar.wxss */
 
 .progress-container {
-  margin-bottom: 5px;
+  box-sizing: border-box;
+  margin-bottom: 16rpx;
+  padding: 18rpx;
   width: 100%;
+  background: #fff7ed;
+  border: 3rpx solid #fed7aa;
+  border-radius: 20rpx;
+  box-shadow: 0 8rpx 20rpx rgba(251, 146, 60, 0.12);
+}
+
+.progress-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18rpx;
+  margin-bottom: 14rpx;
+}
+
+.progress-mood {
+  color: #ea580c;
+  font-size: 28rpx;
+  font-weight: 800;
 }
 
 .progress-info {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  color: #666;
-  font-size: 1.1rem;
+  gap: 14rpx;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  color: #64748b;
+  font-size: 24rpx;
+  font-weight: 600;
 }
 
 .progress-bar {
-  height: 22px;
-  background: #f0f4ff;
-  border-radius: 15px;
+  height: 34rpx;
+  background: #e0f2fe;
+  border-radius: 999rpx;
   overflow: hidden;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
-  border: 2px solid white;
+  box-shadow: inset 0 3rpx 8rpx rgba(14, 116, 144, 0.12);
+  border: 4rpx solid #ffffff;
   position: relative;
 }
 
 .progress {
   height: 100%;
-  background: linear-gradient(to right, #ff9e6d, #ffd166, #06d6a0, #5a67d8, #a777e3);
-  box-shadow: 0 0 10px rgba(90, 103, 216, 0.4);
-  border-radius: 15px;
+  background: linear-gradient(to right, #86efac, #fde68a, #fca5a5);
+  box-shadow: 0 0 12rpx rgba(34, 197, 94, 0.25);
+  border-radius: 999rpx;
   width: 0%;
   transition: width 0.5s ease;
   position: relative;
@@ -39,11 +61,34 @@
 
 .progress-icon{
   position: absolute;
-  right: 0px;
-  font-size: 20px;
-  transform: rotate(45deg);
-  line-height: 20rpx;
+  top: 50%;
+  right: -4rpx;
+  width: 40rpx;
+  height: 40rpx;
+  color: #ffffff;
+  background: #f97316;
+  border: 3rpx solid #ffffff;
+  border-radius: 50%;
+  font-size: 24rpx;
+  line-height: 38rpx;
+  text-align: center;
+  transform: translateY(-50%);
   z-index: 200;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-  right: 5px;
+  box-shadow: 0 4rpx 10rpx rgba(249, 115, 22, 0.25);
+}
+
+.progress-track-icon {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  font-size: 24rpx;
+  transform: translateY(-50%);
+}
+
+.progress-track-icon.left {
+  left: 10rpx;
+}
+
+.progress-track-icon.right {
+  right: 10rpx;
 }

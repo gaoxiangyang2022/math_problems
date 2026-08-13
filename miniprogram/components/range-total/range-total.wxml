@@ -11,6 +11,9 @@
 </view>
 
 <view class="section" wx:if="{{total}}">
+  <view class="section-tools">
+    <practice-settings mode="settings"></practice-settings>
+  </view>
   <h2 class="section-title total-title">请选择题目数量</h2>
   <view>需要多少道题目呢？</view>
   <view class="selecter">

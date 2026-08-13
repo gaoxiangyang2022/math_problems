@@ -1,16 +1,32 @@
-<view class="settings">
-  <view class="setting-row">
-    <text>自动判断</text>
-    <picker mode="selector" range="{{delayOptions}}" value="{{delayIndex}}" bindchange="changeDelay">
-      <view class="setting-pill">{{delay}}ms</view>
-    </picker>
+<view wx:if="{{mode == 'settings'}}" class="settings-launch">
+  <button class="settings-icon" bindtap="openPanel" aria-label="练习设置">⚙</button>
+  <view class="settings-summary">{{innerAutoNext ? '自动下一题' : '手动下一题'}} · {{innerDelay}}ms</view>
+</view>
+
+<view wx:if="{{mode == 'settings' && panelVisible}}" class="settings-mask" bindtap="closePanel">
+  <view class="settings-panel" catchtap="noop">
+    <view class="panel-header">
+      <view>
+        <view class="panel-title">练习设置</view>
+        <view class="panel-subtitle">选择适合小朋友的做题节奏</view>
+      </view>
+      <button class="close-btn" bindtap="closePanel">×</button>
+    </view>
+    <view class="setting-row">
+      <text>答完后多久判断</text>
+      <picker mode="selector" range="{{delayOptions}}" value="{{delayIndex}}" bindchange="changeDelay">
+        <view class="setting-pill">{{innerDelay}}ms</view>
+      </picker>
+    </view>
+    <view class="setting-row">
+      <text>答完后自动下一题</text>
+      <switch checked="{{innerAutoNext}}" bindchange="changeAutoNext" />
+    </view>
   </view>
-  <view class="setting-row">
-    <text>自动切题</text>
-    <switch checked="{{autoNext}}" bindchange="changeAutoNext" />
-  </view>
-  <view wx:if="{{!autoNext}}" class="manual-actions">
-    <button wx:if="{{!checked}}" type="primary" bindtap="verify">验证</button>
-    <button wx:if="{{checked}}" type="primary" bindtap="next">下一题</button>
-  </view>
+</view>
+
+<view wx:if="{{mode == 'manual' && !autoNext}}" class="manual-actions">
+  <view class="manual-tip">{{checked ? '这题已经完成，点下一题继续' : '先点验证，看看这一题对不对'}}</view>
+  <button wx:if="{{!checked}}" type="primary" bindtap="verify">验证</button>
+  <button wx:if="{{checked}}" type="primary" bindtap="next">下一题</button>
 </view>

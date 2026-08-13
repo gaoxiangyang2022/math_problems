@@ -1,21 +1,91 @@
-.settings {
+.settings-launch {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12rpx;
+  margin: 16rpx 0;
+}
+
+.settings-icon {
+  width: 64rpx !important;
+  height: 64rpx !important;
+  min-width: 64rpx !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  color: #ffffff !important;
+  background: #5a67d8 !important;
+  font-size: 34rpx !important;
+  line-height: 64rpx !important;
+  box-shadow: 0 8rpx 18rpx rgba(90, 103, 216, 0.22);
+}
+
+.settings-summary {
+  color: #64748b;
+  font-size: 24rpx;
+}
+
+.settings-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 18rpx;
-  flex-wrap: wrap;
-  margin: 18rpx 0;
-  padding: 16rpx;
-  background: #f8fafc;
-  border-radius: 16rpx;
+  padding: 32rpx;
+  background: rgba(15, 23, 42, 0.36);
+}
+
+.settings-panel {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 640rpx;
+  padding: 30rpx;
+  background: #ffffff;
+  border: 4rpx solid #bfdbfe;
+  border-radius: 24rpx;
+  box-shadow: 0 20rpx 50rpx rgba(15, 23, 42, 0.2);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.panel-title {
+  color: #2563eb;
+  font-size: 34rpx;
+  font-weight: 800;
+}
+
+.panel-subtitle {
+  margin-top: 6rpx;
+  color: #64748b;
+  font-size: 24rpx;
+}
+
+.close-btn {
+  width: 56rpx !important;
+  height: 56rpx !important;
+  min-width: 56rpx !important;
+  padding: 0 !important;
+  color: #64748b !important;
+  background: #f1f5f9 !important;
+  border-radius: 50% !important;
+  font-size: 36rpx !important;
+  line-height: 52rpx !important;
 }
 
 .setting-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10rpx;
+  padding: 20rpx 0;
   color: #52606d;
   font-size: 26rpx;
+  border-top: 1rpx solid #e2e8f0;
 }
 
 .setting-pill {
@@ -27,8 +97,16 @@
 
 .manual-actions {
   width: 100%;
+  text-align: center;
+  margin: 18rpx 0;
 }
 
 .manual-actions button {
   width: 60%;
+}
+
+.manual-tip {
+  margin: 0 0 14rpx;
+  color: #64748b;
+  font-size: 24rpx;
 }

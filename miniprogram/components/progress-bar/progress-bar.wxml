@@ -1,11 +1,16 @@
 <view class="progress-container">
-  <view class="progress-info">
-    <span>进度: <span id="progressText">{{displayIndex}}/{{displayTotal}}</span></span>
-    <span>错误: <span id="wrongCount">{{wrongNum}}</span></span>
+  <view class="progress-top">
+    <view class="progress-mood">{{progressMood}}</view>
+    <view class="progress-info">
+      <span>第 <span id="progressText">{{displayIndex}}</span> / {{displayTotal}} 题</span>
+      <span>错题 <span id="wrongCount">{{wrongNum}}</span></span>
+    </view>
   </view>
   <view class="progress-bar">
     <view class="progress" style="width: {{progressPercent}}%;">
-      <view class="progress-icon">🚀</view>
+      <view class="progress-icon">★</view>
     </view>
+    <view class="progress-track-icon left">🌱</view>
+    <view class="progress-track-icon right">🏁</view>
   </view>
 </view>

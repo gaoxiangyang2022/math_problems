@@ -30,12 +30,22 @@ Page({
   },
 
   startTest(e) {
+    if (this.data.timer) {
+      clearTimeout(this.data.timer);
+    }
+    const settings = getPracticeSettings(this.data.debounce_time);
     this.setData({
       currentRange:e.detail.range,
       currentTotal:e.detail.total,
       currentIndex: 1,
       wrongQuestions: [],
       answerChecked: false,
+      debounce_time: settings.delay,
+      autoNext: settings.autoNext,
+      feedbackMessage: "",
+      userAnswer: "",
+      errorShake: false,
+      timer: 0,
       showWherePage: 1
     });
     this.generateNewProblem();
@@ -74,7 +84,7 @@ Page({
     } else if (this.data.userAnswer === this.data.correctAnswer) {
       recordPracticeResult(true)
       this.setData({
-        feedbackMessage: "答对了，真棒！",
+        feedbackMessage: this.data.autoNext ? "答对了，真棒！" : "答对了，点下一题继续",
         currentIndex: this.data.currentIndex + 1,
         answerChecked: true
       });
@@ -136,7 +146,12 @@ Page({
   restartQuiz() {
     this.setData({
       showWherePage: 0,
-      currentProblem: "请选择难度开始练习"
+      currentProblem: "请选择难度开始练习",
+      feedbackMessage: "",
+      userAnswer: "",
+      answerChecked: false,
+      errorShake: false,
+      timer: 0
     });
   }, 
   beginPrint(e){

@@ -1,33 +1,64 @@
-<view class="header">
-  <h1>趣味乘法口诀学习</h1>
-  <view>点击乘法表中的单元格，查看图形化解释</view>
-</view>
+<view class="page">
+  <view class="hero">
+    <view class="hero-title">乘法口诀乐园</view>
+    <view class="hero-subtitle">先选一个数字，再一条一条看口诀</view>
+  </view>
 
-<view class="multiplication-container">
-  <scroll-view type="list" scroll-x enable-flex show-scrollbar="{{false}}" style="width: 100vw;">
-    <view class="multiplication-flex">
-      <view class="column" wx:for="{{multipData}}" wx:key="index">
-        <view class="cell" wx:for="{{item}}" wx:key="index" data-i="{{item.i}}" data-j="{{item.j}}" bind:tap="showExplanation">{{item.t}}</view>
+  <view class="number-tabs">
+    <button
+      wx:for="{{tableNums}}"
+      wx:key="item"
+      class="number-tab {{selectedBase == item ? 'active' : ''}}"
+      data-base="{{item}}"
+      bindtap="selectBase"
+    >{{item}}</button>
+  </view>
+
+  <view class="study-card">
+    <view class="card-head">
+      <view>
+        <view class="card-title">{{selectedBase}} 的乘法口诀</view>
+        <view class="card-subtitle">点击一条，看看它表示多少组</view>
+      </view>
+      <view class="card-badge">{{selectedFacts.length}} 条</view>
+    </view>
+
+    <view class="facts-grid">
+      <view
+        wx:for="{{selectedFacts}}"
+        wx:key="index"
+        class="fact-card {{showExplanation && selectedIndex == index ? 'active' : ''}}"
+        data-index="{{index}}"
+        bindtap="showFactExplanation"
+      >
+        <view class="fact-main">{{item.t}}</view>
+        <view class="fact-tip">{{item.i}} 组，每组 {{item.j}} 个</view>
       </view>
     </view>
-  </scroll-view>
-
+  </view>
 
   <view class="explanation-panel" wx:if="{{showExplanation}}">
-    <h2 class="explanation-header">{{explanationHeader}}</h2>
-    <scroll-view type="list" scroll-x enable-flex show-scrollbar="{{false}}" style="width: 90vw;" scroll-with-animation="true" scroll-left="{{scrollLeft}}">
-    <view class="bunnies-container">
-      <!-- 小兔子图形生成 -->
-          <view class="bunny-group" wx:for="{{groupData}}" wx:key="index">
-            <view wx:for="{{item}}" wx:key="index" class="{{item.label?'group-label':'bunny'}}">{{item.t}}</view>
-          </view>
-      
+    <view class="explanation-head">
+      <view>
+        <view class="explanation-header">{{explanationHeader}}</view>
+        <view class="explanation-text">{{explanationText}}</view>
+      </view>
+      <button class="close-btn" bindtap="closeExplanation">×</button>
     </view>
-  </scroll-view>
-  <button type="primary" bind:tap="closeExplanation" >关闭</button>
-  </view>
-</view>
 
-<view class="footer">
-  <view>设计用于儿童乘法学习 | 趣味数学教育工具</view>
+    <scroll-view type="list" scroll-x enable-flex show-scrollbar="{{false}}" class="animal-scroll" scroll-with-animation="true" scroll-left="{{scrollLeft}}">
+      <view class="animals-container">
+        <view class="animal-group" wx:for="{{groupData}}" wx:key="index">
+          <view class="animal-row">
+            <view wx:for="{{item}}" wx:key="index" class="{{item.label ? 'group-label' : 'animal-item'}}">{{item.t}}</view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="panel-actions">
+      <button class="nav-btn" bindtap="prevFact" disabled="{{selectedIndex == 0}}">上一条</button>
+      <button class="nav-btn primary" bindtap="nextFact" disabled="{{selectedIndex >= selectedFacts.length - 1}}">下一条</button>
+    </view>
+  </view>
 </view>

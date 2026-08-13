@@ -1,0 +1,16 @@
+<view class="settings">
+  <view class="setting-row">
+    <text>自动判断</text>
+    <picker mode="selector" range="{{delayOptions}}" value="{{delayIndex}}" bindchange="changeDelay">
+      <view class="setting-pill">{{delay}}ms</view>
+    </picker>
+  </view>
+  <view class="setting-row">
+    <text>自动切题</text>
+    <switch checked="{{autoNext}}" bindchange="changeAutoNext" />
+  </view>
+  <view wx:if="{{!autoNext}}" class="manual-actions">
+    <button wx:if="{{!checked}}" type="primary" bindtap="verify">验证</button>
+    <button wx:if="{{checked}}" type="primary" bindtap="next">下一题</button>
+  </view>
+</view>

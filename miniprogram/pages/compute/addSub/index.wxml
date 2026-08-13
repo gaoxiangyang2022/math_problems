@@ -36,7 +36,6 @@
         </view>
 
 
-      <button id="nextQuestion" type="primary" bindtap="nextProblem">下一题</button>
       <button bindtap="beginProcess" type="default" size="mini">解题过程</button>
              <!--计算演示 -->
         <view bind:tap="processOfProblem" wx:if="currentStep.description">{{currentStep.description}}  <text>点击看一步--></text></view>
@@ -46,7 +45,7 @@
 
  <!-- 错题本区域 -->
   <view wx:if="{{showWherePage==2}}" class="container">
-    <wrong-list wrongList="{{wrongQuestions}}"></wrong-list>
+    <wrong-list wrongList="{{wrongQuestions}}" sessionTotal="{{currentTotal}}" bind:restart="restartQuiz"></wrong-list>
   </view>
 
   <!-- 打印题展示界面 -->

@@ -1,10 +1,8 @@
 <view class="container">
   <demo-anim
-    num1="{{7103}}" 
-    num2="{{278}}" 
-    operation="subtraction"
-    bind:stepchange="onStepChange"
-    bind:reset="onReset"
+    visible="{{false}}"
+    question="7103-278="
+    correctAnswer="{{6825}}"
   />
 </view>
 

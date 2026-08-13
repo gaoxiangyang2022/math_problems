@@ -7,14 +7,13 @@
   <!-- 做题界面 -->
   <view wx:if="{{showWherePage==1}}" class="container">
     <progress-bar index="{{currentIndex}}" total="{{currentTotal}}" wrongNum="{{wrongQuestions.length}}"></progress-bar>
+    <practice-settings delay="{{debounce_time}}" autoNext="{{autoNext}}" checked="{{answerChecked}}" bind:change="changePracticeSettings" bind:verify="checkAnswer" bind:next="nextProblem"></practice-settings>
     <view id="feedback">{{feedbackMessage}}</view>
     <view class="problem {{errorShake? ' shake' : ''}}">
       <view id="problem">{{currentProblem}}</view>
       <view class="question-ans"><input type="number" bindinput="inputChange" value="{{userAnswer}}" focus="{{inputFocus}}" /></view>
     </view>
 
-    <button id="nextQuestion" type="primary" bindtap="nextProblem">下一题</button>
-    
   </view>
 
 
@@ -22,7 +21,7 @@
 
 <!-- 错题展示界面 -->
 <view wx:if="{{showWherePage==2}}" class="container">
-  <wrong-list wrongList="{{wrongQuestions}}"></wrong-list>
+  <wrong-list wrongList="{{wrongQuestions}}" sessionTotal="{{currentTotal}}" bind:restart="restartQuiz"></wrong-list>
 </view>
 
 <!-- 打印题展示界面 -->

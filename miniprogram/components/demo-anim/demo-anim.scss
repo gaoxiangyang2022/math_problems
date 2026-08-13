@@ -1,96 +1,73 @@
-.vertical-calculation {
-  padding: 20rpx;
-  box-sizing: border-box;
-}
-
-.canvas-container {
+.mask {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  background: rgba(15, 23, 42, .58);
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-bottom: 40rpx;
-  background: #f9f9f9;
-  border-radius: 20rpx;
-  padding: 30rpx;
-  border: 2rpx solid #e1e8ed;
 }
 
-.calculation-canvas {
-  width: 650rpx;
-  height: 500rpx;
-}
-
-.control-buttons {
+.panel {
+  width: 92vw;
+  max-height: 94vh;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  box-sizing: border-box;
   display: flex;
-  gap: 20rpx;
-  margin-bottom: 40rpx;
+  flex-direction: column;
+  align-items: center;
 }
 
-.btn {
+.panel-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  color: #243b53;
+  font-size: 38rpx;
+  font-weight: 700;
+}
+
+.close {
+  color: #829ab1;
+  font-size: 54rpx;
+  line-height: 1;
+}
+
+.canvas {
+  display: block;
+  width: 350px;
+  max-width: 100%;
+  height: 400px;
+  margin: 20rpx auto;
+  background: #f8fafc;
+  border-radius: 18rpx;
+}
+
+.step-text {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 72rpx;
+  padding: 18rpx;
+  color: #52606d;
+  background: #fff7ed;
+  border-radius: 12rpx;
+  line-height: 1.5;
+}
+
+.actions {
+  width: 100%;
+  display: flex;
+  gap: 18rpx;
+  margin-top: 22rpx;
+}
+
+.actions button {
   flex: 1;
-  height: 90rpx;
-  line-height: 90rpx;
-  border: none;
-  border-radius: 20rpx;
-  font-size: 36rpx;
-  font-weight: 600;
-}
-
-.next-btn {
-  background: #2ecc71;
-  color: white;
-}
-
-.next-btn:disabled {
-  background: #95a5a6;
-}
-
-.reset-btn {
-  background: #e74c3c;
-  color: white;
-}
-
-.steps-info {
-  background: #f8f9fa;
-  border-radius: 20rpx;
-  border-left: 10rpx solid #3498db;
-  padding: 40rpx 30rpx;
-}
-
-.steps-title {
-  font-size: 36rpx;
-  font-weight: 600;
-  color: #2c3e50;
-  margin-bottom: 25rpx;
-}
-
-.steps-list {
-  max-height: 400rpx;
-  min-height: 200rpx;
-}
-
-.step-item {
-  font-size: 32rpx;
-  line-height: 1.6;
-  color: #555;
-  margin-bottom: 20rpx;
-  padding: 15rpx;
-  border-radius: 12rpx;
-}
-
-.step-item.current {
-  background: #e3f2fd;
-  font-weight: bold;
-}
-
-.final-result {
-  margin-top: 25rpx;
-  padding: 20rpx;
-  background: #e8f5e8;
-  border-radius: 12rpx;
-  border-left: 6rpx solid #2ecc71;
-}
-
-.final-text {
-  font-size: 34rpx;
-  font-weight: bold;
-  color: #27ae60;
+  font-size: 28rpx;
 }

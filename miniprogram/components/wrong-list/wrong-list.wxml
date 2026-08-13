@@ -1,19 +1,28 @@
+<view class="completion-banner">
+  <view class="completion-title">{{wrongList.length ? '本次练习完成' : '本次全对，真棒！'}}</view>
+  <view>这次做了 {{sessionTotal}} 道，答对 {{sessionCorrect}} 道</view>
+</view>
+<view class="stats">
+  <view><text class="stats-num">{{stats.total}}</text><text> 累计做题</text></view>
+  <view><text class="stats-num wrong">{{stats.wrong}}</text><text> 累计错题</text></view>
+  <view><text class="stats-num good">{{stats.total - stats.wrong}}</text><text> 累计答对</text></view>
+</view>
+<button class="clear-stats-btn" size="mini" bindtap="clearStats">清空今日统计</button>
 <view wx:if="{{wrongList.length>0}}">
-  <view class="title">{{emojiStr[0]}}错题小本本📙</view>
+  <view class="title">{{emojiStr[0]}} 一起把这些题弄明白</view>
   <scroll-view type="list"
-  scroll-y style="height: 90vh;">
+  scroll-y style="height: 65vh;">
     
     <view class="questions-wrapper">
       <block wx:for="{{wrongList}}" wx:key="index">
         <view class="question-card">
-            <text class="question-content">{{item.question}} | {{item.correctAnswer}}</text>
+            <text class="question-content">{{item.question}} = {{item.correctAnswer}}</text>
             <text class="your-answer">你的答案：{{item.yourAnswer}}</text>
-            <text class="demo-btn" bindtap="goDemo">演示</text>
+            <button class="demo-btn" size="mini" data-item="{{item}}" bindtap="goDemo">看演示</button>
         </view>
       </block>
     </view>
   </scroll-view>
-  <!-- <button class="restart-btn" open-type="getUserInfo" bindtap="restartQuiz">再来一次😠</button> -->
 </view>
 <view wx:if="{{wrongList.length==0}}">
   <view class="relative">
@@ -40,3 +49,10 @@
       </view>
     </view>
 </view>
+<button class="restart-btn" type="primary" bindtap="restart">再练一次</button>
+<demo-anim
+  visible="{{demoVisible}}"
+  question="{{demoQuestion}}"
+  correctAnswer="{{demoAnswer}}"
+  bind:close="closeDemo"
+></demo-anim>

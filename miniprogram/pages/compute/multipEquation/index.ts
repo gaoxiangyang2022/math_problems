@@ -1,6 +1,7 @@
 // pages/compute/addSub/index.ts
 import { isValidNumber,getMultipProblemShu } from '../../../utils/util';
 import { multiplicationSteps } from '../../../utils/multipTools';
+import { recordPracticeResult } from '../../../utils/practiceStats';
 Page({
 
   /**
@@ -61,6 +62,11 @@ Page({
   finishQuiz() {
     this.setData({
       showWherePage: 2
+    });
+  },
+  restartQuiz() {
+    this.setData({
+      showWherePage: 0
     });
   },
   generateNewProblem() {
@@ -151,6 +157,7 @@ Page({
       }
     }
     if(error){
+      recordPracticeResult(false)
       var wqTmp = this.data.wrongQuestions
       wqTmp.push({"question": this.data.currentProblem,"yourAnswer": _yourAnswer ,"correctAnswer": _correctAnswer})
       this.setData({
@@ -161,6 +168,7 @@ Page({
         wrongQuestions: wqTmp
       });
     }else{
+      recordPracticeResult(true)
       this.setData({
         checked:true,
         checkResult:_checkResult,
@@ -168,6 +176,9 @@ Page({
         currentIndex: this.data.currentIndex + 1
       });
     }
+    setTimeout(() => {
+      this.nextProblem();
+    }, 1600);
     console.log('表单数据:', this.data.checkResult);
   },
   

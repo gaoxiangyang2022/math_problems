@@ -50,14 +50,13 @@
                   name = "{{processSteps.length}}-{{index}}" class="result-input {{checkResult[processSteps.length+'-'+index]? 'error' : ''}}"/> 
               </view>
               <button wx:if="{{!checked}}" type="primary" form-type="submit">验证</button>
-              <button wx:if="{{checked}}" type="primary" bind:tap="nextProblem">下一题</button>
             </form>
         </view>  
 	</view>
 
  <!-- 错题本区域 -->
   <view wx:if="{{showWherePage==2}}" class="container">
-    <wrong-list wrongList="{{wrongQuestions}}"></wrong-list>
+    <wrong-list wrongList="{{wrongQuestions}}" sessionTotal="{{currentTotal}}" bind:restart="restartQuiz"></wrong-list>
   </view>
 </view>
 

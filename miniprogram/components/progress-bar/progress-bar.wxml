@@ -1,10 +1,10 @@
 <view class="progress-container">
   <view class="progress-info">
-    <span>进度: <span id="progressText">{{index}}/{{total}}</span></span>
+    <span>进度: <span id="progressText">{{displayIndex}}/{{displayTotal}}</span></span>
     <span>错误: <span id="wrongCount">{{wrongNum}}</span></span>
   </view>
   <view class="progress-bar">
-    <view class="progress" style="width: {{(index / total) * 100}}%;">
+    <view class="progress" style="width: {{progressPercent}}%;">
       <view class="progress-icon">🚀</view>
     </view>
   </view>

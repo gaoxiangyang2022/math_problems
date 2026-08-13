@@ -1,37 +1,18 @@
-<view class="vertical-calculation">
-  <!-- Canvas 绘制区域 -->
-  <view class="canvas-container">
-    <canvas 
-      id="calculationCanvas" 
-      canvas-id="calculationCanvas"
-      class="calculation-canvas"
-      style="width: 650rpx; height: 500rpx;"
-    ></canvas>
-  </view>
-  
-  <!-- 控制按钮 -->
-  <view class="control-buttons">
-    <button 
-      class="btn next-btn" 
-      bindtap="nextStep" 
-      disabled="{{!hasMore || isCalculating}}"
-    >
-      {{isCalculating ? '计算中...' : '下一步'}}
-    </button>
-    <button class="btn reset-btn" bindtap="resetCalculation">重置</button>
-  </view>
-  
-  <!-- 步骤说明 -->
-  <view class="steps-info">
-    <view class="steps-title">计算步骤说明</view>
-    <scroll-view class="steps-list" scroll-y>
-      <view class="step-item {{index === steps.length - 1 ? 'current' : ''}}" 
-            wx:for="{{steps}}" wx:key="*this">
-        {{item}}
-      </view>
-      <view class="final-result" wx:if="{{finalResult}}">
-        <text class="final-text">{{finalResult}}</text>
-      </view>
-    </scroll-view>
+<view class="mask" wx:if="{{visible}}">
+  <view class="panel">
+    <view class="panel-head">
+      <text class="title">{{title}}</text>
+      <text class="close" bindtap="close">×</text>
+    </view>
+    <canvas id="demoCanvas" canvas-id="demoCanvas" class="canvas"></canvas>
+    <view wx:if="{{mode !== 'unsupported'}}" class="step-text">
+      <text wx:if="{{stepIndex === 0}}">点击“下一步”，跟着步骤一起算</text>
+      <text wx:if="{{stepIndex > 0}}">{{steps[stepIndex - 1].title}}：{{steps[stepIndex - 1].detail}}</text>
+    </view>
+    <view class="actions">
+      <button wx:if="{{mode !== 'unsupported'}}" type="primary" bindtap="nextStep" disabled="{{stepIndex >= steps.length}}">{{stepIndex >= steps.length ? '演示完成' : '下一步'}}</button>
+      <button wx:if="{{mode !== 'unsupported'}}" bindtap="reset">重置</button>
+      <button bindtap="close">关闭</button>
+    </view>
   </view>
 </view>

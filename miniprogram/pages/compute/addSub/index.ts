@@ -1,6 +1,7 @@
 // pages/compute/addSub/index.ts
 import { isValidNumber,getAddSubProblemShu } from '../../../utils/util';
 import { MathOperationAnalyzer, AdditionStep, SubtractionStep } from '../../../utils/MathOperationAnalyzer';
+import { recordPracticeResult } from '../../../utils/practiceStats';
 Page({
 
   /**
@@ -60,6 +61,11 @@ Page({
       showWherePage: 2
     });
   },
+  restartQuiz() {
+    this.setData({
+      showWherePage: 0
+    });
+  },
   generateNewProblem() {
     const p = getAddSubProblemShu()
     this.setData({
@@ -96,11 +102,14 @@ Page({
   
   checkAnswer() {
 
-  if (this.data.userAnswerArray.reverse().join('') != this.data.correctAnswerArray.reverse().join('')) {
+  const userAnswer = [...this.data.userAnswerArray].reverse().join('')
+  const correctAnswer = [...this.data.correctAnswerArray].reverse().join('')
+  if (userAnswer != correctAnswer) {
+    recordPracticeResult(false)
     var wqTmp = this.data.wrongQuestions
-    wqTmp.push({"question": this.data.currentProblem,"yourAnswer": this.data.userAnswerArray.reverse().join(''),"correctAnswer": this.data.correctAnswerArray.reverse().join('')})
+    wqTmp.push({"question": this.data.currentProblem,"yourAnswer": userAnswer,"correctAnswer": correctAnswer})
     this.setData({
-      feedbackMessage: `😢答错了！正确答案是 ${this.data.correctAnswerArray.reverse().join('')}`,
+      feedbackMessage: `😢答错了！正确答案是 ${correctAnswer}`,
       currentIndex: this.data.currentIndex + 1,
       wrongQuestions: wqTmp,
       errorShake:true
@@ -109,6 +118,7 @@ Page({
       this.nextProblem();
     }, 1500);
     } else {
+      recordPracticeResult(true)
       this.setData({
         currentIndex: this.data.currentIndex + 1
       });

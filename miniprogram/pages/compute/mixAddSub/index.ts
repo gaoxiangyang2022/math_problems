@@ -62,18 +62,39 @@ Page({
   },
 
   inputChange(e) {
-    const _userAnswer = parseInt(e.detail.value);
+    this.setAnswerValue(e.detail.value);
+  },
 
+  inputDigit(e) {
+    if (this.data.answerChecked) return;
+    const nextValue = `${this.data.userAnswer || ''}${e.detail.value}`;
+    this.setAnswerValue(nextValue);
+  },
+
+  backspaceDigit() {
+    if (this.data.answerChecked) return;
+    const value = `${this.data.userAnswer || ''}`;
+    this.setAnswerValue(value.slice(0, -1));
+  },
+
+  clearAnswer() {
+    if (this.data.answerChecked) return;
+    this.setAnswerValue('');
+  },
+
+  setAnswerValue(value) {
+    const valueText = `${value || ''}`;
+    const _userAnswer = valueText === '' ? NaN : parseInt(valueText);
     if (this.data.timer) {
       clearTimeout(this.data.timer);
     }
 
-    const debounceTimer = this.data.autoNext ? setTimeout(() => {
+    const debounceTimer = valueText !== '' ? setTimeout(() => {
       this.checkAnswer();
     }, this.data.debounce_time) : 0;
 
     this.setData({
-      userAnswer: _userAnswer,
+      userAnswer: valueText === '' ? '' : _userAnswer,
       timer: debounceTimer
     });
   },

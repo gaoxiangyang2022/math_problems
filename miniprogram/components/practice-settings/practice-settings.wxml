@@ -25,8 +25,8 @@
   </view>
 </view>
 
-<view wx:if="{{mode == 'manual' && !autoNext}}" class="manual-actions">
+<view wx:if="{{mode == 'manual' && !autoNext && (showVerify || checked)}}" class="manual-actions">
   <view class="manual-tip">{{checked ? '这题已经完成，点下一题继续' : '先点验证，看看这一题对不对'}}</view>
-  <button wx:if="{{!checked}}" type="primary" bindtap="verify">验证</button>
+  <button wx:if="{{!checked && showVerify}}" type="primary" bindtap="verify">验证</button>
   <button wx:if="{{checked}}" type="primary" bindtap="next">下一题</button>
 </view>

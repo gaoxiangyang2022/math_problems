@@ -56,12 +56,24 @@ page{
 /* 输入框样式 */
 .result-input {
     width: 50px; height: 50px; margin-left: 10px;
+    display: flex; align-items: center; justify-content: center;
     font-size: 2rem; text-align: center; border: 2px solid #3498db; border-radius: 8px;
     outline: none; transition: all 0.3s ease;
     font-family: 'Courier New', monospace; font-weight: bold;
+    background: #ffffff;
 }
-.result-input:focus {
+.result-input.focus {
     border-color: #e74c3c; box-shadow: 0 0 8px rgba(231, 76, 60, 0.3); transform: scale(1.05);
+}
+.result-input.filled {
+    color: #1e293b;
+    background: #eff6ff;
+}
+.placeholder {
+    color: #94a3b8;
+    font-size: 0.8rem;
+    font-family: sans-serif;
+    font-weight: 600;
 }
 /* 反馈信息 */
 .feedback { text-align: center; margin-top: 1rem; min-height: 24px; font-size: 1.1rem; font-weight: bold; }

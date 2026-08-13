@@ -4,54 +4,77 @@
   <range-total bind:beginTest="startTest" range="{{false}}"  bind:beginPrint="beginPrint"></range-total>
 </view>
 
-  <view wx:if="{{showWherePage==1}}" class="container">
+  <view wx:if="{{showWherePage==1}}" class="container practice-page">
 
     <progress-bar index="{{currentIndex}}" total="{{currentTotal}}" wrongNum="{{wrongQuestions.length}}"></progress-bar>
        
-    <view id="feedback">{{feedbackMessage}}</view>
-        <!-- 竖式计算区域 -->
-        <view class="vertical-equation">
-            <!--数字1 -->
-            <view class="number-row">
+    <view id="feedback" class="feedback-message">{{feedbackMessage}}</view>
+
+    <!-- 固定题目区：滚动填写时仍然能看到原题 -->
+    <view class="equation-header {{focus1 >= processSteps.length ? 'sum-mode' : ''}}">
+        <view class="vertical-equation equation-preview">
+            <view class="current-step-card">
+              <text>{{activeRowLabel}}</text>
+            </view>
+
+            <view class="number-row" wx:if="{{focus1 < processSteps.length}}">
                 <view wx:for="{{num1Array}}" wx:key="index" class="digit-cell {{index==num1Selected?'selected':''}}"  >{{item}}</view>
             </view>
-            
-            <!-- 数字2 -->
-            <view class="number-row">
-                <!-- 计算符号 -->
+
+            <view class="number-row" wx:if="{{focus1 < processSteps.length}}">
                 <view class="digit-cell operator">{{operator}}</view>
                 <view wx:for="{{num2Array}}" wx:key="index" class="digit-cell {{index==num2Selected ? 'selected' : '' }}"  >{{item}}</view>
             </view>
-            
-            <!-- 横线 -->
-            <view class="line"></view>
-            
-            <!-- 各步骤输入区域（逆向排列） -->
-            <form bindsubmit="onFormSubmit" id="multipForm">
-              <view wx:for="{{processSteps}}" wx:key="index" class="result-inputs" wx:for-index="outerIndex">
-                <!-- 多步骤计算，分多行，多页 -->
-                <input wx:for="{{item.detailSteps}}"  wx:key="index" type="number" maxlength="1" 
-                data-val="{{item}}" data-index1="{{outerIndex}}" data-index2="{{innerIndex}}"
-                bindinput="inputChange" focus="{{focus1==outerIndex&&focus2==innerIndex}}" 
 
-                wx:for-index="innerIndex"
-                name = "{{outerIndex}}-{{innerIndex}}" class="result-input {{checkResult[outerIndex+'-'+innerIndex]? 'error' : ''}}"/> 
-                <!-- 补0 -->
-                <input  wx:for="{{item.shiftPosition}}"  wx:key="index" class="result-input-dis" value="0" disabled="true" />
+            <view class="line" wx:if="{{focus1 < processSteps.length}}"></view>
+        </view>
+    </view>
+
+    <scroll-view class="practice-scroll" scroll-y scroll-with-animation scroll-into-view="{{activeRowId}}">
+        <view class="vertical-equation answer-equation">
+              <view wx:for="{{processSteps}}" wx:key="index" id="row-{{outerIndex}}" class="result-inputs input-row {{focus1==outerIndex ? 'active-row' : ''}} {{outerIndex < focus1 ? 'done-row' : ''}}" wx:for-index="outerIndex">
+                <view
+                  wx:for="{{item.detailSteps}}"
+                  wx:key="index"
+                  wx:for-index="innerIndex"
+                  class="result-input {{focus1==outerIndex&&focus2==innerIndex ? 'focus' : ''}} {{checkResult[outerIndex+'-'+innerIndex]? 'error' : ''}} {{answerGrid[outerIndex][innerIndex] !== null ? 'filled' : ''}}"
+                  data-index1="{{outerIndex}}"
+                  data-index2="{{innerIndex}}"
+                  bindtap="selectInputCell"
+                >
+                  <text wx:if="{{answerGrid[outerIndex][innerIndex] !== null}}">{{answerGrid[outerIndex][innerIndex]}}</text>
+                </view>
+                <view wx:for="{{item.shiftPosition}}" wx:key="index" class="result-input-dis">0</view>
               </view>
               <!-- 计算步骤与最终结果之间的横线 -->
-              <view class="line"></view>
+              <view id="sum-zone" class="line"></view>
               <!-- 最终结果输入区域（逆向排列） -->
-              <view class="result-inputs">
-                  <input  wx:for="{{correctAnswerArray}}" wx:key="index" type="number" maxlength="1"
-                  data-val="{{item}}" data-index1="{{processSteps.length}}" data-index2="{{index}}"
-                  value="{{nullChar}}"
-                  bindinput="inputChange" focus="{{focus1==processSteps.length&&focus2==index}}"  
-                  name = "{{processSteps.length}}-{{index}}" class="result-input {{checkResult[processSteps.length+'-'+index]? 'error' : ''}}"/> 
+              <view id="row-final" class="result-inputs input-row final-row {{focus1==processSteps.length ? 'active-row' : ''}}" wx:if="{{answerGrid.length > processSteps.length}}">
+                  <view
+                    wx:for="{{correctAnswerArray}}"
+                    wx:key="index"
+                    class="result-input {{focus1==processSteps.length&&focus2==index ? 'focus' : ''}} {{checkResult[processSteps.length+'-'+index]? 'error' : ''}} {{answerGrid[processSteps.length][index] !== null ? 'filled' : ''}}"
+                    data-index1="{{processSteps.length}}"
+                    data-index2="{{index}}"
+                    bindtap="selectInputCell"
+                  >
+                    <text wx:if="{{answerGrid[processSteps.length][index] !== null}}">{{answerGrid[processSteps.length][index]}}</text>
+                  </view>
               </view>
-              <button wx:if="{{!checked}}" type="primary" form-type="submit">验证</button>
-            </form>
-        </view>  
+              <view class="scroll-spacer"></view>
+        </view>
+    </scroll-view>
+        <view class="keypad-dock {{focus1 >= processSteps.length ? 'sum-keypad' : ''}}">
+          <view class="active-input-tip">
+            <text>{{activeRowLabel}}</text>
+            <text class="tip-sub">当前行会亮起来</text>
+          </view>
+          <number-keypad
+          bind:digit="inputDigit"
+          bind:backspace="backspaceDigit"
+          bind:clear="clearDigits"
+          ></number-keypad>
+        </view>
 	</view>
 
  <!-- 错题本区域 -->

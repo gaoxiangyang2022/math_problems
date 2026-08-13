@@ -4,6 +4,7 @@
     "range-total": "/components/range-total/range-total",
     "print-view": "/components/print-view/print-view",
     "wrong-list": "/components/wrong-list/wrong-list",
-    "practice-settings": "/components/practice-settings/practice-settings"
+    "practice-settings": "/components/practice-settings/practice-settings",
+    "number-keypad": "/components/number-keypad/number-keypad"
   }
 }

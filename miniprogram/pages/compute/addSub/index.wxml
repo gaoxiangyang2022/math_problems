@@ -31,16 +31,26 @@
             
             <!-- 结果输入区域（逆向排列） -->
             <view class="result-inputs {{errorShake? ' shake' : ''}}">
-                <input  wx:for="{{correctAnswerArray}}" wx:key="index" type="number" class="result-input" maxlength="1" data-val="{{item}}" data-index="{{index}}" placeholder="{{['个','十','百','千','万'][index]}}" bindinput="inputChange" focus="{{inputFocus==index}}"  value="{{userAnswer}}" /> 
+                <view
+                  wx:for="{{correctAnswerArray}}"
+                  wx:key="index"
+                  class="result-input {{inputFocus==index ? 'focus' : ''}} {{userAnswerArray[index] !== null ? 'filled' : ''}}"
+                  data-index="{{index}}"
+                  bindtap="selectInputCell"
+                >
+                  <text wx:if="{{userAnswerArray[index] !== null}}">{{userAnswerArray[index]}}</text>
+                  <text wx:else class="placeholder">{{['个','十','百','千','万'][index]}}</text>
+                </view>
             </view>
         </view>
 
+      <number-keypad
+        bind:digit="inputDigit"
+        bind:backspace="backspaceDigit"
+        bind:clear="clearDigits"
+      ></number-keypad>
 
-      <button bindtap="beginProcess" type="default" size="mini">解题过程</button>
-             <!--计算演示 -->
-        <view bind:tap="processOfProblem" wx:if="currentStep.description">{{currentStep.description}}  <text>点击看一步--></text></view>
 
-     
 	</view>
 
  <!-- 错题本区域 -->

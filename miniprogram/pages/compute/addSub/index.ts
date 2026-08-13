@@ -20,6 +20,7 @@ Page({
     currentIndex: 1,
     wrongQuestions:[],
     inputFocus:0,
+    answerChecked:false,
     operator:'+',
     userAnswer : "",
     processOfProblemIndex : 0,
@@ -34,6 +35,9 @@ Page({
       currentTotal:e.detail.total,
       currentIndex: 1,
       wrongQuestions: [],
+      answerChecked:false,
+      feedbackMessage:"",
+      errorShake:false,
       showWherePage: 1
     });
     this.generateNewProblem();
@@ -44,6 +48,7 @@ Page({
       feedbackMessage: "",
       userAnswer: "",
       inputFocus: 0,
+      answerChecked:false,
       errorShake:false
     });
 
@@ -63,7 +68,10 @@ Page({
   },
   restartQuiz() {
     this.setData({
-      showWherePage: 0
+      showWherePage: 0,
+      answerChecked:false,
+      feedbackMessage:"",
+      errorShake:false
     });
   },
   generateNewProblem() {
@@ -75,32 +83,73 @@ Page({
       num2Array: p.num2Array,
       correctAnswerArray: p.answerArray,
       userAnswerArray: p.answerArray.map(() => null),
+      inputFocus: 0,
+      answerChecked:false,
       operator: p.operator
     });
   },
 
-  
-  inputChange(e) {
-    console.log(e.target.dataset)
-    if(isValidNumber(e.detail.value)){
-      const _userAnswer = parseInt(e.detail.value);
-      const _dataSet = e.target.dataset
-      var _userAnswerArray = this.data.userAnswerArray
-      _userAnswerArray[_dataSet.index] = _userAnswer
-      //保存用户答案
-      this.setData({
-        userAnswerArray : _userAnswerArray,
-        inputFocus : _dataSet.index+1,
-      })
+  selectInputCell(e) {
+    const index = Number(e.currentTarget.dataset.index) || 0
+    this.setData({ inputFocus: index })
+  },
 
-      if(this.data.userAnswerArray.length-1 == _dataSet.index){
-        this.checkAnswer()
-      }
+  inputDigit(e) {
+    if (this.data.answerChecked) return
+    const digit = Number(e.detail.value)
+    if (!isValidNumber(`${digit}`)) return
+    const userAnswerArray = [...this.data.userAnswerArray]
+    const index = Math.min(Number(this.data.inputFocus) || 0, userAnswerArray.length - 1)
+    userAnswerArray[index] = digit
+    const nextFocus = Math.min(index + 1, userAnswerArray.length - 1)
+    this.setData({
+      userAnswerArray,
+      inputFocus: nextFocus,
+      feedbackMessage: "",
+      errorShake: false
+    })
+
+    if (index === userAnswerArray.length - 1) {
+      this.checkAnswer()
     }
+  },
+
+  backspaceDigit() {
+    if (this.data.answerChecked) return
+    const userAnswerArray = [...this.data.userAnswerArray]
+    let index = Math.min(Number(this.data.inputFocus) || 0, userAnswerArray.length - 1)
+    if (userAnswerArray[index] === null && index > 0) {
+      index -= 1
+    }
+    userAnswerArray[index] = null
+    this.setData({
+      userAnswerArray,
+      inputFocus: index,
+      feedbackMessage: "",
+      errorShake: false
+    })
+  },
+
+  clearDigits() {
+    if (this.data.answerChecked) return
+    this.setData({
+      userAnswerArray: this.data.correctAnswerArray.map(() => null),
+      inputFocus: 0,
+      feedbackMessage: "",
+      errorShake: false
+    })
   },
 
   
   checkAnswer() {
+  if (this.data.answerChecked) return
+  if (this.data.userAnswerArray.some((item) => item === null)) {
+    this.setData({
+      feedbackMessage: "先把每一格都填好，再来验证吧",
+      errorShake: true
+    })
+    return
+  }
 
   const userAnswer = [...this.data.userAnswerArray].reverse().join('')
   const correctAnswer = [...this.data.correctAnswerArray].reverse().join('')
@@ -112,6 +161,7 @@ Page({
       feedbackMessage: `😢答错了！正确答案是 ${correctAnswer}`,
       currentIndex: this.data.currentIndex + 1,
       wrongQuestions: wqTmp,
+      answerChecked:true,
       errorShake:true
     });
     setTimeout(() => {
@@ -120,7 +170,9 @@ Page({
     } else {
       recordPracticeResult(true)
       this.setData({
-        currentIndex: this.data.currentIndex + 1
+        feedbackMessage: "答对了，真棒！",
+        currentIndex: this.data.currentIndex + 1,
+        answerChecked:true
       });
       this.nextProblem();
     }

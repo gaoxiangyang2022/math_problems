@@ -7,6 +7,36 @@ page{
 .problem {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 18rpx;
+  flex-wrap: wrap;
+}
+
+.question-ans {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.answer-box {
+  min-width: 150rpx;
+  height: 86rpx;
+  padding: 0 20rpx;
+  color: #94a3b8;
+  background: #ffffff;
+  border: 4rpx solid #93c5fd;
+  border-radius: 24rpx;
+  font-size: 42rpx;
+  font-weight: 900;
+  line-height: 78rpx;
+  text-align: center;
+  box-shadow: 0 8rpx 0 rgba(96, 165, 250, 0.4);
+}
+
+.answer-box.filled {
+  color: #1d4ed8;
+  background: #eff6ff;
 }
 
 

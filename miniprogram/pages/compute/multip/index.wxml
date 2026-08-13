@@ -6,13 +6,14 @@
   <view wx:if="{{showWherePage==1}}" class="container">
     
     <progress-bar index="{{currentIndex}}" total="{{currentTotal}}" wrongNum="{{wrongQuestions.length}}"></progress-bar>
-    <practice-settings mode="manual" delay="{{debounce_time}}" autoNext="{{autoNext}}" checked="{{answerChecked}}" bind:change="changePracticeSettings" bind:verify="checkAnswer" bind:next="nextProblem"></practice-settings>
+    <practice-settings mode="manual" showVerify="{{false}}" delay="{{debounce_time}}" autoNext="{{autoNext}}" checked="{{answerChecked}}" bind:change="changePracticeSettings" bind:verify="checkAnswer" bind:next="nextProblem"></practice-settings>
 
     <view id="feedback">{{feedbackMessage}}</view>
     <view class="problem {{errorShake? ' shake' : ''}}">
       <view id="problem">{{currentProblem}}</view>
-      <view class="question-ans"> ? = <input type="number" bindinput="inputChange" value="{{userAnswer}}" focus="{{inputFocus}}" /></view>
+      <view class="question-ans"><view class="answer-box {{userAnswer !== '' ? 'filled' : ''}}" bindtap="clearAnswer">{{userAnswer || '?'}}</view></view>
     </view>
+    <number-keypad bind:digit="inputDigit" bind:backspace="backspaceDigit" bind:clear="clearAnswer"></number-keypad>
 
 
 	</view>

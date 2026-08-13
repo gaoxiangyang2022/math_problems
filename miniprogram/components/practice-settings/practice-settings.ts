@@ -3,6 +3,7 @@ import { getPracticeSettings, savePracticeSettings } from '../../utils/practiceS
 Component({
   properties: {
     mode: { type: String, value: 'manual' },
+    showVerify: { type: Boolean, value: true },
     delay: { type: Number, value: 900 },
     autoNext: { type: Boolean, value: true },
     checked: { type: Boolean, value: false }

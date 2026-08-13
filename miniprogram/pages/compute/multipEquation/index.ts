@@ -25,6 +25,9 @@ Page({
     operator:'*',
     userAnswer : "",
     processSteps:[],
+    answerGrid:[],
+    activeRowId:'row-0',
+    activeRowLabel:'第 1 行：用乘数个位去乘',
     checked:false,
     checkResult:{},
     nullChar:'',
@@ -36,6 +39,9 @@ Page({
       currentTotal:e.detail.total,
       currentIndex: 1,
       wrongQuestions: [],
+      feedbackMessage:"",
+      checked:false,
+      checkResult:{},
       showWherePage: 1
     });
     this.generateNewProblem();
@@ -47,9 +53,12 @@ Page({
       userAnswer: "",
       focus1:0,
       focus2:0,
+      activeRowId:'row-0',
+      activeRowLabel:'第 1 行：用乘数个位去乘',
       checkResult:{},
       checked:false,
       processSteps:[],
+      answerGrid:[],
       nullChar:''
     });
 
@@ -76,6 +85,9 @@ Page({
 
     this.setData({
       processSteps:o.steps,
+      answerGrid: this.createAnswerGrid(o.steps, _p.answerArray),
+      activeRowId:'row-0',
+      activeRowLabel:this.getRowLabel(0, o.steps),
       focus2:o.steps[0].detailSteps.length-1,
       currentProblem: _p.problem,
       correctAnswer: _p.answer,
@@ -86,43 +98,130 @@ Page({
     });
   },
 
-  
-  inputChange(e) {
-    console.log(e.target.dataset)
-    if(isValidNumber(e.detail.value)){
-      const _userAnswer = parseInt(e.detail.value);
-      const _dataSet = e.target.dataset
-      var _userAnswerArray = this.data.userAnswerArray
-      console.log(_dataSet.index1, _dataSet.index2)
-      //取得当前输入框是第几行（_focus1），第几列（_focus2）
-      var _focus1 =  _dataSet.index1
-      var _focus2 = _dataSet.index2 - 1
-      if(_focus2 < 0){//步减，小于0，需要换行，否则继续 减1
-        _focus1 = _dataSet.index1+1
-        //如果_focus1超出步数，则移到 最终结果 那里的第一个输入框（最终结果长度-1）
-        if(this.data.processSteps.length < _focus1+1){
-          _focus2=this.data.correctAnswerArray.length-1
-        }else{//否则，就继续下一行，从这一行的最后一个数字开始
-          _focus2 = this.data.processSteps[_focus1].detailSteps.length-1
-        }
-      }
-    
-      //移动光标
-      this.setData({
-        focus2 : _focus2,
-        focus1 : _focus1,
-      })
+  createAnswerGrid(steps, answerArray) {
+    const rows = steps.map((step) => step.detailSteps.map(() => null))
+    rows.push(answerArray.map(() => null))
+    return rows
+  },
 
-      // if(this.data.userAnswerArray.length-1 == _dataSet.index){
-      //   this.checkAnswer()
-      // }
+  selectInputCell(e) {
+    if (this.data.checked) return
+    const rowIndex = Number(e.currentTarget.dataset.index1) || 0
+    this.setData({
+      focus1: rowIndex,
+      focus2: Number(e.currentTarget.dataset.index2) || 0,
+      activeRowId: this.getRowId(rowIndex),
+      activeRowLabel: this.getRowLabel(rowIndex),
+      feedbackMessage:""
+    })
+  },
+
+  getRowId(rowIndex) {
+    return rowIndex >= this.data.processSteps.length ? 'sum-zone' : `row-${rowIndex}`
+  },
+
+  getRowLabel(rowIndex, stepsParam?) {
+    const steps = stepsParam || this.data.processSteps
+    if (rowIndex >= steps.length) {
+      return '最终答案：把中间结果加起来'
     }
+    const step = steps[rowIndex]
+    const placeNames = ['个位', '十位', '百位', '千位', '万位']
+    const placeName = placeNames[step.shiftPosition] || `第 ${step.shiftPosition + 1} 位`
+    return `第 ${rowIndex + 1} 行：用乘数${placeName} ${step.multiplier} 去乘`
+  },
+
+  moveToNextCell(rowIndex, cellIndex) {
+    let nextRow = rowIndex
+    let nextCell = cellIndex - 1
+    if (nextCell < 0) {
+      nextRow = rowIndex + 1
+      if (this.data.answerGrid.length <= nextRow) {
+        return { row: rowIndex, cell: cellIndex, done: true }
+      }
+      nextCell = this.data.answerGrid[nextRow].length - 1
+    }
+    return { row: nextRow, cell: nextCell, done: false }
+  },
+
+  inputDigit(e) {
+    if (this.data.checked) return
+    const digit = Number(e.detail.value)
+    if (!isValidNumber(`${digit}`)) return
+    const answerGrid = this.data.answerGrid.map((row) => [...row])
+    const rowIndex = Math.min(Number(this.data.focus1) || 0, answerGrid.length - 1)
+    const cellIndex = Math.min(Number(this.data.focus2) || 0, answerGrid[rowIndex].length - 1)
+    answerGrid[rowIndex][cellIndex] = digit
+    const next = this.moveToNextCell(rowIndex, cellIndex)
+    this.setData({
+      answerGrid,
+      focus1: next.row,
+      focus2: next.cell,
+      activeRowId: this.getRowId(next.row),
+      activeRowLabel: this.getRowLabel(next.row),
+      feedbackMessage:""
+    })
+    if (next.done) {
+      this.onKeypadSubmit()
+    }
+  },
+
+  backspaceDigit() {
+    if (this.data.checked) return
+    const answerGrid = this.data.answerGrid.map((row) => [...row])
+    let rowIndex = Math.min(Number(this.data.focus1) || 0, answerGrid.length - 1)
+    let cellIndex = Math.min(Number(this.data.focus2) || 0, answerGrid[rowIndex].length - 1)
+    if (answerGrid[rowIndex][cellIndex] === null) {
+      cellIndex += 1
+      if (cellIndex >= answerGrid[rowIndex].length && rowIndex > 0) {
+        rowIndex -= 1
+        cellIndex = 0
+      }
+      cellIndex = Math.min(cellIndex, answerGrid[rowIndex].length - 1)
+    }
+    answerGrid[rowIndex][cellIndex] = null
+    this.setData({
+      answerGrid,
+      focus1: rowIndex,
+      focus2: cellIndex,
+      activeRowId: this.getRowId(rowIndex),
+      activeRowLabel: this.getRowLabel(rowIndex),
+      feedbackMessage:""
+    })
+  },
+
+  clearDigits() {
+    if (this.data.checked) return
+    this.setData({
+      answerGrid: this.createAnswerGrid(this.data.processSteps, this.data.correctAnswerArray),
+      focus1: 0,
+      focus2: this.data.processSteps[0].detailSteps.length - 1,
+      activeRowId:'row-0',
+      activeRowLabel:this.getRowLabel(0),
+      checkResult:{},
+      feedbackMessage:""
+    })
+  },
+
+  onKeypadSubmit() {
+    this.onFormSubmit({ detail: { value: this.buildFormDataFromGrid() } })
+  },
+
+  buildFormDataFromGrid() {
+    const formData = {}
+    this.data.answerGrid.forEach((row, rowIndex) => {
+      row.forEach((value, cellIndex) => {
+        formData[`${rowIndex}-${cellIndex}`] = value === null ? '' : `${value}`
+      })
+    })
+    return formData
   },
 
   /**
    * 验证答案是否正确  
    */
   onFormSubmit(e){
+    if (this.data.checked) return
     const formData = e.detail.value;
     const _n = this.data.processSteps.length
     var _checkResult={}
@@ -183,6 +282,7 @@ Page({
   },
   
   checkAnswer() {
+    this.onKeypadSubmit()
   },
 
   beginPrint(e){

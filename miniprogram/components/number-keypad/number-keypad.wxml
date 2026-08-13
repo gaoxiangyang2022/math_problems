@@ -1,0 +1,8 @@
+<view class="keypad">
+  <view class="key-grid">
+    <view wx:for="{{keys}}" wx:key="item" class="key digit-key" hover-class="key-press" data-value="{{item}}" bindtap="tapDigit">{{item}}</view>
+    <view class="key action-key" hover-class="key-press" bindtap="clear">清空</view>
+    <view class="key digit-key zero-key" hover-class="key-press" data-value="0" bindtap="tapDigit">0</view>
+    <view class="key action-key" hover-class="key-press" bindtap="backspace">退格</view>
+  </view>
+</view>

@@ -2,10 +2,7 @@ h1 { color: #2c3e50; font-size: 2.5rem; margin-bottom: 0.5rem; text-shadow: 1px 
 .subtitle { color: #7f8c8d; font-size: 1.2rem; }
 
 page{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+  min-height: 100%;
 }
 .container {
   padding: 15px;
@@ -13,13 +10,79 @@ page{
   text-align: center;
 }
 
+.practice-page {
+  box-sizing: border-box;
+  height: 100vh;
+  overflow: hidden;
+  padding-bottom: 0;
+  padding-top: 180rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.practice-scroll {
+  box-sizing: border-box;
+  flex: 1;
+  min-height: 0;
+  padding: 18rpx 0 0;
+}
+
 /* 竖式容器 */
 .vertical-equation {
+    box-sizing: border-box;
+    width: 100%;
     display: flex; flex-direction: column; align-items: flex-end; margin-bottom: 2rem;
-    position: relative; min-height: 200px; /* 确保足够高度容纳所有元素 */
+    position: relative;
     button{
       margin-top: 1rem;
     }
+}
+.equation-header {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  margin: 12rpx 0 4rpx;
+  padding: 18rpx 18rpx 14rpx;
+  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%);
+  border: 4rpx solid #bbf7d0;
+  border-radius: 26rpx;
+  box-shadow: 0 10rpx 22rpx rgba(22, 163, 74, 0.12);
+}
+.equation-header.sum-mode {
+  margin-top: 10rpx;
+  padding: 10rpx 14rpx;
+  background: #fff7ed;
+  border-color: #fed7aa;
+  box-shadow: 0 8rpx 18rpx rgba(251, 146, 60, 0.1);
+}
+.equation-preview {
+  margin-bottom: 0;
+}
+.answer-equation {
+  min-height: 100%;
+  padding: 0 18rpx;
+}
+.current-step-card {
+  box-sizing: border-box;
+  align-self: stretch;
+  margin-bottom: 12rpx;
+  padding: 8rpx 12rpx;
+  color: #166534;
+  background: #dcfce7;
+  border: 2rpx solid #86efac;
+  border-radius: 14rpx;
+  font-size: 24rpx;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+.sum-mode .current-step-card {
+  margin-bottom: 0;
+  padding: 8rpx 12rpx;
+  color: #9a3412;
+  background: #ffedd5;
+  border-color: #fdba74;
 }
 /* 数字行样式 */
 .number-row {
@@ -55,25 +118,90 @@ page{
 /* 结果输入区域 */
 .result-inputs {
     display: flex; margin-top: 1rem;justify-content: flex-end;
+    scroll-margin-bottom: 360rpx;
+}
+.input-row {
+    padding: 8rpx 0;
+    border-radius: 14rpx;
+    transition: transform 0.16s ease, opacity 0.16s ease, background-color 0.16s ease;
+}
+.active-row {
+    padding: 12rpx 10rpx;
+    background: #eff6ff;
+    box-shadow: 0 8rpx 18rpx rgba(37, 99, 235, 0.12);
+    transform: scale(1.02);
+}
+.done-row {
+    opacity: 0.58;
+    transform: scale(0.96);
+}
+.final-row {
+    background: #fff7ed;
 }
 /* 输入框样式 */
 .result-input {
     width: 50px; height: 50px; margin-left: 10px;
+    display: flex; align-items: center; justify-content: center;
     font-size: 2rem; text-align: center; border: 2px solid #3498db; border-radius: 8px;
     outline: none; transition: all 0.3s ease;
     font-family: 'Courier New', monospace; font-weight: bold;
+    background: #ffffff;
 }
-.result-input:focus {
+.result-input.focus {
     border-color: #e74c3c; box-shadow: 0 0 8px rgba(231, 76, 60, 0.3); transform: scale(1.05);
+}
+.result-input.filled {
+    color: #1e293b;
+    background: #eff6ff;
 }
 .result-input-dis{
   width: 50px; height: 50px; margin-left: 10px;
+  display: flex; align-items: center; justify-content: center;
   font-size: 2rem; text-align: center; border: 2px solid #ffffff; border-radius: 8px;
   outline: none; 
   font-family: 'Courier New', monospace; font-weight: bold;
   color: #d6d9db;
 }
+.keypad-dock {
+  box-sizing: border-box;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 500;
+  padding: 10rpx 22rpx calc(14rpx + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, rgba(240, 249, 255, 0.75), #ffffff 38%);
+  box-shadow: 0 -10rpx 24rpx rgba(15, 23, 42, 0.12);
+}
+.active-input-tip {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0 auto 8rpx;
+  padding: 12rpx 16rpx;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border: 2rpx solid #bfdbfe;
+  border-radius: 18rpx;
+  font-size: 28rpx;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+.sum-keypad .active-input-tip {
+  padding: 10rpx 14rpx;
+}
+.tip-sub {
+  color: #64748b;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+.scroll-spacer {
+  height: 420rpx;
+}
 /* 反馈信息 */
-.feedback { text-align: center; margin-top: 1rem; min-height: 24px; font-size: 1.1rem; font-weight: bold; }
+.feedback,
+.feedback-message { text-align: center; margin-top: 1rem; min-height: 10px; font-size: 1.1rem; font-weight: bold; }
 .success { color: #2ecc71; }
 .error { color: #e74c3c; }

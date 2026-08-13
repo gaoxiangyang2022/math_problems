@@ -1,0 +1,61 @@
+.keypad {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 12rpx auto 0;
+  padding: 14rpx;
+  background: linear-gradient(180deg, #fff7ed 0%, #eff6ff 100%);
+  border: 4rpx solid #ffffff;
+  border-radius: 28rpx;
+  box-shadow: 0 12rpx 26rpx rgba(37, 99, 235, 0.14), inset 0 0 0 3rpx #bfdbfe;
+}
+
+.key-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10rpx;
+}
+
+.key {
+  box-sizing: border-box;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border-radius: 22rpx;
+  font-weight: 900;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.08s ease;
+}
+
+.key {
+  height: 76rpx;
+  font-size: 32rpx;
+  line-height: 72rpx;
+  text-align: center;
+  box-shadow: 0 6rpx 0 rgba(96, 165, 250, 0.42);
+}
+
+.digit-key {
+  color: #1d4ed8;
+  background: linear-gradient(180deg, #ffffff 0%, #dbeafe 100%);
+  border: 3rpx solid #93c5fd;
+}
+
+.action-key {
+  color: #b45309;
+  background: linear-gradient(180deg, #fff7ed 0%, #fed7aa 100%);
+  border: 3rpx solid #fdba74;
+  font-size: 28rpx;
+  box-shadow: 0 7rpx 0 rgba(251, 146, 60, 0.42);
+}
+
+.key-press {
+  transform: translateY(6rpx) scale(0.98);
+  box-shadow: 0 1rpx 0 rgba(15, 23, 42, 0.18);
+}
+
+.zero-key {
+  color: #15803d;
+  background: linear-gradient(180deg, #ffffff 0%, #dcfce7 100%);
+  border-color: #86efac;
+}

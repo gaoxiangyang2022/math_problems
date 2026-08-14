@@ -1,0 +1,8 @@
+<view class="nav-shell" style="padding-top: {{statusBarHeight}}px;">
+  <view class="nav-bar">
+    <view class="back-btn" bindtap="goBack">‹</view>
+    <view class="nav-title">{{title}}</view>
+    <view class="nav-placeholder"></view>
+  </view>
+</view>
+<view class="nav-spacer" style="height: {{navHeight}}px;"></view>

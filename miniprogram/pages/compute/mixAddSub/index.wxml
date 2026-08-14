@@ -1,12 +1,13 @@
+<app-nav title="加减混合"></app-nav>
 <view style="width: 100%;">
   <!-- 选择界面 -->
-  <view wx:if="{{showWherePage==0}}" class="container">
+  <view wx:if="{{showWherePage==0}}" class="container select-page">
 
     <range-total bind:beginTest="startTest" bind:beginPrint="beginPrint"></range-total>
   </view>
 
   <!-- 做题界面 -->
-  <view wx:if="{{showWherePage==1}}" class="container">
+  <view wx:if="{{showWherePage==1}}" class="container practice-page">
     
     <progress-bar index="{{currentIndex}}" total="{{currentTotal}}" wrongNum="{{wrongQuestions.length}}"></progress-bar>
     <practice-settings mode="manual" showVerify="{{false}}" delay="{{debounce_time}}" autoNext="{{autoNext}}" checked="{{answerChecked}}" bind:change="changePracticeSettings" bind:verify="checkAnswer" bind:next="nextProblem"></practice-settings>
@@ -15,10 +16,12 @@
     <view class="problem {{errorShake? ' shake' : ''}}">
       <view id="problem">{{currentProblem}}</view>
       <view class="question-ans">
-       ? = <view class="answer-box {{userAnswer !== '' ? 'filled' : ''}}" bindtap="clearAnswer">{{userAnswer || '?'}}</view>
+       <view class="answer-box {{userAnswer !== '' ? 'filled' : ''}}" bindtap="clearAnswer">{{userAnswer || '?'}}</view>
       </view>
     </view>
-    <number-keypad bind:digit="inputDigit" bind:backspace="backspaceDigit" bind:clear="clearAnswer"></number-keypad>
+    <view class="keypad-dock">
+      <number-keypad bind:digit="inputDigit" bind:backspace="backspaceDigit" bind:clear="clearAnswer"></number-keypad>
+    </view>
   </view>
  <!-- 错题本区域 -->
  <view wx:if="{{showWherePage==2}}" class="container">

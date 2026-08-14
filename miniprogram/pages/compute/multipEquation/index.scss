@@ -5,9 +5,19 @@ page{
   min-height: 100%;
 }
 .container {
+  box-sizing: border-box;
   padding: 15px;
   width: 95vw;
   text-align: center;
+}
+
+.select-page {
+  min-height: 100vh;
+  padding-top: 48rpx;
+  padding-bottom: 48rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .practice-page {
@@ -15,7 +25,6 @@ page{
   height: 100vh;
   overflow: hidden;
   padding-bottom: 0;
-  padding-top: 180rpx;
   display: flex;
   flex-direction: column;
 }

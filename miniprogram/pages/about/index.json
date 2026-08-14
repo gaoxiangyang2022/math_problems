@@ -1,6 +1,8 @@
 {
   "usingComponents": {
-    "demo-anim": "/components/demo-anim/demo-anim"
+    "demo-anim": "/components/demo-anim/demo-anim",
+    "app-nav": "/components/app-nav/app-nav"
    
-  }
+  },
+  "navigationBarTitleText": "演示讲解"
 }

@@ -1,4 +1,5 @@
 <!-- pages/arithmetic/arithmetic.wxml -->
+<app-nav title="打印题目"></app-nav>
 <view class="container">
   <!-- 页码展示 -->
   <text class="panel-title">

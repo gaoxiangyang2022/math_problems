@@ -110,7 +110,6 @@ Page({
       recordPracticeResult(true)
       this.setData({
         feedbackMessage: this.data.autoNext ? "答对了，真棒！" : "答对了，点下一题继续",
-        currentIndex: this.data.currentIndex + 1,
         answerChecked: true
       });
       if (this.data.autoNext) setTimeout(() => {
@@ -122,7 +121,6 @@ Page({
       wqTmp.push({"question": this.data.currentProblem,"yourAnswer": this.data.userAnswer,"correctAnswer": this.data.correctAnswer})
       this.setData({
         feedbackMessage: `这题先记下来，正确答案是 ${this.data.correctAnswer}`,
-        currentIndex: this.data.currentIndex + 1,
         wrongQuestions: wqTmp,
         answerChecked: true,
         errorShake:true
@@ -135,18 +133,19 @@ Page({
   },
 
   nextProblem() {
+    if (this.data.currentIndex >= this.data.currentTotal) {
+      this.finishQuiz();
+      return;
+    }
     this.setData({
       feedbackMessage:"",
       userAnswer: "",
       answerChecked: false,
-      errorShake:false
+      errorShake:false,
+      currentIndex: this.data.currentIndex + 1
     });
 
-    if (this.data.currentIndex > this.data.currentTotal) {
-      this.finishQuiz();
-    } else {
-      this.generateNewProblem();
-    }
+    this.generateNewProblem();
   },
 
   changePracticeSettings(e) {

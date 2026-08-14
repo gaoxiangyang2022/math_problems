@@ -1,3 +1,4 @@
+<app-nav title="演示讲解"></app-nav>
 <view class="container">
   <demo-anim
     visible="{{false}}"

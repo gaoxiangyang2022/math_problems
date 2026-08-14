@@ -44,22 +44,23 @@ Page({
   },
 
   nextProblem() {
+    if (this.data.currentIndex >= this.data.currentTotal) {
+      this.setData({
+        inputFocus: 100
+      });
+      this.finishQuiz();
+      return;
+    }
     this.setData({
       feedbackMessage: "",
       userAnswer: "",
       inputFocus: 0,
       answerChecked:false,
-      errorShake:false
+      errorShake:false,
+      currentIndex: this.data.currentIndex + 1
     });
 
-    if (this.data.currentIndex > this.data.currentTotal) {
-      this.setData({
-        inputFocus: 100
-      });
-      this.finishQuiz();
-    } else {
-      this.generateNewProblem();
-    }
+    this.generateNewProblem();
   },
   finishQuiz() {
     this.setData({
@@ -159,7 +160,6 @@ Page({
     wqTmp.push({"question": this.data.currentProblem,"yourAnswer": userAnswer,"correctAnswer": correctAnswer})
     this.setData({
       feedbackMessage: `😢答错了！正确答案是 ${correctAnswer}`,
-      currentIndex: this.data.currentIndex + 1,
       wrongQuestions: wqTmp,
       answerChecked:true,
       errorShake:true
@@ -171,7 +171,6 @@ Page({
       recordPracticeResult(true)
       this.setData({
         feedbackMessage: "答对了，真棒！",
-        currentIndex: this.data.currentIndex + 1,
         answerChecked:true
       });
       this.nextProblem();

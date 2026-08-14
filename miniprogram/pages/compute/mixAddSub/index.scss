@@ -1,8 +1,34 @@
 page{
+  min-height: 100%;
+}
+.container {
+  box-sizing: border-box;
+  width: 100%;
+}
+.select-page {
+  min-height: 100vh;
+  padding: 48rpx 24rpx;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   justify-content: center;
-  height: 100%;
+}
+.practice-page {
+  min-height: 100vh;
+  padding-bottom: 330rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.keypad-dock {
+  box-sizing: border-box;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 500;
+  padding: 10rpx 22rpx calc(14rpx + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, rgba(240, 249, 255, 0.75), #ffffff 38%);
+  box-shadow: 0 -10rpx 24rpx rgba(15, 23, 42, 0.12);
 }
 
 .problem {

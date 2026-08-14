@@ -48,6 +48,10 @@ Page({
   },
 
   nextProblem() {
+    if (this.data.currentIndex >= this.data.currentTotal) {
+      this.finishQuiz();
+      return;
+    }
     this.setData({
       feedbackMessage: "",
       userAnswer: "",
@@ -59,14 +63,11 @@ Page({
       checked:false,
       processSteps:[],
       answerGrid:[],
-      nullChar:''
+      nullChar:'',
+      currentIndex: this.data.currentIndex + 1
     });
 
-    if (this.data.currentIndex > this.data.currentTotal) {
-      this.finishQuiz();
-    } else {
-      this.generateNewProblem();
-    }
+    this.generateNewProblem();
   },
   finishQuiz() {
     this.setData({
@@ -263,7 +264,6 @@ Page({
         checked:true,
         checkResult:_checkResult,
         feedbackMessage: `😢答错了！正确答案是 ${_correctAnswer}`,
-        currentIndex: this.data.currentIndex + 1,
         wrongQuestions: wqTmp
       });
     }else{
@@ -271,8 +271,7 @@ Page({
       this.setData({
         checked:true,
         checkResult:_checkResult,
-        feedbackMessage: `🌸答案正确！很棒🌸！`,
-        currentIndex: this.data.currentIndex + 1
+        feedbackMessage: `🌸答案正确！很棒🌸！`
       });
     }
     setTimeout(() => {

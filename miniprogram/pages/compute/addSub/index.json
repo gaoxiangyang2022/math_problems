@@ -4,6 +4,8 @@
     "range-total": "/components/range-total/range-total",
     "print-view": "/components/print-view/print-view",
     "wrong-list": "/components/wrong-list/wrong-list",
-    "number-keypad": "/components/number-keypad/number-keypad"
-  }
+    "number-keypad": "/components/number-keypad/number-keypad",
+    "app-nav": "/components/app-nav/app-nav"
+  },
+  "navigationBarTitleText": "加减竖式"
 }

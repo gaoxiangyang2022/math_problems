@@ -1,3 +1,4 @@
+<app-nav title="乘法口诀"></app-nav>
 <view class="page">
   <view class="hero">
     <view class="hero-title">乘法口诀乐园</view>

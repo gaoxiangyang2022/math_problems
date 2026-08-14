@@ -1,3 +1,6 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "app-nav": "/components/app-nav/app-nav"
+  },
+  "navigationBarTitleText": "错题本"
 }

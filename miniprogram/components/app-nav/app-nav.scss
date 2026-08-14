@@ -1,0 +1,47 @@
+.nav-shell {
+  box-sizing: border-box;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 8rpx 20rpx rgba(15, 23, 42, 0.08);
+}
+
+.nav-bar {
+  height: 48px;
+  padding: 0 24rpx;
+  display: grid;
+  grid-template-columns: 72rpx 1fr 72rpx;
+  align-items: center;
+}
+
+.back-btn {
+  width: 64rpx;
+  height: 64rpx;
+  color: #2563eb;
+  background: #eff6ff;
+  border: 2rpx solid #bfdbfe;
+  border-radius: 50%;
+  font-size: 54rpx;
+  font-weight: 900;
+  line-height: 54rpx;
+  text-align: center;
+}
+
+.nav-title {
+  min-width: 0;
+  color: #1e293b;
+  font-size: 34rpx;
+  font-weight: 900;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-placeholder {
+  width: 72rpx;
+  height: 1px;
+}

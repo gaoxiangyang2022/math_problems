@@ -1,6 +1,6 @@
 <view wx:if="{{mode == 'settings'}}" class="settings-launch">
-  <button class="settings-icon" bindtap="openPanel" aria-label="练习设置">⚙</button>
   <view class="settings-summary">{{innerAutoNext ? '自动下一题' : '手动下一题'}} · {{innerDelay}}ms</view>
+  <button class="settings-icon" bindtap="openPanel" aria-label="练习设置">⚙</button>
 </view>
 
 <view wx:if="{{mode == 'settings' && panelVisible}}" class="settings-mask" bindtap="closePanel">

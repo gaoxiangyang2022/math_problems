@@ -1,10 +1,11 @@
+<app-nav title="加减竖式"></app-nav>
 <view>
 <!-- 选择界面 -->
-<view wx:if="{{showWherePage==0}}" class="container">
+<view wx:if="{{showWherePage==0}}" class="container select-page">
   <range-total bind:beginTest="startTest" range="{{false}}"  bind:beginPrint="beginPrint" ></range-total>
 </view>
 
-  <view wx:if="{{showWherePage==1}}" class="container">
+  <view wx:if="{{showWherePage==1}}" class="container practice-page">
 
     <progress-bar index="{{currentIndex}}" total="{{currentTotal}}" wrongNum="{{wrongQuestions.length}}"></progress-bar>
        
@@ -44,11 +45,13 @@
             </view>
         </view>
 
-      <number-keypad
-        bind:digit="inputDigit"
-        bind:backspace="backspaceDigit"
-        bind:clear="clearDigits"
-      ></number-keypad>
+      <view class="keypad-dock">
+        <number-keypad
+          bind:digit="inputDigit"
+          bind:backspace="backspaceDigit"
+          bind:clear="clearDigits"
+        ></number-keypad>
+      </view>
 
 
 	</view>

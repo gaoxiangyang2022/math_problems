@@ -1,4 +1,4 @@
-
+<app-nav title="错题本"></app-nav>
  <!-- 竖式计算区域 -->
 <view class="vertical-equation">
     <!--计算动画演示 -->

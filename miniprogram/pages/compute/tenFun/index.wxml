@@ -1,4 +1,4 @@
-
+<app-nav title="凑、破10法"></app-nav>
 
 <!-- <view style="width: 100vw; display: flex; margin: 20rpx 0; ">
   <button type="primary" bind:tap="playAddDemo">凑10法（+）演示</button>

@@ -84,6 +84,47 @@
   box-shadow: 0 10px 20px rgba(6,214,160,0.3);
 }
 
+/* 答题方式（输入答案 / 选择答案） */
+.mode-section {
+  margin-bottom: 25px;
+}
+
+.mode-title::before {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%235a67d8"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1 15l-5-5 1.41-1.41L11 14.17l6.59-6.59L19 9l-8 8z"/></svg>');
+}
+
+.mode-option {
+  flex: 1;
+  max-width: none;
+  min-width: 110px;
+  padding: 12px 10px;
+  font-size: 1rem;
+}
+
+.input-option {
+  background: linear-gradient(135deg, #a5d8ff, #74c0fc);
+  color: #1b4f72;
+}
+
+.input-option.active {
+  background: linear-gradient(135deg, #4dabf7, #1c7ed6);
+  color: white;
+  transform: scale(1.03);
+  box-shadow: 0 10px 20px rgba(28, 126, 214, 0.3);
+}
+
+.choice-option {
+  background: linear-gradient(135deg, #ffd8a8, #ffc078);
+  color: #8a4b00;
+}
+
+.choice-option.active {
+  background: linear-gradient(135deg, #ffa94d, #f76707);
+  color: white;
+  transform: scale(1.03);
+  box-shadow: 0 10px 20px rgba(247, 103, 7, 0.3);
+}
+
 .action-buttons {
   display: flex;
   justify-content: center;

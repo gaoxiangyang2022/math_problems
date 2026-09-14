@@ -1,65 +1,178 @@
 <app-nav title="乘法口诀"></app-nav>
 <view class="page">
-  <view class="hero">
-    <view class="hero-title">乘法口诀乐园</view>
-    <view class="hero-subtitle">先选一个数字，再一条一条看口诀</view>
+  <view class="mode-switch">
+    <view class="mode-btn {{tab=='study' ? 'active' : ''}}" data-tab="study" bindtap="switchTab">📖 看口诀</view>
+    <view class="mode-btn {{tab=='quiz' ? 'active' : ''}}" data-tab="quiz" bindtap="switchTab">🙋 考一考</view>
   </view>
 
-  <view class="number-tabs">
-    <button
-      wx:for="{{tableNums}}"
-      wx:key="item"
-      class="number-tab {{selectedBase == item ? 'active' : ''}}"
-      data-base="{{item}}"
-      bindtap="selectBase"
-    >{{item}}</button>
-  </view>
-
-  <view class="study-card">
-    <view class="card-head">
-      <view>
-        <view class="card-title">{{selectedBase}} 的乘法口诀</view>
-        <view class="card-subtitle">点击一条，看看它表示多少组</view>
-      </view>
-      <view class="card-badge">{{selectedFacts.length}} 条</view>
+  <block wx:if="{{tab=='study'}}">
+    <view class="hero">
+      <view class="hero-title">乘法口诀乐园</view>
+      <view class="hero-subtitle">先选一个数字，再一条一条看口诀</view>
     </view>
 
-    <view class="facts-grid">
-      <view
-        wx:for="{{selectedFacts}}"
-        wx:key="index"
-        class="fact-card {{showExplanation && selectedIndex == index ? 'active' : ''}}"
-        data-index="{{index}}"
-        bindtap="showFactExplanation"
-      >
-        <view class="fact-main">{{item.t}}</view>
-        <view class="fact-tip">{{item.i}} 组，每组 {{item.j}} 个</view>
-      </view>
-    </view>
-  </view>
-
-  <view class="explanation-panel" wx:if="{{showExplanation}}">
-    <view class="explanation-head">
-      <view>
-        <view class="explanation-header">{{explanationHeader}}</view>
-        <view class="explanation-text">{{explanationText}}</view>
-      </view>
-      <button class="close-btn" bindtap="closeExplanation">×</button>
+    <view class="number-tabs">
+      <button
+        wx:for="{{tableNums}}"
+        wx:key="item"
+        class="number-tab {{selectedBase == item ? 'active' : ''}}"
+        data-base="{{item}}"
+        bindtap="selectBase"
+      >{{item}}</button>
     </view>
 
-    <scroll-view type="list" scroll-x enable-flex show-scrollbar="{{false}}" class="animal-scroll" scroll-with-animation="true" scroll-left="{{scrollLeft}}">
-      <view class="animals-container">
-        <view class="animal-group" wx:for="{{groupData}}" wx:key="index">
-          <view class="animal-row">
-            <view wx:for="{{item}}" wx:key="index" class="{{item.label ? 'group-label' : 'animal-item'}}">{{item.t}}</view>
-          </view>
+    <view class="study-card">
+      <view class="card-head">
+        <view>
+          <view class="card-title">{{selectedBase}} 的乘法口诀</view>
+          <view class="card-subtitle">点击一条，看看它表示多少组</view>
+        </view>
+        <view class="card-badge">{{selectedFacts.length}} 条</view>
+      </view>
+
+      <view class="facts-grid">
+        <view
+          wx:for="{{selectedFacts}}"
+          wx:key="index"
+          class="fact-card {{showExplanation && selectedIndex == index ? 'active' : ''}}"
+          data-index="{{index}}"
+          bindtap="showFactExplanation"
+        >
+          <view class="fact-main">{{item.t}}</view>
+          <view class="fact-tip">{{item.i}} 组，每组 {{item.j}} 个</view>
         </view>
       </view>
-    </scroll-view>
-
-    <view class="panel-actions">
-      <button class="nav-btn" bindtap="prevFact" disabled="{{selectedIndex == 0}}">上一条</button>
-      <button class="nav-btn primary" bindtap="nextFact" disabled="{{selectedIndex >= selectedFacts.length - 1}}">下一条</button>
     </view>
-  </view>
+
+    <view class="explanation-panel" wx:if="{{showExplanation}}">
+      <view class="explanation-head">
+        <view>
+          <view class="explanation-header">{{explanationHeader}}</view>
+          <view class="explanation-text">{{explanationText}}</view>
+        </view>
+        <button class="close-btn" bindtap="closeExplanation">×</button>
+      </view>
+
+      <scroll-view type="list" scroll-x enable-flex show-scrollbar="{{false}}" class="animal-scroll" scroll-with-animation="true" scroll-left="{{scrollLeft}}">
+        <view class="animals-container">
+          <view class="animal-group" wx:for="{{groupData}}" wx:key="index">
+            <view class="animal-row">
+              <view wx:for="{{item}}" wx:key="index" class="{{item.label ? 'group-label' : 'animal-item'}}">{{item.t}}</view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+
+      <view class="panel-actions">
+        <button class="nav-btn" bindtap="prevFact" disabled="{{selectedIndex == 0}}">上一条</button>
+        <button class="nav-btn primary" bindtap="nextFact" disabled="{{selectedIndex >= selectedFacts.length - 1}}">下一条</button>
+      </view>
+    </view>
+  </block>
+
+  <block wx:if="{{tab=='quiz'}}">
+    <!-- 提问设置 -->
+    <view class="quiz-setup" wx:if="{{quizPhase=='setup'}}">
+      <view class="quiz-hero">
+        <view class="quiz-title">🙋 大人来考一考</view>
+        <view class="quiz-subtitle">家长读题，孩子口头回答，再按结果滑一下</view>
+      </view>
+
+      <view class="setup-card">
+        <view class="setup-label">考哪些口诀？</view>
+        <view class="scope-row">
+          <view class="scope-btn {{quizScope=='all' ? 'active' : ''}}" data-scope="all" bindtap="changeQuizScope">全表 1~9</view>
+          <view class="scope-btn {{quizScope=='pick' ? 'active' : ''}}" data-scope="pick" bindtap="changeQuizScope">指定数字</view>
+        </view>
+
+        <view class="pick-tabs" wx:if="{{quizScope=='pick'}}">
+          <view
+            wx:for="{{tableNums}}"
+            wx:key="item"
+            class="pick-tab {{quizPickBases.indexOf(item) >= 0 ? 'active' : ''}}"
+            data-base="{{item}}"
+            bindtap="toggleQuizBase"
+          >{{item}}</view>
+        </view>
+
+        <view class="setup-intro">{{quizIntro}}</view>
+
+        <view class="gesture-tips">
+          <view class="gesture-tip"><text class="gesture-icon up">↑</text>孩子答对：向上滑动</view>
+          <view class="gesture-tip"><text class="gesture-icon right">→</text>孩子答错：向右滑动</view>
+        </view>
+        <view class="gesture-note">不方便滑动时，也可以点下面的按钮</view>
+      </view>
+
+      <view class="start-quiz-btn" bindtap="startQuiz">开始提问</view>
+    </view>
+
+    <!-- 提问中 -->
+    <view class="quiz-asking" wx:if="{{quizPhase=='asking'}}">
+      <view class="quiz-progress">
+        <view class="progress-text">还剩 {{queueLeft}} / {{queueTotal}} 句</view>
+        <view class="progress-sub">已判定 {{answeredCount}} 次 · 答对 {{correctCount}} 次 · 答错 {{wrongStrikeCount}} 次</view>
+      </view>
+
+      <view class="quiz-card {{cardState}}" bindtouchstart="onCardTouchStart" bindtouchend="onCardTouchEnd">
+        <view class="quiz-card-tag">家长提问</view>
+        <view class="quiz-question">{{currentProblem.showAs}} = ?</view>
+        <view class="quiz-answer">答案 {{currentProblem.result}}（孩子先说，再看这里）</view>
+        <view class="card-hint">↑ 答对　　→ 答错</view>
+      </view>
+
+      <view class="judge-actions">
+        <button class="judge-btn wrong-btn" bindtap="tapWrong">答错 →</button>
+        <button class="judge-btn right-btn" bindtap="tapCorrect">↑ 答对</button>
+      </view>
+      <button class="replay-btn" bindtap="replayQuestion">🔊 再念一遍题目</button>
+
+      <view class="correct-pile" wx:if="{{correctPile.length}}">
+        <view class="pile-label">刚答对</view>
+        <view class="pile-items">
+          <view class="pile-item" wx:for="{{correctPile}}" wx:key="index">{{item.showAs}}={{item.result}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 本轮结果 -->
+    <view class="quiz-result" wx:if="{{quizPhase=='result'}}">
+      <view class="result-hero">
+        <view class="result-emoji">🎉</view>
+        <view class="result-title">全部口诀都答对啦</view>
+        <view class="result-sub">用时 {{quizTimeText}} · 共判定 {{answeredCount}} 次</view>
+      </view>
+
+      <view class="result-stats">
+        <view class="stat-item">
+          <view class="stat-num">{{answeredCount}}</view>
+          <view class="stat-label">判定次数</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-num ok">{{correctCount}}</view>
+          <view class="stat-label">答对</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-num bad">{{wrongStrikeCount}}</view>
+          <view class="stat-label">答错次数</view>
+        </view>
+      </view>
+
+      <view class="mistake-card" wx:if="{{mistakeList.length}}">
+        <view class="mistake-title">❌ 还需要多念几遍的（{{mistakeList.length}} 句）</view>
+        <view class="mistake-row" wx:for="{{mistakeList}}" wx:key="key">
+          <view class="mistake-fact">{{item.answerText}}</view>
+          <view class="mistake-count">错 {{item.wrongCount}} 次</view>
+        </view>
+      </view>
+      <view class="mistake-card all-good" wx:else>
+        <view class="mistake-title">👍 一句都没错，口诀记得很牢</view>
+      </view>
+
+      <view class="result-actions">
+        <button class="nav-btn primary" bindtap="restartQuiz">再来一轮</button>
+        <button class="nav-btn" bindtap="backToQuizSetup">改范围再考</button>
+      </view>
+    </view>
+  </block>
 </view>

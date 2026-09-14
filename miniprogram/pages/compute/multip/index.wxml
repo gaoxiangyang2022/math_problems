@@ -1,20 +1,33 @@
 <app-nav title="乘法口算"></app-nav>
 <!-- 选择界面 -->
 <view wx:if="{{showWherePage==0}}" class="container select-page">
-  <range-total bind:beginTest="startTest" range="{{false}}"  bind:beginPrint="beginPrint"></range-total>
+  <range-total showMode="{{true}}" bind:beginTest="startTest" range="{{false}}"  bind:beginPrint="beginPrint"></range-total>
 </view>
 
   <view wx:if="{{showWherePage==1}}" class="container practice-page">
     
-    <progress-bar index="{{currentIndex}}" total="{{currentTotal}}" wrongNum="{{wrongQuestions.length}}"></progress-bar>
-    <practice-settings mode="manual" showVerify="{{false}}" delay="{{debounce_time}}" autoNext="{{autoNext}}" checked="{{answerChecked}}" bind:change="changePracticeSettings" bind:verify="checkAnswer" bind:next="nextProblem"></practice-settings>
+    <progress-bar id="progressBar" index="{{currentIndex}}" total="{{currentTotal}}" wrongNum="{{wrongQuestions.length}}"></progress-bar>
+    <practice-settings mode="manual" practiceMode="{{practiceMode}}" showVerify="{{false}}" delay="{{debounce_time}}" autoNext="{{autoNext}}" checked="{{answerChecked}}" bind:change="changePracticeSettings" bind:verify="checkAnswer" bind:next="nextProblem"></practice-settings>
 
-    <view id="feedback">{{feedbackMessage}}</view>
     <view class="problem {{errorShake? ' shake' : ''}}">
       <view id="problem">{{currentProblem}}</view>
-      <view class="question-ans"><view class="answer-box {{userAnswer !== '' ? 'filled' : ''}}" bindtap="clearAnswer">{{userAnswer || '?'}}</view></view>
+      <!-- 输入答案模式 -->
+      <view class="question-ans" wx:if="{{practiceMode!='choice'}}"><view class="answer-box {{userAnswer !== '' ? 'filled' : ''}}" bindtap="clearAnswer">{{userAnswer || '?'}}</view></view>
+      <!-- 选择题模式：五个答案挑一个 -->
+      <view class="choice-panel" wx:else>
+        <view class="choice-tip">从下面五个答案里选一个</view>
+        <view class="choice-grid">
+          <view
+            wx:for="{{answerChoices}}"
+            wx:key="value"
+            class="choice-item {{selectedChoice===item.value ? (item.isCorrect ? 'right-choice' : 'wrong-choice') : ''}}"
+            data-value="{{item.value}}"
+            bindtap="selectChoice"
+          >{{item.label}}</view>
+        </view>
+      </view>
     </view>
-    <view class="keypad-dock">
+    <view class="keypad-dock" wx:if="{{practiceMode!='choice'}}">
       <number-keypad bind:digit="inputDigit" bind:backspace="backspaceDigit" bind:clear="clearAnswer"></number-keypad>
     </view>
 
@@ -22,7 +35,7 @@
 	</view>
  <!-- 错题本区域 -->
  <view wx:if="{{showWherePage==2}}" class="container">
-    <wrong-list wrongList="{{wrongQuestions}}" sessionTotal="{{currentTotal}}" bind:restart="restartQuiz"></wrong-list>
+    <wrong-list wrongList="{{wrongQuestions}}" sessionTotal="{{currentTotal}}" sessionTime="{{sessionTimeText}}" bind:restart="restartQuiz"></wrong-list>
  </view>
 
  <!-- 打印题展示界面 -->

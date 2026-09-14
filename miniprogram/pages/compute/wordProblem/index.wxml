@@ -1,0 +1,86 @@
+<app-nav title="小学应用题"></app-nav>
+<view class="page">
+  <view class="intro-card">
+    <view class="intro-title">读题慢一点，也没关系</view>
+    <view class="intro-text">先自己想一想，再点开解题过程看看思路。</view>
+  </view>
+
+  <view class="panel setup-panel" wx:if="{{pageMode === 'setup'}}">
+    <view class="panel-title">出题设置</view>
+    <view class="setup-step">
+      <view class="step-title">选择年级</view>
+      <view class="chip-row">
+        <view
+          wx:for="{{gradeOptions}}"
+          wx:key="value"
+          class="chip {{currentGrade === item.value ? 'active' : ''}}"
+          data-grade="{{item.value}}"
+          bindtap="changeGrade"
+        >
+          {{item.label}}
+        </view>
+      </view>
+    </view>
+
+    <view class="setup-step type-step">
+      <view class="step-title">选择题型</view>
+      <scroll-view scroll-x class="type-scroll" enable-flex>
+        <view class="chip-row type-row">
+          <view
+            wx:for="{{typeOptions}}"
+            wx:key="id"
+            class="chip soft-chip {{currentType === item.id ? 'active' : ''}}"
+            data-type="{{item.id}}"
+            bindtap="changeType"
+          >
+            {{item.label}}
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <view class="action-row setup-action-row">
+      <view class="action-btn primary-btn" bindtap="startPractice">开始出题</view>
+    </view>
+  </view>
+
+  <view wx:if="{{pageMode === 'problem' && currentProblem}}">
+    <view class="panel top-action-panel">
+      <view class="action-row compact-action-row">
+        <view class="action-btn light-btn" bindtap="backToSetup">修改设置</view>
+        <view class="action-btn secondary-btn" bindtap="generateProblem">换一题</view>
+      </view>
+    </view>
+
+    <view class="problem-card">
+    <view class="problem-meta">
+      <view class="meta-pill">{{currentProblem.categoryLabel}}</view>
+      <view class="meta-pill warm">{{currentProblem.typeLabel}}</view>
+    </view>
+    <view class="problem-text">{{currentProblem.text}}</view>
+    <view class="tip-box" wx:if="{{currentProblem.tip}}">
+      <text class="tip-label">想一想</text>
+      <text class="tip-text">{{currentProblem.tip}}</text>
+    </view>
+    <view class="action-row">
+      <view class="action-btn primary-btn" bindtap="toggleSolution">
+        {{showSolution ? '收起解题过程' : '查看解题过程'}}
+      </view>
+    </view>
+  </view>
+
+  <view class="solution-card" wx:if="{{pageMode === 'problem' && currentProblem && showSolution}}">
+    <view class="solution-title">解题过程</view>
+    <view class="step-list">
+      <view class="step-item" wx:for="{{currentProblem.steps}}" wx:key="index">
+        <view class="step-index">{{index + 1}}</view>
+        <view class="step-text">{{item}}</view>
+      </view>
+    </view>
+    <view class="answer-banner">
+      <text class="answer-label">最后答案</text>
+      <text class="answer-text">{{currentProblem.answerText}}</text>
+    </view>
+  </view>
+  </view>
+</view>

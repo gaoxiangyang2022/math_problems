@@ -15,11 +15,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18rpx;
+  gap: 12rpx;
   margin-bottom: 14rpx;
+  flex-wrap: wrap;
 }
 
 .progress-mood {
+  flex: 1;
+  min-width: 0;
   color: #ea580c;
   font-size: 28rpx;
   font-weight: 800;
@@ -33,6 +36,33 @@
   color: #64748b;
   font-size: 24rpx;
   font-weight: 600;
+}
+
+/* 计时显示 */
+.progress-timers {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10rpx;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+.timer-pill {
+  padding: 4rpx 14rpx;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border: 2rpx solid #bfdbfe;
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.timer-pill.total {
+  color: #b45309;
+  background: #fffbeb;
+  border-color: #fde68a;
 }
 
 .progress-bar {

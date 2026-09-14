@@ -1,24 +1,37 @@
 <view class="completion-banner">
   <view class="completion-title">{{wrongList.length ? '本次练习完成' : '本次全对，真棒！'}}</view>
   <view>这次做了 {{sessionTotal}} 道，答对 {{sessionCorrect}} 道</view>
+  <view class="completion-time" wx:if="{{sessionTime}}">⏱ 用时 {{sessionTime}}</view>
 </view>
 <view class="stats">
+  <button class="clear-stats-btn" size="mini" bindtap="clearStats">清空</button>
   <view><text class="stats-num">{{stats.total}}</text><text> 累计做题</text></view>
   <view><text class="stats-num wrong">{{stats.wrong}}</text><text> 累计错题</text></view>
   <view><text class="stats-num good">{{stats.total - stats.wrong}}</text><text> 累计答对</text></view>
 </view>
-<button class="clear-stats-btn" size="mini" bindtap="clearStats">清空今日统计</button>
 <view wx:if="{{wrongList.length>0}}">
   <view class="title">{{emojiStr[0]}} 一起把这些题弄明白</view>
   <scroll-view type="list"
   scroll-y style="height: 65vh;">
     
     <view class="questions-wrapper">
-      <block wx:for="{{wrongList}}" wx:key="index">
+      <block wx:for="{{displayWrongList}}" wx:key="index">
         <view class="question-card">
-            <text class="question-content">{{item.question}} = {{item.correctAnswer}}</text>
-            <text class="your-answer">你的答案：{{item.yourAnswer}}</text>
-            <button class="demo-btn" size="mini" data-item="{{item}}" bindtap="goDemo">看演示</button>
+            <view class="question-row">
+              <text class="question-label">题目</text>
+              <text class="question-content">{{item.prefix}}</text>
+              <text class="correct-fill" wx:if="{{item.highlight}}">{{item.highlight}}</text>
+              <text class="question-content">{{item.suffix}}</text>
+            </view>
+            <view class="answer-row answer-summary-row">
+              <view class="answer-summary-main">
+                <text class="answer-label">{{item.answerLabel}}</text>
+                <text class="answer-value">{{item.answerValue}}</text>
+                <text class="answer-label your-answer-label">你的答案</text>
+                <text class="your-answer">{{item.yourAnswer}}</text>
+              </view>
+              <button class="demo-btn" size="mini" data-item="{{item.raw}}" bindtap="goDemo">看演示</button>
+            </view>
         </view>
       </block>
     </view>

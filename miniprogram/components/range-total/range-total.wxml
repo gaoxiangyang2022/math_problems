@@ -1,3 +1,12 @@
+<view class="section mode-section" wx:if="{{showMode}}">
+  <h2 class="section-title mode-title">选择答题方式</h2>
+  <view>自己写答案，还是从五个答案里挑一个？</view>
+  <view class="selecter">
+    <button class="option mode-option input-option {{practiceMode!='choice'?'active':''}}" data-mode="input" bindtap="changeMode" size="mini">输入答案</button>
+    <button class="option mode-option choice-option {{practiceMode=='choice'?'active':''}}" data-mode="choice" bindtap="changeMode" size="mini">选择答案</button>
+  </view>
+</view>
+
 <view class="section" wx:if="{{range}}">
   <h2 class="section-title range-title">请选择出题范围</h2>
   <view>多少以内的数字呢？</view>
@@ -27,7 +36,7 @@
 </view>
 
 <view class="selected-info">
-  已选择：<text wx:if="{{range}}">{{currentRange}}以内算术，</text><text wx:if="{{total}}">共{{currentTotal}}道题目</text>
+  已选择：<text wx:if="{{range}}">{{currentRange}}以内算术，</text><text wx:if="{{total}}">共{{currentTotal}}道题目</text><text wx:if="{{showMode}}">，{{practiceMode=='choice'?'选择题':'输入答案'}}</text>
 </view>
 
 <view class="action-buttons">

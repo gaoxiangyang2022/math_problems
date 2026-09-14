@@ -323,6 +323,18 @@
   background: #8b5cf6;
 }
 
+.sky-card {
+  background: #eef9ff;
+}
+
+.sky-card .icon {
+  background: #38bdf8;
+}
+
+.wide-card {
+  grid-column: 1 / -1;
+}
+
 .animal-move {
   animation: naturalBounce 1.5s forwards;
 }

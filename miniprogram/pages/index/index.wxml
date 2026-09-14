@@ -110,6 +110,20 @@
         </view>
       </view>
     </view>
+
+    <view class="lesson-group">
+      <view class="group-title">阅读思考</view>
+      <view class="grid">
+        <view class="card sky-card wide-card" bind:tap="goToWordProblem">
+            <view class="card-tag practice-tag">练习</view>
+            <view class="icon">题</view>
+            <view class="card-text">
+              <view class="card-title">小学应用题</view>
+              <view class="card-des">读题慢慢想，跟着过程学思路</view>
+            </view>
+        </view>
+      </view>
+    </view>
     
     <!-- 底部 -->
     <view class="footer">

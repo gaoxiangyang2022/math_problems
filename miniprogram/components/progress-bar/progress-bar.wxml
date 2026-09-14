@@ -1,6 +1,10 @@
 <view class="progress-container">
   <view class="progress-top">
     <view class="progress-mood">{{progressMood}}</view>
+    <view class="progress-timers">
+      <view class="timer-pill total" wx:if="{{timerText}}">⏱ 总用时 {{timerText}}</view>
+      <view class="timer-pill" wx:if="{{problemTimerText}}">本题 {{problemTimerText}}</view>
+    </view>
     <view class="progress-info">
       <span>第 <span id="progressText">{{displayIndex}}</span> / {{displayTotal}} 题</span>
       <span>错题 <span id="wrongCount">{{wrongNum}}</span></span>

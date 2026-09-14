@@ -92,6 +92,9 @@ Component({
     goToMixMultip(){
       this.openPractice('加减乘混合', '/pages/compute/mixMultip/index')
     },
+    goToWordProblem(){
+      this.openPractice('小学应用题', '/pages/compute/wordProblem/index')
+    },
     goAboutFun(){
       wx.navigateTo({
         url: '/pages/about/index'

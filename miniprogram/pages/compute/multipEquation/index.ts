@@ -2,6 +2,8 @@
 import { isValidNumber,getMultipProblemShu } from '../../../utils/util';
 import { multiplicationSteps } from '../../../utils/multipTools';
 import { recordPracticeResult } from '../../../utils/practiceStats';
+import { showFloatingFeedback } from '../../../utils/feedback';
+import { createPracticeTimer, formatDuration } from '../../../utils/practiceTimer';
 Page({
 
   /**
@@ -31,7 +33,59 @@ Page({
     checked:false,
     checkResult:{},
     nullChar:'',
-    problemList:[]
+    problemList:[],
+    sessionTimeText: ''
+  },
+
+  onLoad() {
+    this.practiceTimer = createPracticeTimer();
+    this.problemTimer = createPracticeTimer();
+  },
+  onUnload() {
+    if (this.practiceTimer) this.practiceTimer.reset();
+    if (this.problemTimer) this.problemTimer.reset();
+  },
+  onHide() {
+    // 切到后台 / 离开页面时暂停计时
+    const timerComponent = this.getTimerComponent();
+    if (timerComponent && timerComponent.pauseTimer) timerComponent.pauseTimer();
+  },
+  onShow() {
+    if (this.data.showWherePage !== 1) return;
+    const timerComponent = this.getTimerComponent();
+    if (timerComponent && timerComponent.startTimer) timerComponent.startTimer();
+  },
+
+  /** 页面里的进度条组件，负责计时显示 */
+  getTimerComponent() {
+    return this.selectComponent('#progressBar') as any;
+  },
+  startPracticeTimer() {
+    this.practiceTimer.start();
+    const timerComponent = this.getTimerComponent();
+    if (timerComponent && timerComponent.startTimer) timerComponent.startTimer();
+  },
+  resetPracticeTimer() {
+    this.practiceTimer.reset();
+    const timerComponent = this.getTimerComponent();
+    if (timerComponent && timerComponent.resetTimer) timerComponent.resetTimer();
+  },
+  stopPracticeTimer() {
+    const elapsed = this.practiceTimer.stop();
+    const timerComponent = this.getTimerComponent();
+    if (timerComponent && timerComponent.stopTimer) timerComponent.stopTimer();
+    return elapsed;
+  },
+  startProblemTimer() {
+    this.problemTimer.reset();
+    this.problemTimer.start();
+    const timerComponent = this.getTimerComponent();
+    if (timerComponent && timerComponent.startProblemTimer) timerComponent.startProblemTimer();
+  },
+  stopProblemTimer() {
+    this.problemTimer.stop();
+    const timerComponent = this.getTimerComponent();
+    if (timerComponent && timerComponent.stopProblemTimer) timerComponent.stopProblemTimer();
   },
 
   startTest(e) {    
@@ -42,8 +96,12 @@ Page({
       feedbackMessage:"",
       checked:false,
       checkResult:{},
+      sessionTimeText: "",
       showWherePage: 1
     });
+    // 重新开始一场练习：总用时从 0 开始
+    this.resetPracticeTimer();
+    this.startPracticeTimer();
     this.generateNewProblem();
   },
 
@@ -70,13 +128,19 @@ Page({
     this.generateNewProblem();
   },
   finishQuiz() {
+    // 练习结束：停止计时并记录总用时
+    const elapsed = this.stopPracticeTimer();
     this.setData({
-      showWherePage: 2
+      showWherePage: 2,
+      sessionTimeText: formatDuration(elapsed)
     });
   },
   restartQuiz() {
+    this.problemTimer.reset();
+    this.resetPracticeTimer();
     this.setData({
-      showWherePage: 0
+      showWherePage: 0,
+      sessionTimeText: ""
     });
   },
   generateNewProblem() {
@@ -97,6 +161,8 @@ Page({
       correctAnswerArray: _p.answerArray,
       userAnswerArray: _p.answerArray.map(() => null),
     });
+    // 新的一题：单题用时重新开始
+    this.startProblemTimer();
   },
 
   createAnswerGrid(steps, answerArray) {
@@ -258,20 +324,22 @@ Page({
     }
     if(error){
       recordPracticeResult(false)
+      this.stopProblemTimer();
       var wqTmp = this.data.wrongQuestions
       wqTmp.push({"question": this.data.currentProblem,"yourAnswer": _yourAnswer ,"correctAnswer": _correctAnswer})
+      showFloatingFeedback(`😢 答案：${_correctAnswer}`, 1600)
       this.setData({
         checked:true,
         checkResult:_checkResult,
-        feedbackMessage: `😢答错了！正确答案是 ${_correctAnswer}`,
         wrongQuestions: wqTmp
       });
     }else{
       recordPracticeResult(true)
+      this.stopProblemTimer();
+      showFloatingFeedback('🎉 答对啦', 1200)
       this.setData({
         checked:true,
-        checkResult:_checkResult,
-        feedbackMessage: `🌸答案正确！很棒🌸！`
+        checkResult:_checkResult
       });
     }
     setTimeout(() => {

@@ -3,6 +3,8 @@ import { getPracticeSettings, savePracticeSettings } from '../../utils/practiceS
 Component({
   properties: {
     mode: { type: String, value: 'manual' },
+    // 选择题模式下不需要"验证"按钮，选项点下去就判卷
+    practiceMode: { type: String, value: 'input' },
     showVerify: { type: Boolean, value: true },
     delay: { type: Number, value: 900 },
     autoNext: { type: Boolean, value: true },

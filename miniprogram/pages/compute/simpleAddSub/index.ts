@@ -1,6 +1,9 @@
-import { getAddSubProblem } from '../../../utils/util';
+import { getAddSubProblem, buildAnswerChoices, AnswerChoice } from '../../../utils/util';
 import { recordPracticeResult } from '../../../utils/practiceStats';
 import { getPracticeSettings, savePracticeSettings } from '../../../utils/practiceSettings';
+import { showFloatingFeedback } from '../../../utils/feedback';
+import { createPracticeTimer, formatDuration } from '../../../utils/practiceTimer';
+
 Page({
   data: {
     currentRange: 10,
@@ -20,13 +23,66 @@ Page({
     feedbackMessage: "",
     showWherePage: 0,
     problemList:[],
+    practiceMode: 'input',
+    answerChoices: [] as AnswerChoice[],
+    selectedChoice: null as number | null,
+    selectionLocked: false,
+    sessionTimeText: ''
   },
   onLoad() {
+    this.practiceTimer = createPracticeTimer();
+    this.problemTimer = createPracticeTimer();
     const settings = getPracticeSettings(this.data.debounce_time);
     this.setData({
       debounce_time: settings.delay,
       autoNext: settings.autoNext
     });
+  },
+  onUnload() {
+    if (this.practiceTimer) this.practiceTimer.reset();
+    if (this.problemTimer) this.problemTimer.reset();
+  },
+  onHide() {
+    // 切到后台 / 离开页面时暂停计时
+    const timerComponent = this.getTimerComponent();
+    if (timerComponent && timerComponent.pauseTimer) timerComponent.pauseTimer();
+  },
+  onShow() {
+    if (this.data.showWherePage !== 1) return;
+    const timerComponent = this.getTimerComponent();
+    if (timerComponent && timerComponent.startTimer) timerComponent.startTimer();
+  },
+
+  /** 页面里的进度条组件，负责计时显示 */
+  getTimerComponent() {
+    return this.selectComponent('#progressBar') as any;
+  },
+  startPracticeTimer() {
+    this.practiceTimer.start();
+    const timerComponent = this.getTimerComponent();
+    if (timerComponent && timerComponent.startTimer) timerComponent.startTimer();
+  },
+  resetPracticeTimer() {
+    this.practiceTimer.reset();
+    const timerComponent = this.getTimerComponent();
+    if (timerComponent && timerComponent.resetTimer) timerComponent.resetTimer();
+  },
+  stopPracticeTimer() {
+    const elapsed = this.practiceTimer.stop();
+    const timerComponent = this.getTimerComponent();
+    if (timerComponent && timerComponent.stopTimer) timerComponent.stopTimer();
+    return elapsed;
+  },
+  startProblemTimer() {
+    this.problemTimer.reset();
+    this.problemTimer.start();
+    const timerComponent = this.getTimerComponent();
+    if (timerComponent && timerComponent.startProblemTimer) timerComponent.startProblemTimer();
+  },
+  stopProblemTimer() {
+    this.problemTimer.stop();
+    const timerComponent = this.getTimerComponent();
+    if (timerComponent && timerComponent.stopProblemTimer) timerComponent.stopProblemTimer();
   },
 
   startTest(e) {
@@ -46,8 +102,16 @@ Page({
       userAnswer: "",
       errorShake: false,
       timer: 0,
+      practiceMode: e.detail.mode === 'choice' ? 'choice' : 'input',
+      selectedChoice: null,
+      selectionLocked: false,
+      answerChoices: [],
+      sessionTimeText: '',
       showWherePage: 1
     });
+    // 重新开始一场练习：总用时从 0 开始
+    this.resetPracticeTimer();
+    this.startPracticeTimer();
     this.generateNewProblem();
   },
 
@@ -56,8 +120,13 @@ Page({
     this.setData({
       currentProblem: _p.problem,
       correctAnswer: _p.answer,
-      inputFocus: true
+      inputFocus: true,
+      selectedChoice: null,
+      selectionLocked: false,
+      answerChoices: this.data.practiceMode === 'choice' ? buildAnswerChoices(_p) : []
     });
+    // 新的一题：单题用时重新开始
+    this.startProblemTimer();
   },
 
   inputChange(e) {
@@ -66,22 +135,43 @@ Page({
 
   inputDigit(e) {
     if (this.data.answerChecked) return;
+    if (this.data.practiceMode === 'choice') return;
     const nextValue = `${this.data.userAnswer || ''}${e.detail.value}`;
     this.setAnswerValue(nextValue);
   },
 
   backspaceDigit() {
     if (this.data.answerChecked) return;
+    if (this.data.practiceMode === 'choice') return;
     const value = `${this.data.userAnswer || ''}`;
     this.setAnswerValue(value.slice(0, -1));
   },
 
   clearAnswer() {
     if (this.data.answerChecked) return;
+    if (this.data.practiceMode === 'choice') return;
     this.setAnswerValue('');
   },
 
+  /** 选择题模式：点选其中一个答案，选完立即判卷 */
+  selectChoice(e) {
+    if (this.data.answerChecked || this.data.selectionLocked) return;
+    const value = Number(e.currentTarget.dataset.value);
+    if (Number.isNaN(value)) return;
+    if (this.data.timer) {
+      clearTimeout(this.data.timer);
+    }
+    this.setData({
+      selectedChoice: value,
+      selectionLocked: true,
+      userAnswer: value,
+      timer: 0
+    });
+    this.checkAnswer();
+  },
+
   setAnswerValue(value) {
+    if (this.data.practiceMode === 'choice') return;
     const valueText = `${value || ''}`;
     const _userAnswer = valueText === '' ? NaN : parseInt(valueText);
     if (this.data.timer) {
@@ -99,14 +189,15 @@ Page({
   checkAnswer() {
     if (this.data.answerChecked) return;
     if (isNaN(this.data.userAnswer)) {
+      showFloatingFeedback('🙂 先输入答案', 1200)
       this.setData({
-        userAnswer: "",
-        feedbackMessage: "先写下答案，再来验证吧"
+        userAnswer: ""
       });
     } else if (this.data.userAnswer === this.data.correctAnswer) {
       recordPracticeResult(true)
+      this.stopProblemTimer();
+      showFloatingFeedback(this.data.autoNext ? '🎉 答对啦' : '🎉 答对啦', 1200)
       this.setData({
-        feedbackMessage: this.data.autoNext ? "答对了，真棒！" : "答对了，点下一题继续",
         answerChecked: true
       });
       if (this.data.autoNext) setTimeout(() => {
@@ -114,17 +205,20 @@ Page({
       }, 650);
     } else {
       recordPracticeResult(false)
+      this.stopProblemTimer();
       var wqTmp = this.data.wrongQuestions
       wqTmp.push({"question": this.data.currentProblem,"yourAnswer": this.data.userAnswer,"correctAnswer": this.data.correctAnswer})
+      showFloatingFeedback(`😢 答案：${this.data.correctAnswer}`, 1600)
       this.setData({
-        feedbackMessage: `这题先记下来，正确答案是 ${this.data.correctAnswer}`,
         wrongQuestions: wqTmp,
         answerChecked: true,
         errorShake:true
       });
-      if (this.data.autoNext) setTimeout(() => {
+      // 选择题点一下就走：答错也计入错题本，稍作停顿后立刻下一题
+      const nextDelay = this.data.practiceMode === 'choice' ? 900 : 1800;
+      if (this.data.autoNext || this.data.practiceMode === 'choice') setTimeout(() => {
         this.nextProblem();
-      }, 1800);
+      }, nextDelay);
     }
   },
 
@@ -138,6 +232,7 @@ Page({
       userAnswer: "",
       answerChecked: false,
       errorShake:false,
+      selectedChoice: null,
       currentIndex: this.data.currentIndex + 1
     });
 
@@ -159,12 +254,20 @@ Page({
   },
 
   finishQuiz() {
+    // 练习结束：停止计时并记录总用时
+    const elapsed = this.stopPracticeTimer();
     this.setData({
-      showWherePage: 2
+      showWherePage: 2,
+      sessionTimeText: formatDuration(elapsed)
     });
   },
 
   restartQuiz() {
+    if (this.data.timer) {
+      clearTimeout(this.data.timer);
+    }
+    this.problemTimer.reset();
+    this.resetPracticeTimer();
     this.setData({
       showWherePage: 0,
       currentProblem: "请选择难度开始练习",
@@ -172,7 +275,11 @@ Page({
       userAnswer: "",
       answerChecked: false,
       errorShake: false,
-      timer: 0
+      selectedChoice: null,
+      selectionLocked: false,
+      answerChoices: [],
+      timer: 0,
+      sessionTimeText: ''
     });
   }, 
   beginPrint(e){

@@ -66,6 +66,60 @@ page{
   background: #eff6ff;
 }
 
+/* 选择题模式：只显示答案，5 个选项排两列 */
+.choice-panel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.choice-tip {
+  margin-bottom: 16rpx;
+  color: #7c3aed;
+  font-size: 28rpx;
+  font-weight: 800;
+}
+
+.choice-grid {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.choice-item {
+  box-sizing: border-box;
+  /* 两列排布，5 个选项时最后一个占满整行 */
+  flex: 1 1 calc(50% - 10rpx);
+  min-width: calc(50% - 10rpx);
+  padding: 26rpx 10rpx;
+  color: #1e3a8a;
+  background: #ffffff;
+  border: 4rpx solid #c4b5fd;
+  border-radius: 22rpx;
+  font-size: 52rpx;
+  font-weight: 900;
+  line-height: 1.1;
+  text-align: center;
+  box-shadow: 0 8rpx 0 rgba(196, 181, 253, 0.5);
+}
+
+.choice-item.right-choice {
+  color: #166534;
+  background: #dcfce7;
+  border-color: #4ade80;
+  box-shadow: 0 8rpx 0 rgba(74, 222, 128, 0.45);
+}
+
+.choice-item.wrong-choice {
+  color: #b91c1c;
+  background: #fee2e2;
+  border-color: #f87171;
+  box-shadow: 0 8rpx 0 rgba(248, 113, 113, 0.45);
+}
+
+
 
 
 

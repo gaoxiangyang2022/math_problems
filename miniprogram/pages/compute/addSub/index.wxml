@@ -7,9 +7,8 @@
 
   <view wx:if="{{showWherePage==1}}" class="container practice-page">
 
-    <progress-bar index="{{currentIndex}}" total="{{currentTotal}}" wrongNum="{{wrongQuestions.length}}"></progress-bar>
+    <progress-bar id="progressBar" index="{{currentIndex}}" total="{{currentTotal}}" wrongNum="{{wrongQuestions.length}}"></progress-bar>
        
-    <view id="feedback">{{feedbackMessage}}</view>
         <!-- 竖式计算区域 -->
         <view class="vertical-equation">
             <!--计算动画演示 -->
@@ -58,7 +57,7 @@
 
  <!-- 错题本区域 -->
   <view wx:if="{{showWherePage==2}}" class="container">
-    <wrong-list wrongList="{{wrongQuestions}}" sessionTotal="{{currentTotal}}" bind:restart="restartQuiz"></wrong-list>
+    <wrong-list wrongList="{{wrongQuestions}}" sessionTotal="{{currentTotal}}" sessionTime="{{sessionTimeText}}" bind:restart="restartQuiz"></wrong-list>
   </view>
 
   <!-- 打印题展示界面 -->

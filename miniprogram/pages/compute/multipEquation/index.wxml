@@ -7,10 +7,8 @@
 
   <view wx:if="{{showWherePage==1}}" class="container practice-page">
 
-    <progress-bar index="{{currentIndex}}" total="{{currentTotal}}" wrongNum="{{wrongQuestions.length}}"></progress-bar>
+    <progress-bar id="progressBar" index="{{currentIndex}}" total="{{currentTotal}}" wrongNum="{{wrongQuestions.length}}"></progress-bar>
        
-    <view id="feedback" class="feedback-message">{{feedbackMessage}}</view>
-
     <!-- 固定题目区：滚动填写时仍然能看到原题 -->
     <view class="equation-header {{focus1 >= processSteps.length ? 'sum-mode' : ''}}">
         <view class="vertical-equation equation-preview">
@@ -80,7 +78,7 @@
 
  <!-- 错题本区域 -->
   <view wx:if="{{showWherePage==2}}" class="container">
-    <wrong-list wrongList="{{wrongQuestions}}" sessionTotal="{{currentTotal}}" bind:restart="restartQuiz"></wrong-list>
+    <wrong-list wrongList="{{wrongQuestions}}" sessionTotal="{{currentTotal}}" sessionTime="{{sessionTimeText}}" bind:restart="restartQuiz"></wrong-list>
   </view>
 </view>
 

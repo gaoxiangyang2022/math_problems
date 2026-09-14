@@ -2,16 +2,22 @@
 .print-view{
   display: flex;
   flex-direction: column;
-  height: 90vh;
+  /* 只占满剩下的可视高度：100px ≈ 顶部导航条 + 容器上下内边距，
+     这样底部的两个按钮就不会被顶出屏幕 */
+  height: calc(100vh - 100px);
+  max-height: calc(100vh - 100px);
+  overflow: hidden;
 }
 .problem-list{
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  overflow: scroll;
-  height: 90%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  /* flex 子项默认 min-height:auto，会被内容撑开，把底部按钮顶出屏幕 */
+  min-height: 0;
   flex: 1;
-  align-content: baseline;
+  align-content: flex-start;
 
   .item {
     flex: 1 1 calc(50% - 10px); 
@@ -28,6 +34,13 @@
   display: flex;
   flex-wrap: nowrap;
   gap: 5px;
-  flex: 0;
-  padding-top: 1em;
+  flex: 0 0 auto;
+  flex-shrink: 0;
+  padding: 1em 0 calc(10px + env(safe-area-inset-bottom));
+  background: #ffffff;
+
+  button {
+    flex: 1;
+    min-width: 0;
+  }
 }

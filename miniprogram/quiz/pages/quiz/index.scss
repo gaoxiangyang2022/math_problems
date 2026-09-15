@@ -302,31 +302,69 @@ page {
   border-color: #ea580c;
 }
 
-.pick-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14rpx;
+/* ============ 指定数字：选中 / 未选中 两种状态 ============ */
+.pick-section {
   margin-top: 22rpx;
 }
 
+.pick-hint {
+  color: #94a3b8;
+  font-size: 24rpx;
+}
+
+.pick-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 16rpx;
+}
+
+/* 2~9 共 8 个数字：每行 4 个，正好两行 */
+.pick-cell {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 25%;
+  /* 高度由 wxml 里的 size 给出（和圆的直径一致，避免圆被压到下一行） */
+}
+
+/* 第二行（第 5~8 个）与第一行留出足够间距，别挨在一起 */
+.pick-cell:nth-child(n + 5) {
+  margin-top: 30rpx;
+}
+
+/* 圆圈：宽高由 wxml 里的 size 给出（宽=高，永远是正圆） */
 .pick-tab {
   box-sizing: border-box;
-  width: 84rpx;
-  height: 84rpx;
-  line-height: 78rpx;
-  color: #1d4ed8;
-  background: #eff6ff;
-  border: 3rpx solid #bfdbfe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  /* 未选中：浅灰底 + 灰色虚线边 + 灰字（明显是"没选"） */
+  color: #94a3b8;
+  background: #f1f5f9;
+  border: 4rpx dashed #cbd5e1;
   border-radius: 50%;
-  font-size: 32rpx;
-  font-weight: 800;
+  font-size: 40rpx;
+  font-weight: 700;
   text-align: center;
 }
 
+/* 选中：深蓝实心 + 白字 + 实线边 + 阴影（和未选中差别拉到最大） */
 .pick-tab.active {
-  color: #ffffff;
-  background: #2563eb;
-  border-color: #2563eb;
+  color: #ffffff !important;
+  background-color: #2563eb !important;
+  background-image: linear-gradient(135deg, #3b82f6, #1d4ed8) !important;
+  border: 3rpx solid #1d4ed8 !important;
+  box-shadow: 0 8rpx 18rpx rgba(29, 78, 216, 0.35);
+  font-weight: 900;
+}
+
+.pick-summary {
+  margin-top: 16rpx;
+  color: #1d4ed8;
+  font-size: 26rpx;
+  font-weight: 800;
 }
 
 .setup-intro {
@@ -395,8 +433,16 @@ page {
 }
 
 /* ============ 提问模式：提问中 ============ */
+/* 提问中是"全屏锁死"的一屏：内容竖向居中，不需要滚动 */
+.quiz-asking {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - 56rpx);
+}
+
 .quiz-progress {
-  padding: 22rpx 24rpx;
+  padding: 18rpx 24rpx;
   background: #ffffff;
   border: 3rpx solid #bae6fd;
   border-radius: 18rpx;
@@ -417,8 +463,8 @@ page {
 
 .quiz-card {
   box-sizing: border-box;
-  margin: 30rpx 0 24rpx;
-  padding: 60rpx 30rpx;
+  margin: 22rpx 0 18rpx;
+  padding: 44rpx 30rpx;
   background: #ffffff;
   border: 4rpx solid #fdba74;
   border-radius: 28rpx;
@@ -452,9 +498,9 @@ page {
 }
 
 .quiz-question {
-  margin: 26rpx 0 16rpx;
+  margin: 20rpx 0 14rpx;
   color: #1e293b;
-  font-size: 92rpx;
+  font-size: 84rpx;
   font-weight: 900;
   letter-spacing: 4rpx;
 }
@@ -471,7 +517,7 @@ page {
 }
 
 .card-hint {
-  margin-top: 26rpx;
+  margin-top: 20rpx;
   color: #94a3b8;
   font-size: 26rpx;
 }

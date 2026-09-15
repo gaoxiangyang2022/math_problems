@@ -20,6 +20,14 @@
   font-weight: 700;
 }
 
+.completion-times {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+}
+
 .completion-time {
   display: inline-block;
   margin-top: 12rpx;
@@ -30,6 +38,12 @@
   border-radius: 999rpx;
   font-size: 26rpx;
   font-weight: 700;
+}
+
+.completion-time.avg {
+  color: #0f766e;
+  background: #ecfdf5;
+  border-color: #99f6e4;
 }
 
 .title {

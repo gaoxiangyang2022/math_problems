@@ -65,6 +65,21 @@
   border-color: #fde68a;
 }
 
+/* 竞速模式：只突出总用时和每题平均 */
+.timer-pill.avg {
+  color: #0f766e;
+  background: #ecfdf5;
+  border-color: #99f6e4;
+}
+
+.progress-container.speed .timer-pill.total {
+  font-size: 30rpx;
+}
+
+.progress-container.speed .progress-mood {
+  font-size: 24rpx;
+}
+
 .progress-bar {
   height: 34rpx;
   background: #e0f2fe;

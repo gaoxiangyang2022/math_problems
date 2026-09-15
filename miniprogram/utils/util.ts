@@ -285,7 +285,7 @@ const pickDistractors = (mistakes: number[], correct: number, count: number, opt
   const extraPool = (options && options.extraPool) || []
   const picked: number[] = []
 
-  // 统一入口：过滤非法值 + 去重，保证 5 个选项互不相同
+  // 统一入口：过滤非法值 + 去重，保证每个选项都不一样
   const tryAdd = (value: number, limit?: number) => {
     const num = Math.round(Number(value))
     if (!Number.isFinite(num)) return
@@ -415,17 +415,17 @@ export interface AnswerChoice {
 }
 
 /**
- * 生成含正确答案的一组选项（默认 5 个）供选择题模式使用
+ * 生成含正确答案的一组选项（默认 4 个）供选择题模式使用
  * 选项只显示答案本身，题干仍然在题目区，不重复显示算式
  * @param problem 题目对象或题目文本，例如 getAddSubProblem() 的返回值
- * @param options.count 选项个数，默认 5
+ * @param options.count 选项个数，默认 4
  * @param options.answer 覆盖正确答案（不传则取 problem.answer）
  */
 export const buildAnswerChoices = (problem: any, options?: { count?: number, answer?: number }): AnswerChoice[] => {
   const source = typeof problem === 'string' ? { problem } : (problem || {})
   const text = `${source.problem || ''}`
   const answer = options && options.answer !== undefined ? options.answer : source.answer
-  const count = Math.max(2, Number((options && options.count) || 5))
+  const count = Math.max(2, Number((options && options.count) || 4))
   const correctValue = Math.round(Number(answer) || 0)
   const { prefix, suffix } = splitProblemByUnknown(text)
   const values = [correctValue].concat(buildDistractors(source, count - 1))
@@ -456,7 +456,10 @@ export const buildAnswerChoices = (problem: any, options?: { count?: number, ans
 export const getMultipProblem = () => {
   var multN1 = getNumsByMultip();
   var multN2 = getNumsByMultip();
-  const rnums = [multN1[1],multN2[2],multN1[1]*multN2[2]]
+  // 口诀统一"小数在前"：2×7 而不是 7×2
+  const small = Math.min(multN1[1], multN2[2]);
+  const big = Math.max(multN1[1], multN2[2]);
+  const rnums = [small, big, small * big];
   const _index = getNumsByRange(3)[0]-1;
   var _answer = rnums[_index]
   rnums[_index] = "?"
@@ -464,7 +467,7 @@ export const getMultipProblem = () => {
     problem: `${rnums[0]} × ${rnums[1]} = ${rnums[2]}`,
     answer: _answer,
     kind: 'multip',
-    meta: { a: multN1[1], b: multN2[2], numbers: [multN1[1], multN2[2]] }
+    meta: { a: small, b: big, numbers: [small, big] }
   }
   if(hasNoDuplicateInLast10(r.problem)){
     return r

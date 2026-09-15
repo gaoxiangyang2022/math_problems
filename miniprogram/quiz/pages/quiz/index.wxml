@@ -1,3 +1,4 @@
+<page-meta page-style="{{pageStyle}}"></page-meta>
 <app-nav title="乘法口诀"></app-nav>
 <view class="page">
   <view class="mode-switch">
@@ -81,18 +82,25 @@
       <view class="setup-card">
         <view class="setup-label">考哪些口诀？</view>
         <view class="scope-row">
-          <view class="scope-btn {{quizScope=='all' ? 'active' : ''}}" data-scope="all" bindtap="changeQuizScope">全表 1~9</view>
+          <view class="scope-btn {{quizScope=='all' ? 'active' : ''}}" data-scope="all" bindtap="changeQuizScope">全表 2~9</view>
           <view class="scope-btn {{quizScope=='pick' ? 'active' : ''}}" data-scope="pick" bindtap="changeQuizScope">指定数字</view>
         </view>
 
-        <view class="pick-tabs" wx:if="{{quizScope=='pick'}}">
-          <view
-            wx:for="{{tableNums}}"
-            wx:key="item"
-            class="pick-tab {{quizPickBases.indexOf(item) >= 0 ? 'active' : ''}}"
-            data-base="{{item}}"
-            bindtap="toggleQuizBase"
-          >{{item}}</view>
+        <view class="pick-section" wx:if="{{quizScope=='pick'}}">
+          <view class="pick-hint">点一下选中，再点一下取消（至少留一个）</view>
+          <view class="pick-tabs">
+            <view
+              class="pick-cell"
+              wx:for="{{pickTabs}}"
+              wx:key="num"
+              data-base="{{item.num}}"
+              bindtap="toggleQuizBase"
+              style="height: {{item.size}}rpx;"
+            >
+              <view class="pick-tab {{item.picked ? 'active' : ''}}" style="width: {{item.size}}rpx; height: {{item.size}}rpx;">{{item.num}}</view>
+            </view>
+          </view>
+          <view class="pick-summary">已选 {{quizPickBases.length}} 个数字：{{quizPickBases.join('、')}}</view>
         </view>
 
         <view class="setup-intro">{{quizIntro}}</view>
@@ -101,7 +109,7 @@
           <view class="gesture-tip"><text class="gesture-icon up">↑</text>孩子答对：向上滑动</view>
           <view class="gesture-tip"><text class="gesture-icon right">→</text>孩子答错：向右滑动</view>
         </view>
-        <view class="gesture-note">不方便滑动时，也可以点下面的按钮</view>
+        <view class="gesture-note">不方便滑动时，也可以点下面的按钮；有语音包时会自动念题</view>
       </view>
 
       <view class="start-quiz-btn" bindtap="startQuiz">开始提问</view>
@@ -114,7 +122,8 @@
         <view class="progress-sub">已判定 {{answeredCount}} 次 · 答对 {{correctCount}} 次 · 答错 {{wrongStrikeCount}} 次</view>
       </view>
 
-      <view class="quiz-card {{cardState}}" bindtouchstart="onCardTouchStart" bindtouchend="onCardTouchEnd">
+      <!-- catchtouchmove：卡片上的滑动不冒泡给页面，页面就不会跟着滚 -->
+      <view class="quiz-card {{cardState}}" bindtouchstart="onCardTouchStart" catchtouchmove="onCardTouchMove" bindtouchend="onCardTouchEnd">
         <view class="quiz-card-tag">家长提问</view>
         <view class="quiz-question">{{currentProblem.showAs}} = ?</view>
         <view class="quiz-answer">答案 {{currentProblem.result}}（孩子先说，再看这里）</view>
@@ -125,7 +134,7 @@
         <button class="judge-btn wrong-btn" bindtap="tapWrong">答错 →</button>
         <button class="judge-btn right-btn" bindtap="tapCorrect">↑ 答对</button>
       </view>
-      <button class="replay-btn" bindtap="replayQuestion">🔊 再念一遍题目</button>
+      <button class="replay-btn" wx:if="{{hasQuestionAudio}}" bindtap="replayQuestion">🔊 再念一遍题目</button>
 
       <view class="correct-pile" wx:if="{{correctPile.length}}">
         <view class="pile-label">刚答对</view>

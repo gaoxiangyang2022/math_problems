@@ -70,7 +70,8 @@ Component({
       this.openPractice('加减竖式', '/pages/compute/addSub/index')
     },
     goToMultip(){
-      this.openPractice('乘法口诀', '/pages/compute/multipTab/index')
+      // 乘法口诀（看口诀 + 考一考）在独立分包 quiz 里，点进来才会下载分包和语音包
+      this.openPractice('乘法口诀', '/quiz/pages/quiz/index')
     },
     goToMult(){
       this.openPractice('乘法口算', '/pages/compute/multip/index')

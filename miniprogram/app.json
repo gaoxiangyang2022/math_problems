@@ -3,7 +3,6 @@
     "pages/index/index",
     "pages/compute/simpleAddSub/index",
     "pages/compute/addSub/index",
-    "pages/compute/multipTab/index",
     "pages/compute/multip/index",
     "pages/compute/tenFun/index",
     "pages/about/index",
@@ -13,6 +12,15 @@
     "pages/compute/multipEquation/index",
     "pages/compute/wordProblem/index",
     "pages/arithmetic/arithmetic"
+  ],
+  "subpackages": [
+    {
+      "root": "quiz",
+      "name": "quiz",
+      "pages": [
+        "pages/quiz/index"
+      ]
+    }
   ],
   "window": {
     "navigationBarTextStyle": "black",

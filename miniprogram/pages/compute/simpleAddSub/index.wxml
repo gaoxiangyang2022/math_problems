@@ -1,3 +1,4 @@
+<page-meta page-style="{{pageStyle}}"></page-meta>
 <app-nav title="简单加减法"></app-nav>
 <view style="width: 100%;">
   <!-- 选择界面 -->
@@ -6,8 +7,8 @@
   </view>
 
   <!-- 做题界面 -->
-  <view wx:if="{{showWherePage==1}}" class="container practice-page">
-    <progress-bar id="progressBar" index="{{currentIndex}}" total="{{currentTotal}}" wrongNum="{{wrongQuestions.length}}"></progress-bar>
+  <view wx:if="{{showWherePage==1}}" class="container practice-page {{speedMode ? 'speed-page' : ''}}">
+    <progress-bar id="progressBar" index="{{currentIndex}}" total="{{currentTotal}}" wrongNum="{{wrongQuestions.length}}" speedMode="{{speedMode}}" showProblemTimer="{{!speedMode}}" averageText="{{averageTimeText}}"></progress-bar>
     <practice-settings mode="manual" practiceMode="{{practiceMode}}" showVerify="{{false}}" delay="{{debounce_time}}" autoNext="{{autoNext}}" checked="{{answerChecked}}" bind:change="changePracticeSettings" bind:verify="checkAnswer" bind:next="nextProblem"></practice-settings>
     <view class="problem {{errorShake? ' shake' : ''}}">
       <view id="problem">{{currentProblem}}</view>
@@ -15,16 +16,16 @@
       <view class="question-ans" wx:if="{{practiceMode!='choice'}}">
         <view class="answer-box {{userAnswer !== '' ? 'filled' : ''}}" bindtap="clearAnswer">{{userAnswer || '?'}}</view>
       </view>
-      <!-- 选择题模式：五个答案挑一个 -->
-      <view class="choice-panel" wx:else>
-        <view class="choice-tip">从下面五个答案里选一个</view>
+      <!-- 选择题模式（竞速）：四个答案挑一个 -->
+      <view class="choice-panel {{speedMode ? 'speed' : ''}}" wx:else>
+        <view class="choice-tip">从下面四个答案里选一个</view>
         <view class="choice-grid">
           <view
             wx:for="{{answerChoices}}"
             wx:key="value"
             class="choice-item {{selectedChoice===item.value ? (item.isCorrect ? 'right-choice' : 'wrong-choice') : ''}}"
             data-value="{{item.value}}"
-            bindtap="selectChoice"
+            catchtap="selectChoice"
           >{{item.label}}</view>
         </view>
       </view>
@@ -40,7 +41,7 @@
 
 <!-- 错题展示界面 -->
 <view wx:if="{{showWherePage==2}}" class="container">
-  <wrong-list wrongList="{{wrongQuestions}}" sessionTotal="{{currentTotal}}" sessionTime="{{sessionTimeText}}" bind:restart="restartQuiz"></wrong-list>
+  <wrong-list wrongList="{{wrongQuestions}}" sessionTotal="{{currentTotal}}" sessionTime="{{sessionTimeText}}" sessionAvgTime="{{avgTimeText}}" bind:restart="restartQuiz"></wrong-list>
 </view>
 
 <!-- 打印题展示界面 -->

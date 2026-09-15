@@ -19,6 +19,16 @@ page{
   flex-direction: column;
   justify-content: center;
 }
+
+/* 竞速模式：整页锁死，答题时不会因为拖到空白处触发页面滚动
+   高度要减掉顶部导航条（约 100px），否则页面总高超过一屏还是能滑 */
+.practice-page.speed-page {
+  height: calc(100vh - 100px);
+  min-height: 0;
+  padding: 0 0 20rpx;
+  overflow: hidden;
+  justify-content: center;
+}
 .keypad-dock {
   box-sizing: border-box;
   position: fixed;
@@ -66,7 +76,7 @@ page{
   background: #eff6ff;
 }
 
-/* 选择题模式：只显示答案，5 个选项排两列 */
+/* 选择题模式：只显示答案，4 个选项排两列（2×2） */
 .choice-panel {
   width: 100%;
   display: flex;
@@ -90,7 +100,7 @@ page{
 
 .choice-item {
   box-sizing: border-box;
-  /* 两列排布，5 个选项时最后一个占满整行 */
+  /* 两列排布，4 个选项刚好 2×2 */
   flex: 1 1 calc(50% - 10rpx);
   min-width: calc(50% - 10rpx);
   padding: 26rpx 10rpx;
@@ -117,6 +127,20 @@ page{
   background: #fee2e2;
   border-color: #f87171;
   box-shadow: 0 8rpx 0 rgba(248, 113, 113, 0.45);
+}
+
+/* 竞速模式：不显示说明文字，选项更紧凑，尽量一屏放完不滚动 */
+.choice-panel.speed .choice-tip {
+  display: none;
+}
+
+.choice-panel.speed .choice-grid {
+  gap: 16rpx;
+}
+
+.choice-panel.speed .choice-item {
+  padding: 22rpx 10rpx;
+  font-size: 50rpx;
 }
 
 

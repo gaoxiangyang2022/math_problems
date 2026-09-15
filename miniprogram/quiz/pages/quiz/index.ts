@@ -1,5 +1,5 @@
-// pages/compute/multipTab/index.ts
-import { formatDuration, createPracticeTimer } from '../../../utils/practiceTimer'
+// 乘法口诀 · 考一考（独立分包页面，语音包随分包一起加载）
+import { formatDuration, createPracticeTimer } from '../../utils/practiceTimer'
 
 const app = getApp()
 
@@ -31,6 +31,8 @@ Page({
     // ---------- 学习模式 ----------
     multipData: [],
     tableNums: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    // 考一考只考 2~9 的乘法口诀（看口诀仍保留完整的 1~9）
+    quizBaseNums: [2, 3, 4, 5, 6, 7, 8, 9],
     selectedBase: 2,
     selectedFacts: [],
     selectedFact: null,
@@ -47,8 +49,9 @@ Page({
     tab: 'study',            // study: 看口诀  quiz: 考一考
     quizReady: false,        // 提问模式的选择界面
     quizPhase: 'setup',      // setup: 选择范围 / asking: 提问中 / result: 本轮结果
-    quizScope: 'all',        // all: 全表(1~9) / pick: 指定几个数字
+    quizScope: 'all',        // all: 全表(2~9) / pick: 指定几个数字
     quizPickBases: [2, 3, 4],
+    pickTabs: [],            // [{ num, picked }] 供"指定数字"直接渲染选中状态
     quizIntro: '',
     currentProblem: null,    // { i, j, result, showAs, askText }
     queueLeft: 0,
@@ -59,25 +62,36 @@ Page({
     mistakeList: [],         // [{ key, showAs, text, answerText, wrongCount }]
     correctPile: [],
     cardState: '',
-    quizTimeText: ''
+    quizTimeText: '',
+    // 本地语音包是否可用（决定要不要显示"再念一遍"按钮）
+    hasQuestionAudio: true,
+    // 提问中锁住页面滚动，否则滑动判定会带着整个页面一起滚
+    pageStyle: ''
   },
+  /** 提问中：整页锁死 + 内容居中，滑动手势不会被页面滚动吃掉 */
+  ASK_PAGE_STYLE: 'height:100vh;overflow:hidden;',
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad() {
     this.practiceTimer = createPracticeTimer()
-    this.buildIds = 'multipTabQuiz'
-    this.ttsPlayTried = false
     this.isStaticPlayback = false
+    // 本地语音包状态：有文件就能念题，没有就退回家长念题
+    this.audioMissing = false
     try {
       this.questionAudio = wx.createInnerAudioContext({ useWebAudioImplement: true })
-      this.questionAudio.onError(() => {
-        // 设备不支持朗读或域名未配置时，静默失败，不打扰家长
-        this.ttsPlayTried = false
+      this.questionAudio.onError((res) => {
+        // 语音包缺失（没放音频文件）时，自动隐藏"再念一遍"按钮
+        const code = Number(res && res.errCode)
+        if (!code || [1, 2, 3, 4].indexOf(code) >= 0) {
+          this.audioMissing = true
+          if (this.data.hasQuestionAudio) this.setData({ hasQuestionAudio: false })
+        }
       })
     } catch (err) {
       this.questionAudio = null
+      this.audioMissing = true
     }
     this.initData()
     this.refreshQuizIntro()
@@ -114,8 +128,12 @@ Page({
       }
       _multipData.push(_multipData_line)
     }
+   // 圆圈尺寸只算一次，切换选中状态时保持同一个尺寸
+   this.pickTabSize = this.getPickTabSize()
    this.setData({
-    multipData: _multipData
+    multipData: _multipData,
+    // 初始化"指定数字"的选中状态（圆圈尺寸按"一行四个"算好）
+    pickTabs: this.buildPickTabs(this.data.quizPickBases, this.pickTabSize)
    })
     this.selectBase({ currentTarget: { dataset: { base: this.data.selectedBase } } })
 
@@ -126,11 +144,14 @@ Page({
     const tab = `${e.currentTarget.dataset.tab}`
     if (tab === this.data.tab) return
     if (tab !== 'quiz') this.stopSpeak()
+    const asking = tab === 'quiz' && this.data.quizPhase === 'asking'
     this.setData({
       tab,
-      showExplanation: false
+      showExplanation: false,
+      // 只有提问中的界面需要锁住页面滚动
+      pageStyle: asking ? this.ASK_PAGE_STYLE : ''
     })
-    if (tab === 'quiz' && this.data.quizPhase === 'asking') {
+    if (asking) {
       this.speakCurrentProblem()
     }
   },
@@ -236,6 +257,29 @@ Page({
     this.refreshQuizIntro()
   },
 
+  /**
+   * 把"数字是否被选中"提前算进数组，模板直接用
+   * size 是每个圆圈的直径(rpx)：按屏幕宽度算出"一行四个"的正圆尺寸，
+   * 这样宽高一致，不会因为屏幕宽窄被拉成椭圆
+   */
+  buildPickTabs(picked, size) {
+    const selected = picked || this.data.quizPickBases || []
+    const nums = this.data.quizBaseNums || [2, 3, 4, 5, 6, 7, 8, 9]
+    return nums.map((num: number) => ({
+      num,
+      picked: selected.indexOf(num) >= 0,
+      size: size || this.pickTabSize || 143
+    }))
+  },
+
+  /**
+   * 算出一行四个的正圆直径（单位 rpx，会自动跟着屏幕缩放）
+   * 750rpx 就是屏幕宽度：减去页面左右内边距、卡片内边距、三个间距，再四等分
+   */
+  getPickTabSize() {
+    return Math.max(100, Math.round((750 - 2 * 28 - 2 * 24 - 3 * 20) / 4))
+  },
+
   toggleQuizBase(e) {
     const base = Number(e.currentTarget.dataset.base)
     if (!base) return
@@ -251,15 +295,19 @@ Page({
       picked.push(base)
     }
     picked.sort((a: number, b: number) => a - b)
-    this.setData({ quizPickBases: picked })
+    this.setData({
+      quizPickBases: picked,
+      // 选中状态同步刷新，保证点一下外观立刻变
+      pickTabs: this.buildPickTabs(picked)
+    })
     this.refreshQuizIntro()
   },
 
-  /** 按当前选择算出这一轮会考哪些口诀 */
+  /** 按当前选择算出这一轮会考哪些口诀（全表 = 2~9 的乘法口诀，共 36 句） */
   getQuizPairs() {
     const bases = this.data.quizScope === 'pick'
       ? (this.data.quizPickBases || []).slice().sort((a: number, b: number) => a - b)
-      : [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      : [2, 3, 4, 5, 6, 7, 8, 9]
     const pairs = []
     bases.forEach((i: number) => {
       for (let j = i; j <= 9; j++) {
@@ -273,7 +321,7 @@ Page({
     const pairs = this.getQuizPairs()
     const baseText = this.data.quizScope === 'pick'
       ? `只考 ${(this.data.quizPickBases || []).join('、')} 的口诀`
-      : '考 1~9 全部口诀'
+      : '考 2~9 全部口诀'
     this.setData({
       quizIntro: `${baseText}，共 ${pairs.length} 句口诀。孩子答对就向上滑，答错就向右滑；答错的会隔几题再来一次，全部答对才结束。`
     })
@@ -298,7 +346,8 @@ Page({
       mistakeList: [],
       correctPile: [],
       cardState: '',
-      quizTimeText: ''
+      quizTimeText: '',
+      pageStyle: this.ASK_PAGE_STYLE
     }, () => {
       this.nextQuestion(queue)
     })
@@ -320,13 +369,15 @@ Page({
     // 随机抽一道，保证"随机出题"
     const pickIndex = randomInt(0, queue.length - 1)
     const pair = queue.splice(pickIndex, 1)[0]
-    const showAs = Math.random() < 0.5 ? `${pair.i} × ${pair.j}` : `${pair.j} × ${pair.i}`
+    // 口诀统一"小数在前"：显示 2 × 7，不显示 7 × 2
+    const small = Math.min(pair.i, pair.j)
+    const big = Math.max(pair.i, pair.j)
     const problem = {
       i: pair.i,
       j: pair.j,
       result: pair.i * pair.j,
-      showAs,
-      askText: `${pair.i}乘${pair.j}`
+      showAs: `${small} × ${big}`,
+      askText: `${small}乘${big}`
     }
     this.setData({
       currentProblem: problem,
@@ -343,31 +394,45 @@ Page({
     })
   },
 
-  // ============ 提问模式：朗读题目 ============
+  // ============ 提问模式：念题语音 ============
+  /**
+   * 只播放本地语音包，不请求任何在线接口
+   * 语音包随分包一起放在 quiz/audio/multip/ 下，命名 ixj.mp3
+   * （例如 2x7.mp3 读"二乘七等于十四"）
+   * 没放文件时 onError 会把 audioMissing 置为 true，并自动隐藏"再念一遍"按钮
+   */
   speakCurrentProblem() {
     const problem = this.data.currentProblem
     if (!problem) return
-    this.playQuestion(`${problem.i}乘${problem.j}等于多少`)
+    this.playQuestion(problem)
   },
 
   replayQuestion() {
+    if (this.audioMissing) {
+      wx.showToast({ title: '请家长念题', icon: 'none' })
+      return
+    }
     const problem = this.data.currentProblem
     if (!problem) return
-    this.playQuestion(`${problem.i}乘${problem.j}等于多少`)
+    this.playQuestion(problem)
   },
 
-  playQuestion(text) {
-    if (!this.questionAudio || !text) return
-    const url = `https://tsn.baidu.com/text2audio?tex=${encodeURIComponent(text)}&lan=zh&cuid=${this.buildIds}&ctp=1&per=0&spd=4&pit=5&vol=6&aue=3`
+  getQuestionAudioPath(i, j) {
+    // 绝对路径指向本分包内的语音包：只有进入考一考才会下载这部分资源
+    return `/quiz/audio/multip/${i}x${j}.mp3`
+  },
+
+  playQuestion(problem) {
+    if (!this.questionAudio || this.audioMissing || !problem) return
+    const src = this.getQuestionAudioPath(problem.i, problem.j)
     this.isStaticPlayback = false
     try {
       this.questionAudio.stop()
-      this.questionAudio.src = url
+      this.questionAudio.src = src
       this.questionAudio.play()
       this.isStaticPlayback = true
-      this.ttsPlayTried = true
     } catch (err) {
-      // 朗读不可用时，家长自己念题即可，卡片上一直有题目
+      // 播放失败不影响答题，家长自己念题即可
       this.isStaticPlayback = false
     }
   },
@@ -387,12 +452,40 @@ Page({
     const touch = e.touches && e.touches[0]
     if (!touch) return
     this.touchStart = { x: touch.clientX, y: touch.clientY }
+    this.touchTriggered = false
+  },
+
+  /**
+   * 卡片上的 touchmove 用 catch 绑定，阻止事件冒泡到页面，页面就不会跟着滚
+   * 顺便在手指移动到位时就判定，滑动手感更跟手
+   */
+  onCardTouchMove(e) {
+    if (this.touchTriggered || this.judging) return
+    const start = this.touchStart
+    const touch = e.touches && e.touches[0]
+    if (!start || !touch) return
+    const dx = touch.clientX - start.x
+    const dy = touch.clientY - start.y
+    // 向上滑动（并且明显比横向多）= 答对
+    if (dy <= -SWIPE_MIN_DISTANCE && Math.abs(dy) > Math.abs(dx)) {
+      this.touchTriggered = true
+      this.markAnswer(true)
+      return
+    }
+    // 向右滑动（并且明显比纵向多）= 答错
+    if (dx >= SWIPE_MIN_DISTANCE && Math.abs(dx) > Math.abs(dy)) {
+      this.touchTriggered = true
+      this.markAnswer(false)
+    }
   },
 
   onCardTouchEnd(e) {
-    if (this.judging) return
     const start = this.touchStart
     this.touchStart = null
+    if (this.judging || this.touchTriggered) {
+      this.touchTriggered = false
+      return
+    }
     const touch = e.changedTouches && e.changedTouches[0]
     if (!start || !touch) return
     const dx = touch.clientX - start.x
@@ -406,7 +499,6 @@ Page({
     // 向右滑动 = 答错
     if (dx >= SWIPE_MIN_DISTANCE && Math.abs(dx) > Math.abs(dy)) {
       this.markAnswer(false)
-      return
     }
   },
 
@@ -495,7 +587,9 @@ Page({
       currentProblem: null,
       cardState: '',
       quizTimeText: formatDuration(elapsed),
-      queueLeft: 0
+      queueLeft: 0,
+      // 结果页要能上下滚动
+      pageStyle: ''
     })
     // 题目可能中途改过范围，回到设置页时文案保持同步
     this.refreshQuizIntro()
@@ -518,7 +612,8 @@ Page({
       currentProblem: null,
       cardState: '',
       queueLeft: 0,
-      quizTimeText: ''
+      quizTimeText: '',
+      pageStyle: ''
     })
     this.refreshQuizIntro()
   },
@@ -530,7 +625,7 @@ Page({
   // onShareAppMessage() {
   //   return {
   //     title: '一起来练习乘法口决吧！',
-  //     path: '/pages/compute/multipTab/index',
+  //     path: '/quiz/pages/quiz/index',
   //   }
   //  },
 })

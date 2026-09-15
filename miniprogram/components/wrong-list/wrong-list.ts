@@ -8,6 +8,8 @@ Component({
     sessionTotal: { type: Number, value: 0 },
     /** 本次练习用时文案，例如 "3分20秒" */
     sessionTime: { type: String, value: '' },
+    /** 每题平均用时文案，例如 "2.4秒" */
+    sessionAvgTime: { type: String, value: '' },
   },
 
   data: {

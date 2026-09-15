@@ -2,7 +2,13 @@ import { getMultipProblem, buildAnswerChoices, AnswerChoice } from '../../../uti
 import { recordPracticeResult } from '../../../utils/practiceStats';
 import { getPracticeSettings, savePracticeSettings } from '../../../utils/practiceSettings';
 import { showFloatingFeedback } from '../../../utils/feedback';
-import { createPracticeTimer, formatDuration } from '../../../utils/practiceTimer';
+import { createPracticeTimer, formatDuration, formatPreciseDuration, averageSeconds } from '../../../utils/practiceTimer';
+
+// 竞速判卷动画时间：只留一小段，让颜色变化能被看见
+const SPEED_JUDGE_DELAY = 300
+// 竞速模式下锁死页面滚动（含 iOS 下拉回弹）
+const PAGE_LOCK_STYLE = 'height:100vh;overflow:hidden;'
+
 Page({
 
   /**
@@ -26,10 +32,16 @@ Page({
     errorShake: false,
     problemList:[],
     practiceMode: 'input',
+    // 选择题 = 竞速模式：去掉动画、去掉提示，做完立刻下一题
+    speedMode: false,
     answerChoices: [] as AnswerChoice[],
     selectedChoice: null as number | null,
     selectionLocked: false,
-    sessionTimeText: ''
+    sessionTimeText: '',
+    avgTimeText: '',
+    averageTimeText: '',
+    // 竞速模式锁住页面滚动用
+    pageStyle: ''
   },
 
   /**
@@ -47,6 +59,8 @@ Page({
   onUnload() {
     if (this.practiceTimer) this.practiceTimer.reset();
     if (this.problemTimer) this.problemTimer.reset();
+    // 离开页面时确保页面滚动恢复，避免带到别的页面
+    this.setData({ pageStyle: '' });
   },
   onHide() {
     // 切到后台 / 离开页面时暂停计时
@@ -91,11 +105,33 @@ Page({
     if (timerComponent && timerComponent.stopProblemTimer) timerComponent.stopProblemTimer();
   },
 
+  /** 竞速模式：刷新顶部的"每题平均用时" */
+  refreshAverage() {
+    if (!this.data.speedMode) return
+    const count = Math.max(Number(this.data.currentIndex) || 0, 0)
+    if (!count) return
+    const total = this.practiceTimer ? this.practiceTimer.getElapsed() : 0
+    const avg = averageSeconds(total, count)
+    this.setData({
+      averageTimeText: `均 ${formatPreciseDuration(avg)}`
+    })
+  },
+
+  /**
+   * 竞速模式必须把页面本身也锁住：
+   * 只在容器上写 overflow:hidden 挡不住 iOS 的下拉回弹，页面照样会被拖动
+   */
+  updatePageScrollLock(speedMode) {
+    this.setData({ pageStyle: speedMode ? PAGE_LOCK_STYLE : '' })
+  },
+
+
   startTest(e) {    
     if (this.data.timer) {
       clearTimeout(this.data.timer);
     }
     const settings = getPracticeSettings(this.data.debounce_time);
+    const speedMode = e.detail.mode === 'choice'
     this.setData({
       currentTotal:e.detail.total,
       currentIndex: 1,
@@ -107,11 +143,15 @@ Page({
       userAnswer:"",
       errorShake:false,
       timer: 0,
-      practiceMode: e.detail.mode === 'choice' ? 'choice' : 'input',
+      practiceMode: speedMode ? 'choice' : 'input',
+      speedMode,
+      pageStyle: speedMode ? PAGE_LOCK_STYLE : '',
       selectedChoice: null,
       selectionLocked: false,
       answerChoices: [],
       sessionTimeText: "",
+      avgTimeText: "",
+      averageTimeText: "",
       showWherePage: 1
     });
     // 重新开始一场练习：总用时从 0 开始
@@ -132,6 +172,7 @@ Page({
     });
     // 新的一题：单题用时重新开始
     this.startProblemTimer();
+    this.refreshAverage();
   },  
   inputChange(e) {
     this.setAnswerValue(e.detail.value);
@@ -203,29 +244,43 @@ Page({
     } else if (this.data.userAnswer === this.data.correctAnswer) {
       recordPracticeResult(true)
       this.stopProblemTimer();
-      showFloatingFeedback(this.data.autoNext ? '🎉 答对啦' : '🎉 答对啦', 1200)
       this.setData({
         answerChecked:true
       });
-      if (this.data.autoNext) setTimeout(() => {
-        this.nextProblem();
-      }, 650);
+      if (this.data.speedMode) {
+        // 竞速模式：不要提示、不要动画，直接下一题
+        setTimeout(() => {
+          this.nextProblem();
+        }, SPEED_JUDGE_DELAY);
+      } else {
+        showFloatingFeedback(this.data.autoNext ? '🎉 答对啦' : '🎉 答对啦', 1200)
+        if (this.data.autoNext) setTimeout(() => {
+          this.nextProblem();
+        }, 650);
+      }
+      this.refreshAverage();
     } else {
       recordPracticeResult(false)
       this.stopProblemTimer();
       var wqTmp = this.data.wrongQuestions
       wqTmp.push({"question": this.data.currentProblem,"yourAnswer": this.data.userAnswer,"correctAnswer": this.data.correctAnswer})
-      showFloatingFeedback(`😢 答案：${this.data.correctAnswer}`, 1600)
       this.setData({
         wrongQuestions: wqTmp,
         answerChecked:true,
-        errorShake:true
+        // 竞速模式不做抖动动画，省时间
+        errorShake: !this.data.speedMode
       });
-      // 选择题点一下就走：答错也计入错题本，稍作停顿后立刻下一题
-      const nextDelay = this.data.practiceMode === 'choice' ? 900 : 1800;
-      if (this.data.autoNext || this.data.practiceMode === 'choice') setTimeout(() => {
-        this.nextProblem();
-      }, nextDelay);
+      if (this.data.speedMode) {
+        setTimeout(() => {
+          this.nextProblem();
+        }, SPEED_JUDGE_DELAY);
+      } else {
+        showFloatingFeedback(`😢 答案：${this.data.correctAnswer}`, 1600)
+        if (this.data.autoNext) setTimeout(() => {
+          this.nextProblem();
+        }, 1800);
+      }
+      this.refreshAverage();
     }
   },
 
@@ -262,11 +317,17 @@ Page({
   },
 
   finishQuiz() {
-    // 练习结束：停止计时并记录总用时
+    // 练习结束：停止计时，算出每题平均用时
     const elapsed = this.stopPracticeTimer();
+    const count = Math.max(Number(this.data.currentTotal) || Number(this.data.currentIndex) || 0, 0);
+    const avg = averageSeconds(elapsed, count);
     this.setData({
       showWherePage: 2,
-      sessionTimeText: formatDuration(elapsed)
+      sessionTimeText: formatDuration(elapsed),
+      avgTimeText: count ? formatPreciseDuration(avg) : '',
+      averageTimeText: count ? `均 ${formatPreciseDuration(avg)}` : '',
+      // 结果页可以正常滚动
+      pageStyle: ''
     });
   },
   restartQuiz() {
@@ -286,7 +347,10 @@ Page({
       selectionLocked: false,
       answerChoices: [],
       timer: 0,
-      sessionTimeText: ""
+      sessionTimeText: "",
+      avgTimeText: "",
+      averageTimeText: "",
+      pageStyle: ""
     });
   },
 

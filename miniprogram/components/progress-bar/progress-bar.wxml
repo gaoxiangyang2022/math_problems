@@ -1,13 +1,18 @@
-<view class="progress-container">
+<view class="progress-container {{speedMode ? 'speed' : ''}}">
   <view class="progress-top">
     <view class="progress-mood">{{progressMood}}</view>
     <view class="progress-timers">
-      <view class="timer-pill total" wx:if="{{timerText}}">⏱ 总用时 {{timerText}}</view>
-      <view class="timer-pill" wx:if="{{problemTimerText}}">本题 {{problemTimerText}}</view>
+      <view class="timer-pill total" wx:if="{{timerText}}">⏱ {{timerText}}</view>
+      <view class="timer-pill avg" wx:if="{{averageText}}">{{averageText}}</view>
+      <view class="timer-pill" wx:if="{{showProblemTimer && problemTimerText}}">本题 {{problemTimerText}}</view>
     </view>
-    <view class="progress-info">
+    <view class="progress-info" wx:if="{{!speedMode}}">
       <span>第 <span id="progressText">{{displayIndex}}</span> / {{displayTotal}} 题</span>
       <span>错题 <span id="wrongCount">{{wrongNum}}</span></span>
+    </view>
+    <view class="progress-info" wx:else>
+      <span>第 <span id="progressText">{{displayIndex}}</span> 题</span>
+      <span>错 <span id="wrongCount">{{wrongNum}}</span></span>
     </view>
   </view>
   <view class="progress-bar">

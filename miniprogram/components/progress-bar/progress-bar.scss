@@ -16,64 +16,85 @@
   align-items: center;
   justify-content: space-between;
   gap: 12rpx;
-  margin-bottom: 14rpx;
-  flex-wrap: wrap;
+  margin-bottom: 12rpx;
+  /* 关键：不换行。否则总用时文字变长时会把右边挤到第二行，高度跳变导致页面抖动 */
+  flex-wrap: nowrap;
 }
 
 .progress-mood {
   flex: 1;
   min-width: 0;
+  overflow: hidden;
   color: #ea580c;
   font-size: 28rpx;
   font-weight: 800;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .progress-info {
   display: flex;
   gap: 14rpx;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  flex: none;
   justify-content: flex-end;
   color: #64748b;
   font-size: 24rpx;
   font-weight: 600;
+  white-space: nowrap;
 }
 
-/* 计时显示 */
+/* 计时显示：单独一行，永远不换行、不撑高 */
 .progress-timers {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 10rpx;
-  flex-wrap: wrap;
-  flex: 1;
+  margin-bottom: 12rpx;
+  flex-wrap: nowrap;
 }
 
 .timer-pill {
-  padding: 4rpx 14rpx;
+  box-sizing: border-box;
+  height: 44rpx;
+  padding: 0 12rpx;
   color: #1d4ed8;
   background: #eff6ff;
   border: 2rpx solid #bfdbfe;
   border-radius: 999rpx;
   font-size: 24rpx;
   font-weight: 700;
+  line-height: 40rpx;
   white-space: nowrap;
 }
 
+/* 总用时：黄底。按比例分宽（不是按内容分），所以字数变化不会改变布局 */
 .timer-pill.total {
+  flex: 1.25 1 0;
+  min-width: 0;
+  overflow: hidden;
   color: #b45309;
   background: #fffbeb;
   border-color: #fde68a;
+  text-align: center;
+  text-overflow: ellipsis;
 }
 
-/* 竞速模式：只突出总用时和每题平均 */
+/* 每题平均：绿底，同样按比例分宽，最多省略号，不会换行 */
 .timer-pill.avg {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
   color: #0f766e;
   background: #ecfdf5;
   border-color: #99f6e4;
+  text-align: center;
+  text-overflow: ellipsis;
 }
 
+/* 竞速模式：字体略大一点，突出总用时 */
 .progress-container.speed .timer-pill.total {
-  font-size: 30rpx;
+  font-size: 26rpx;
 }
 
 .progress-container.speed .progress-mood {

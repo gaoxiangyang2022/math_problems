@@ -1,24 +1,55 @@
-<app-nav title="演示讲解"></app-nav>
-<view class="container">
-  <demo-anim
-    visible="{{false}}"
-    question="7103-278="
-    correctAnswer="{{6825}}"
-  />
-</view>
+<app-nav title="关于 · 一起做出来"></app-nav>
 
-<text>
-  如果您或您所在的企业、单位有软件开发的需求（无论是教育工具、微信小程序、管理系统还是其他定制化产品），我们都能够提供专业的技术支持。欢迎联系我，我们一起探讨如何用技术为您的想法赋能。
-</text>
-<view>
-  <text>
-   下面放上联系方式，如果有好的建议，需求都可以加我微信，如果有项目需要合作也可以联系我，谢谢
-  </text>
-  <text bind:tap="callme" user-select="true">
-  电话（点击快速拔号）：19138112344
-  </text>
-  <text bind:tap="copyPhone" user-select="true">
-  微信号码（点击复制）：19138112344
-  </text>
-</view>
+<view class="page">
+  <view class="hero">
+    <view class="hero-emoji">🧮</view>
+    <view class="hero-title">小小数学家</view>
+    <view class="hero-sub">一个陪孩子练口算的小程序</view>
+  </view>
 
+  <view class="card">
+    <view class="card-title">☀️ 为什么做这个</view>
+    <view class="card-text">
+      陪孩子做题的时候，总觉得"要是能随手出题、马上对答案、把错题收起来就好了"。于是就有了这个小程序：把每天几分钟的练习，变成一件不费劲的小事。
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">🧩 现在能做什么</view>
+    <view class="list">
+      <view class="list-item"><text class="dot">·</text><text>加减乘除口算、竖式练习，做完自动判卷；</text></view>
+      <view class="list-item"><text class="dot">·</text><text>选择题竞速模式，计时 + 每题平均用时，一眼看出熟练度；</text></view>
+      <view class="list-item"><text class="dot">·</text><text>乘法口诀「考一考」：家长问、孩子答，上滑答对、右滑答错；</text></view>
+      <view class="list-item"><text class="dot">·</text><text>错题自动收进错题本，还能生成 A4 打印题单。</text></view>
+    </view>
+  </view>
+
+  <!-- 结尾：把"小点子值得被重视"和"有想法可以找我"连成一件事 -->
+  <view class="card end-card">
+    <view class="card-title">🤝 如果你也有个小想法</view>
+
+    <view class="quote">
+      <view class="quote-mark">“</view>
+      <view class="quote-text">任何小的想法、小的点子，都值得被重视。</view>
+      <view class="quote-sub">它可能只是一句"要是能这样就好了"——就像这个小程序，也是从这么一句话开始的。</view>
+    </view>
+
+    <view class="card-text end-lead">
+      所以，如果你心里也正好有个小想法，或者手头有软件开发的需求（教育工具、微信小程序、管理系统，或者其它定制化产品），都可以加我聊聊。我把这个小程序做出来了，也可以帮你把那个想法做出来。
+    </view>
+
+    <view class="contact-row" bindtap="callme" hover-class="contact-hover">
+      <view class="contact-label">📞 电话（点击拨号）</view>
+      <view class="contact-value">19138112344</view>
+    </view>
+
+    <view class="contact-row" bindtap="copyPhone" hover-class="contact-hover">
+      <view class="contact-label">💬 微信（点击复制）</view>
+      <view class="contact-value">19138112344</view>
+    </view>
+
+    <view class="card-tip">有好的建议、想法，或者想合作，随时加我微信，谢谢 🙏</view>
+  </view>
+
+  <view class="footer">愿每个小点子，都被认真对待 🌱</view>
+</view>

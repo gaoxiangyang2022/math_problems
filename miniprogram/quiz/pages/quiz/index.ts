@@ -79,8 +79,11 @@ Page({
     this.isStaticPlayback = false
     // 本地语音包状态：有文件就能念题，没有就退回家长念题
     this.audioMissing = false
+    this.applyAudioOptions()
     try {
       this.questionAudio = wx.createInnerAudioContext({ useWebAudioImplement: true })
+      // 老版本基础库只看这个属性；2.3.0+ 由 wx.setInnerAudioOption 统一设置
+      this.questionAudio.obeyMuteSwitch = false
       this.questionAudio.onError((res) => {
         // 语音包缺失（没放音频文件）时，自动隐藏"再念一遍"按钮
         const code = Number(res && res.errCode)
@@ -95,6 +98,17 @@ Page({
     }
     this.initData()
     this.refreshQuizIntro()
+  },
+
+  /** iOS 静音键下也要能出声：兜底再设一次（分包被独立打开时 app.onLaunch 可能已执行过，重复设置无副作用） */
+  applyAudioOptions() {
+    try {
+      if (typeof wx.setInnerAudioOption === 'function') {
+        wx.setInnerAudioOption({ obeyMuteSwitch: false, speakerOn: true, fail: () => {} })
+      }
+    } catch (err) {
+      // 忽略老版本基础库
+    }
   },
 
   onHide() {
@@ -427,6 +441,10 @@ Page({
     const src = this.getQuestionAudioPath(problem.i, problem.j)
     this.isStaticPlayback = false
     try {
+      // 保险起见每次播放前再确认一次静音开关设置（部分机型切前后台后会重置）
+      if (this.questionAudio.obeyMuteSwitch !== false) {
+        this.questionAudio.obeyMuteSwitch = false
+      }
       this.questionAudio.stop()
       this.questionAudio.src = src
       this.questionAudio.play()

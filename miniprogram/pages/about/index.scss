@@ -1,15 +1,185 @@
-/* pages/about/index.wxss */
+/* pages/about/index.scss */
 
 page {
-
-  font-size: large;
+  box-sizing: border-box;
+  min-height: 100%;
+  background: linear-gradient(180deg, #eef2ff 0%, #fdf4ff 55%, #f0fdf4 100%);
+  color: #263238;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background: #fff;
-  display:block;
-  flex-direction: column;
-  align-items: center;
-  line-height: 1.5;
-  width: 90vw;
+}
+
+.page {
+  box-sizing: border-box;
+  width: 92%;
+  max-width: 720rpx;
   margin: 0 auto;
-  padding: 70rpx 0;
+  padding: 28rpx 0 60rpx;
+}
+
+/* 顶部介绍 */
+.hero {
+  padding: 30rpx 8rpx 34rpx;
+  text-align: center;
+}
+
+.hero-emoji {
+  font-size: 88rpx;
+  line-height: 1.2;
+}
+
+.hero-title {
+  margin-top: 10rpx;
+  color: #4338ca;
+  font-size: 46rpx;
+  font-weight: 900;
+  letter-spacing: 2rpx;
+}
+
+.hero-sub {
+  margin-top: 10rpx;
+  color: #64748b;
+  font-size: 26rpx;
+}
+
+/* 通用卡片 */
+.card {
+  box-sizing: border-box;
+  margin-bottom: 26rpx;
+  padding: 28rpx 26rpx;
+  background: #ffffff;
+  border: 3rpx solid #e0e7ff;
+  border-radius: 22rpx;
+  box-shadow: 0 10rpx 24rpx rgba(99, 102, 241, 0.1);
+}
+
+.card-title {
+  margin-bottom: 16rpx;
+  color: #3730a3;
+  font-size: 32rpx;
+  font-weight: 900;
+}
+
+.card-text {
+  color: #475569;
+  font-size: 28rpx;
+  line-height: 1.75;
+}
+
+.card-tip {
+  margin-top: 18rpx;
+  color: #94a3b8;
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+
+/* 结尾卡片：理念 + 合作邀请合成一件事 */
+.end-card {
+  background: linear-gradient(160deg, #ffffff, #fff7ed 90%);
+  border-color: #fed7aa;
+  box-shadow: 0 12rpx 28rpx rgba(251, 146, 60, 0.16);
+}
+
+/* 卡片里的引用块：这句话是整页的重点 */
+.quote {
+  position: relative;
+  margin-bottom: 24rpx;
+  padding: 34rpx 28rpx 28rpx;
+  background: linear-gradient(135deg, #fff7ed, #ffe4e6);
+  border: 2rpx solid #fdba74;
+  border-radius: 18rpx;
+}
+
+.quote-mark {
+  position: absolute;
+  top: 2rpx;
+  left: 20rpx;
+  color: #fdba74;
+  font-size: 88rpx;
+  font-weight: 900;
+  line-height: 1;
+  opacity: 0.7;
+}
+
+.quote-text {
+  position: relative;
+  color: #b45309;
+  font-size: 38rpx;
+  font-weight: 900;
+  line-height: 1.6;
+  letter-spacing: 1rpx;
+  text-align: center;
+}
+
+.quote-sub {
+  position: relative;
+  margin-top: 16rpx;
+  color: #92400e;
+  font-size: 26rpx;
+  line-height: 1.7;
+  text-align: center;
+  opacity: 0.85;
+}
+
+/* 引用之后接上"可以找我"的那段话 */
+.end-lead {
+  margin-top: 4rpx;
+}
+
+/* 能做哪些事 */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.list-item {
+  display: flex;
+  align-items: flex-start;
+  color: #475569;
+  font-size: 28rpx;
+  line-height: 1.7;
+}
+
+.dot {
+  flex: 0 0 auto;
+  margin-right: 10rpx;
+  color: #6366f1;
+  font-weight: 900;
+}
+
+/* 联系方式 */
+.contact-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-top: 18rpx;
+  padding: 22rpx 24rpx;
+  background: #eef2ff;
+  border: 2rpx solid #c7d2fe;
+  border-radius: 16rpx;
+}
+
+.contact-hover {
+  background: #e0e7ff;
+}
+
+.contact-label {
+  color: #4338ca;
+  font-size: 26rpx;
+  font-weight: 800;
+}
+
+.contact-value {
+  color: #1e293b;
+  font-size: 32rpx;
+  font-weight: 900;
+  letter-spacing: 1rpx;
+}
+
+.footer {
+  margin-top: 34rpx;
+  color: #94a3b8;
+  font-size: 24rpx;
+  text-align: center;
 }
